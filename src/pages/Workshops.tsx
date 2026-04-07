@@ -4,7 +4,7 @@ const Workshops = () => {
   return (
     <section id="workshops" className="scroll-mt-24 px-6 py-20 lg:px-10">
       <div
-        className="relative mx-auto flex min-h-[70vh] max-w-7xl items-center overflow-hidden rounded-[2rem] border border-white/10 bg-black text-white shadow-2xl"
+        className="relative mx-auto flex min-h-[70vh] max-w-7xl items-center overflow-hidden rounded-4xl border border-white/10 bg-black text-white shadow-2xl"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.8)), url(${workshopImage})`,
           backgroundSize: "cover",

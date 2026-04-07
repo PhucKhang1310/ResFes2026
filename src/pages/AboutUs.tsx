@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import resfesPlasma from "../assets/resfes_plasma.jpg";
 import resfesTour from "../assets/resfes_tour.jpg";
 import resfesWind from "../assets/resfes_wind.jpg";
 import resfesMentor from "../assets/resfes_mentor.jpg";
+import resfesNhut from "../assets/resfes_nhut.jpg";
+import SectionMarker from "../components/SectionMarker";
 
 const AboutUs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const images = [resfesPlasma, resfesTour, resfesWind, resfesMentor];
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const images = [
+    resfesPlasma,
+    resfesTour,
+    resfesWind,
+    resfesMentor,
+    resfesNhut,
+  ];
 
   const handleCarouselScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const carousel = e.currentTarget;
@@ -15,24 +24,36 @@ const AboutUs = () => {
     setActiveIndex(Math.min(activeIdx, images.length - 1));
   };
 
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % images.length;
+
+        if (carouselRef.current) {
+          carouselRef.current.scrollTo({
+            top: nextIndex * carouselRef.current.clientHeight,
+            behavior: "smooth",
+          });
+        }
+
+        return nextIndex;
+      });
+    }, 5000);
+
+    return () => window.clearInterval(intervalId);
+  }, [images.length]);
+
   return (
     <div
       id="about"
       className="flex bg-white flex-col justify-center items-center pb-10 scroll-mt-24"
     >
-      <span className="mt-20 font-extrabold text-xl text-black flex gap-3">
-        <svg
-          viewBox="0 0 292.828 292.828"
-          xmlns="http://www.w3.org/2000/svg"
-          width="15"
-        >
-          <polygon
-            points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
-            fill="#00000"
-          />
-        </svg>
-        ABOUT RESFES 2026
-      </span>
+      <SectionMarker
+        label="ABOUT RESFES 2026"
+        className="mt-20 text-xl text-black"
+        iconWidth={15}
+        fillColor="#000000"
+      />
 
       <div className="flex w-3/4 mt-20 items-center">
         <div className="flex flex-1 gap-4 items-center justify-start">
@@ -49,21 +70,15 @@ const AboutUs = () => {
             ))}
           </div>
           <div
+            ref={carouselRef}
             className="carousel carousel-vertical rounded-box h-[90vh]"
             onScroll={handleCarouselScroll}
           >
-            <div className="carousel-item h-full">
-              <img src={resfesPlasma} />
-            </div>
-            <div className="carousel-item h-full">
-              <img src={resfesTour} />
-            </div>
-            <div className="carousel-item h-full">
-              <img src={resfesWind} />
-            </div>
-            <div className="carousel-item h-full">
-              <img src={resfesMentor} />
-            </div>
+            {images.map((image, index) => (
+              <div key={index} className="carousel-item h-full">
+                <img src={image} />
+              </div>
+            ))}
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-4 pl-8">

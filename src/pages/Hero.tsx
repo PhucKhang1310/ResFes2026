@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import heroGlow from "../assets/home-hero-slide-1-glow.webp";
 import heroRibbon from "../assets/home-hero01.png";
+import RegisterButtons from "../components/RegisterButtons";
+import SectionMarker from "../components/SectionMarker";
 
 const Hero = () => {
   const initialSeconds = 15 * 24 * 60 * 60 + 10 * 60 * 60 + 24 * 60 + 59;
@@ -136,43 +138,17 @@ const Hero = () => {
                     sec
                   </div>
                 </div>
-                <div className="flex gap-5">
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLScEo6HgWxAHJbjeiE2MoVAMRfM1ltmtt3hTJZ0cza6Pz4F1HQ/viewform"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn mt-8 rounded-full border-0 bg-orange-600 px-8 text-white hover:bg-orange-600/90"
-                  >
-                    Register FPTers
-                  </a>
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLScZllL6Ewl8_tId9eMffO2UgYer41U3_6LjW0-SmYNVi2ocnw/viewform"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn-outline mt-8 rounded-full bg-transparent px-8 text-white hover:bg-white hover:text-black"
-                  >
-                    Register Non-FPTers
-                  </a>
-                </div>
+                <RegisterButtons />
               </div>
             </div>
           </div>
         </div>
         <div className="relative mt-10 z-20 flex h-[40vh] w-full items-start justify-center bg-linear-to-b from-black/70 to-black">
           <div className="flex flex-col justify-center items-center text-3xl pt-10">
-            <span className="font-extrabold text-sm mb-2 flex w-full justify-center gap-2">
-              <svg
-                viewBox="0 0 292.828 292.828"
-                xmlns="http://www.w3.org/2000/svg"
-                width="10"
-              >
-                <polygon
-                  points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
-                  fill="#ffffff"
-                />
-              </svg>
-              WE ARE
-            </span>
+            <SectionMarker
+              label="WE ARE"
+              className="text-sm mb-2 w-full justify-center text-white"
+            />
             <h1 className="font-thin">
               <span className="font-bold">Empowering minds</span> to turn
               research into

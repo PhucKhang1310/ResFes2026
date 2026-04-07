@@ -77,7 +77,7 @@ const NavBar = () => {
         </div>
       </div>
       <div
-        className={`h-7 bg-gradient-to-b from-black/75 to-transparent transition-opacity duration-500 ${
+        className={`h-7 bg-linear-to-b from-black/75 to-transparent transition-opacity duration-500 ${
           isAtTop ? "opacity-0" : "opacity-100"
         }`}
       />

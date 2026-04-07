@@ -1,5 +1,6 @@
 import { FaEnvelope, FaFacebookF, FaPhone } from "react-icons/fa6";
 import logo from "../assets/logo.png";
+import RegisterButtons from "../components/RegisterButtons";
 
 const Footer = () => {
   return (
@@ -15,24 +16,7 @@ const Footer = () => {
             <p className="font-thin"> Build Smarter</p>
             <p className="text-4xl mt-3 font-medium">Join ResFes</p>
             <br />
-            <div className="flex gap-5">
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLScEo6HgWxAHJbjeiE2MoVAMRfM1ltmtt3hTJZ0cza6Pz4F1HQ/viewform"
-                target="_blank"
-                rel="noreferrer"
-                className="btn mt-2 rounded-full border-0 bg-orange-600 px-8 text-white hover:bg-orange-600/90"
-              >
-                Register FPTers
-              </a>
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLScZllL6Ewl8_tId9eMffO2UgYer41U3_6LjW0-SmYNVi2ocnw/viewform"
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-outline mt-2 rounded-full bg-transparent px-8 text-white hover:bg-white hover:text-black"
-              >
-                Register Non-FPTers
-              </a>
-            </div>
+            <RegisterButtons className="[&_.btn]:mt-2" />
           </p>
         </aside>
         <nav className="justify-self-end">
