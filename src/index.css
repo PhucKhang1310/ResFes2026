@@ -64,6 +64,19 @@ body::-webkit-scrollbar,
   }
 }
 
+@keyframes milestone-box-blink {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+
+  50% {
+    opacity: 0.36;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+  }
+}
+
 .flicker-letter {
   display: inline-block;
   opacity: 0;
@@ -72,4 +85,8 @@ body::-webkit-scrollbar,
   animation-delay: var(--delay, 0s);
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
+}
+
+.milestone-box-blink {
+  animation: milestone-box-blink 1.8s ease-in-out infinite;
 }

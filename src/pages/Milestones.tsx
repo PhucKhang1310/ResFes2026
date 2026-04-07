@@ -64,7 +64,11 @@ const Milestones = () => {
                 {index !== 0 && <hr className="bg-white/40" />}
 
                 {index % 2 === 0 ? (
-                  <div className="timeline-start timeline-box border-white/25 bg-black text-right">
+                  <div
+                    className={`timeline-start timeline-box border-white/25 bg-black text-right ${
+                      index === 0 ? "milestone-box-blink" : ""
+                    }`}
+                  >
                     {item.detail ? (
                       <span className="badge badge-outline badge-xs mb-2 border-white text-white">
                         {item.detail}
