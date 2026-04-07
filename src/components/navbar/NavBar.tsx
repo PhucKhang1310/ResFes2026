@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 
 const NavBar = () => {
   const [isHidden, setIsHidden] = useState(false);
@@ -30,14 +30,12 @@ const NavBar = () => {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${
-        isHidden ? "-translate-y-full" : "translate-y-0"
-      }`}
+      className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${isHidden ? "-translate-y-full" : "translate-y-0"
+        }`}
     >
       <div
-        className={`${
-          isAtTop ? "bg-transparent" : "bg-black"
-        } border-b border-white/20 transition-colors duration-500`}
+        className={`${isAtTop ? "bg-transparent" : "bg-black"
+          } border-b border-white/20 transition-colors duration-500`}
       >
         <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
           <div className="navbar">
@@ -77,9 +75,8 @@ const NavBar = () => {
         </div>
       </div>
       <div
-        className={`h-7 bg-linear-to-b from-black/75 to-transparent transition-opacity duration-500 ${
-          isAtTop ? "opacity-0" : "opacity-100"
-        }`}
+        className={`h-7 bg-linear-to-b from-black/75 to-transparent transition-opacity duration-500 ${isAtTop ? "opacity-0" : "opacity-100"
+          }`}
       />
     </header>
   );

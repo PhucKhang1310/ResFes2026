@@ -1,4 +1,4 @@
-import workshopImage from "../assets/resfes_tour.jpg";
+import workshopImage from "../../assets/resfes_tour.jpg";
 
 const Workshops = () => {
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import heroGlow from "../assets/home-hero-slide-1-glow.webp";
-import heroRibbon from "../assets/home-hero01.png";
+import heroGlow from "../../assets/home-hero-slide-1-glow.webp";
+import heroRibbon from "../../assets/home-hero01.png";
 
 const Hero = () => {
   const initialSeconds = 15 * 24 * 60 * 60 + 10 * 60 * 60 + 24 * 60 + 59;
@@ -40,7 +40,7 @@ const Hero = () => {
     text.split("").map((character, index) => (
       <span
         key={`${text}-${character}-${index}`}
-        className="flicker-letter"
+        className="flicker-letter select-none"
         style={getFlickerTimings(text, index)}
       >
         {character === " " ? "\u00A0" : character}

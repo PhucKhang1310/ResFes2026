@@ -1,8 +1,8 @@
 import { useState } from "react";
-import resfesPlasma from "../assets/resfes_plasma.jpg";
-import resfesTour from "../assets/resfes_tour.jpg";
-import resfesWind from "../assets/resfes_wind.jpg";
-import resfesMentor from "../assets/resfes_mentor.jpg";
+import resfesPlasma from "../../assets/resfes_plasma.jpg";
+import resfesTour from "../../assets/resfes_tour.jpg";
+import resfesWind from "../../assets/resfes_wind.jpg";
+import resfesMentor from "../../assets/resfes_mentor.jpg";
 
 const AboutUs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -40,11 +40,10 @@ const AboutUs = () => {
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-6 rounded transition-all ${
-                  index === activeIndex
-                    ? "bg-gray-800 opacity-100"
-                    : "bg-gray-300 opacity-50"
-                }`}
+                className={`w-1 h-6 rounded transition-all ${index === activeIndex
+                  ? "bg-gray-800 opacity-100"
+                  : "bg-gray-300 opacity-50"
+                  }`}
               />
             ))}
           </div>
@@ -53,16 +52,16 @@ const AboutUs = () => {
             onScroll={handleCarouselScroll}
           >
             <div className="carousel-item h-full">
-              <img src={resfesPlasma} />
+              <img className="object-cover" src={resfesPlasma} />
             </div>
             <div className="carousel-item h-full">
-              <img src={resfesTour} />
+              <img className="object-cover" src={resfesTour} />
             </div>
             <div className="carousel-item h-full">
-              <img src={resfesWind} />
+              <img className="object-cover" src={resfesWind} />
             </div>
             <div className="carousel-item h-full">
-              <img src={resfesMentor} />
+              <img className="object-cover" src={resfesMentor} />
             </div>
           </div>
         </div>
