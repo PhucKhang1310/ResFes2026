@@ -16,7 +16,10 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="flex bg-white flex-col justify-center items-center pb-10">
+    <div
+      id="about"
+      className="flex bg-white flex-col justify-center items-center pb-10 scroll-mt-24"
+    >
       <span className="mt-20 font-extrabold text-xl text-black flex gap-3">
         <svg
           viewBox="0 0 292.828 292.828"

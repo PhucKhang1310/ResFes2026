@@ -37,7 +37,10 @@ const ResearchFields = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-10 pb-20 bg-black">
+    <div
+      id="research-fields"
+      className="flex flex-col justify-center items-center mt-10 pb-20 bg-black scroll-mt-24"
+    >
       <span className="mt-20 font-extrabold text-sm text-white flex gap-3">
         <svg
           viewBox="0 0 292.828 292.828"

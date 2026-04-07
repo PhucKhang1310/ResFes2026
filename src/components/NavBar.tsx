@@ -1,11 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import logo from "../assets/logo.png";
 
 const NavBar = () => {
   const [isHidden, setIsHidden] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const previousScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsHidden(window.scrollY > 0);
+      const currentScrollY = window.scrollY;
+      setIsAtTop(currentScrollY <= 0);
+
+      if (currentScrollY <= 0) {
+        setIsHidden(false);
+      } else if (currentScrollY > previousScrollY.current) {
+        setIsHidden(true);
+      } else if (currentScrollY < previousScrollY.current) {
+        setIsHidden(false);
+      }
+
+      previousScrollY.current = currentScrollY;
     };
 
     handleScroll();
@@ -16,42 +30,57 @@ const NavBar = () => {
 
   return (
     <header
-      className={`absolute inset-x-0 top-0 z-30 transition-transform duration-300 ${
+      className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${
         isHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="mx-auto w-full max-w-7xl px-6 pt-4 lg:px-10">
-        <div className="navbar bg-transparent p-0">
-          <div className="flex-1">
-            <a className="btn btn-ghost text-xl">ResFes</a>
-            <ul className="menu menu-horizontal px-1">
-              <li>
-                <a>About</a>
-              </li>
-              <li>
-                <a>Research Fields</a>
-              </li>
-              <li>
-                <a>Regulations</a>
-              </li>
-              <li>
-                <a>Milestones</a>
-              </li>
-            </ul>
-          </div>
-          <div className="flex-none">
-            <ul className="menu menu-horizontal px-1">
-              <li>
-                <a>News</a>
-              </li>
-              <li>
-                <a>History</a>
-              </li>
-            </ul>
+      <div
+        className={`${
+          isAtTop ? "bg-transparent" : "bg-black"
+        } border-b border-white/20 transition-colors duration-500`}
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
+          <div className="navbar">
+            <div className="navbar-start flex items-center gap-6">
+              <a
+                href="#home"
+                className="inline-flex items-center justify-center leading-none"
+              >
+                <img src={logo} className="block h-10 w-auto object-contain" />
+              </a>
+              <ul className="menu menu-horizontal px-1">
+                <li>
+                  <a href="#about">About</a>
+                </li>
+                <li>
+                  <a href="#research-fields">Research Fields</a>
+                </li>
+                <li>
+                  <a href="#regulations">Regulations</a>
+                </li>
+                <li>
+                  <a href="#milestones">Milestones</a>
+                </li>
+              </ul>
+            </div>
+            <div className="navbar-end">
+              <ul className="menu menu-horizontal px-1">
+                <li>
+                  <a href="#workshops">News</a>
+                </li>
+                <li>
+                  <a href="#awards">History</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-      <div className="divider" />
+      <div
+        className={`h-7 bg-gradient-to-b from-black/75 to-transparent transition-opacity duration-500 ${
+          isAtTop ? "opacity-0" : "opacity-100"
+        }`}
+      />
     </header>
   );
 };

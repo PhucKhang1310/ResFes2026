@@ -49,7 +49,10 @@ const Hero = () => {
 
   return (
     <>
-      <section className="relative isolate min-h-screen overflow-hidden bg-black text-white">
+      <section
+        id="home"
+        className="relative isolate min-h-screen overflow-hidden bg-black text-white scroll-mt-24"
+      >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)]" />
         <img
           src={heroGlow}
@@ -68,17 +71,21 @@ const Hero = () => {
           <div className="flex w-full flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
             <div className="hero-content self-start p-0 text-neutral-content lg:flex-1 lg:justify-start">
               <div className="max-w-xl">
-                <div className="mb-5 text-5xl lg:text-7xl">
+                <div className="mb-3 text-5xl lg:text-7xl">
                   <h1 className="font-bold">{renderFlickerText("RESEARCH")}</h1>
                   <h1 className="font-thin">{renderFlickerText("FESTIVAL")}</h1>
                   <h1 className="font-bold">{renderFlickerText("2026")}</h1>
                 </div>
-                <p className="max-w-lg text-white/80">
-                  RBL in Action, Researchers Ready
-                </p>
-                <p className="mb-8 max-w-lg text-white/80">
-                  Triển khai RBL, Triển vọng trong nghiên cứu
-                </p>
+                <span className="text-rotate mb-3">
+                  <span className="justify-items-start">
+                    <span className="max-w-lg text-white/80">
+                      RBL in Action, Researchers Ready
+                    </span>
+                    <span className="max-w-lg text-white/80">
+                      Triển khai RBL, Triển vọng trong nghiên cứu
+                    </span>
+                  </span>
+                </span>
                 <div className="grid grid-flow-col gap-3 text-center auto-cols-max lg:gap-5">
                   <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
@@ -130,12 +137,22 @@ const Hero = () => {
                   </div>
                 </div>
                 <div className="flex gap-5">
-                  <button className="btn mt-8 rounded-full border-0 bg-orange-600 px-8 text-white hover:bg-orange-600/90">
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScEo6HgWxAHJbjeiE2MoVAMRfM1ltmtt3hTJZ0cza6Pz4F1HQ/viewform"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn mt-8 rounded-full border-0 bg-orange-600 px-8 text-white hover:bg-orange-600/90"
+                  >
                     Register FPTers
-                  </button>
-                  <button className="btn btn-outline mt-8 rounded-full bg-transparent px-8 text-white hover:text-black hover:bg-white">
+                  </a>
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScZllL6Ewl8_tId9eMffO2UgYer41U3_6LjW0-SmYNVi2ocnw/viewform"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-outline mt-8 rounded-full bg-transparent px-8 text-white hover:bg-white hover:text-black"
+                  >
                     Register Non-FPTers
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
