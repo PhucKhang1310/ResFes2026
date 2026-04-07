@@ -16,7 +16,7 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="flex bg-white flex-col justify-center items-center">
+    <div className="flex bg-white flex-col justify-center items-center pb-10">
       <span className="mt-20 font-extrabold text-xl text-black flex gap-3">
         <svg
           viewBox="0 0 292.828 292.828"
@@ -31,7 +31,7 @@ const AboutUs = () => {
         ABOUT RESFES 2026
       </span>
 
-      <div className="flex w-3/4 mt-30 items-center">
+      <div className="flex w-3/4 mt-20 items-center">
         <div className="flex flex-1 gap-4 items-center justify-start">
           <div className="flex flex-col gap-2 justify-center">
             {images.map((_, index) => (
