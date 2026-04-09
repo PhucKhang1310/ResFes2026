@@ -6,10 +6,12 @@ import {
   FaPalette,
 } from "react-icons/fa6";
 import { useRef, useState } from "react";
+import { useFadeIn } from "../../hook/useFadeIn";
 
 const ResearchFields = () => {
   const [activeField, setActiveField] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { inView, ref } = useFadeIn();
 
   const handleAccordionChange = (index: number) => {
     setActiveField(index);
@@ -39,7 +41,9 @@ const ResearchFields = () => {
   return (
     <div
       id="research-fields"
-      className="flex flex-col justify-center items-center mt-10 pb-20 bg-black scroll-mt-24"
+      ref={ref}
+      className={`flex flex-col justify-center items-center mt-10 pb-20 bg-black scroll-mt-24
+        ${inView ? "fade-in" : "opacity-0"}`}
     >
       <span className="mt-20 font-extrabold text-sm text-white flex gap-3">
         <svg

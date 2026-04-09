@@ -1,11 +1,15 @@
 import { FaMedal, FaTrophy } from "react-icons/fa6";
-
+import { useFadeIn } from "../../hook/useFadeIn";
 const Awards = () => {
+  const { inView, ref } = useFadeIn(0, 70);
+
   return (
     <section
       id="awards"
-      className="bg-black px-6 py-20 lg:px-10 pt-30 scroll-mt-24"
-    >
+      ref={ref}
+      className={`bg-black px-6 py-20 lg:px-10 pt-30 scroll-mt-24
+        ${inView ? "fade-in" : "opacity-0"}
+      `}>
       <div className="mx-auto w-full max-w-6xl">
         <div className="divider font-extrabold text-sm text-white">AWARDS</div>
         <div className="mx-auto mt-30 grid w-full max-w-5xl grid-cols-2 items-end gap-4 md:grid-cols-4 md:gap-5">

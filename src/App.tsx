@@ -7,6 +7,7 @@ import NavBar from "./components/navbar/NavBar";
 import Regulations from "./components/regulations/Regulations";
 import ResearchFields from "./components/research/ResearchFields";
 import Workshops from "./components/workshops/Workshops";
+import LazyWrapper from "./components/wrapper/LazyWrapper";
 
 const App = () => {
   return (
@@ -16,9 +17,11 @@ const App = () => {
       <AboutUs />
       <ResearchFields />
       <Awards />
-      <Regulations />
-      <Milestones />
-      <Workshops />
+      <LazyWrapper>
+        <Regulations />
+        <Milestones />
+        <Workshops />
+      </LazyWrapper>
       <Footer />
     </>
   );

@@ -3,9 +3,12 @@ import resfesPlasma from "../../assets/resfes_plasma.jpg";
 import resfesTour from "../../assets/resfes_tour.jpg";
 import resfesWind from "../../assets/resfes_wind.jpg";
 import resfesMentor from "../../assets/resfes_mentor.jpg";
+import { useFadeIn } from "../../hook/useFadeIn";
 
 const AboutUs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { inView, ref } = useFadeIn();
+
   const images = [resfesPlasma, resfesTour, resfesWind, resfesMentor];
 
   const handleCarouselScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -17,8 +20,10 @@ const AboutUs = () => {
 
   return (
     <div
+      ref={ref}
       id="about"
-      className="flex bg-white flex-col justify-center items-center pb-10 scroll-mt-24"
+      className={`flex bg-white flex-col justify-center items-center pb-10 scroll-mt-24 
+        ${inView ? "fade-in" : "opacity-0"}`}
     >
       <span className="mt-20 font-extrabold text-xl text-black flex gap-3">
         <svg
