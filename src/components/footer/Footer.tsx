@@ -1,5 +1,5 @@
 import { FaEnvelope, FaFacebookF, FaPhone } from "react-icons/fa6";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 
 const Footer = () => {
   return (

@@ -1,4 +1,5 @@
 type Milestone = {
+  id: number;
   date: string;
   title: string;
   detail?: string;
@@ -6,35 +7,43 @@ type Milestone = {
 
 const milestones: Milestone[] = [
   {
+    id: 1,
     date: "March 16 - 5:00 PM, April 16",
     title: "Registration and Proposal submission",
     detail: "START",
   },
   {
+    id: 2,
     date: "April 6",
     title: "Preliminary round's Workshops",
   },
   {
+    id: 3,
     date: "April 23",
     title: "Announcement on Preliminary Round Candidates",
   },
   {
+    id: 4,
     date: "May 09 & 10",
     title: "Preliminary Round",
   },
   {
+    id: 5,
     date: "May 19",
     title: "Preliminary Round result announcement",
   },
   {
+    id: 6,
     date: "5:00 PM, July 19",
     title: "Full paper submission",
   },
   {
+    id: 7,
     date: "July 22",
     title: "Announcement on The Finale Candidates",
   },
   {
+    id: 8,
     date: "August 15",
     title: "The Finale",
   },

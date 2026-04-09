@@ -1,12 +1,12 @@
-import AboutUs from "./components/AboutUs";
-import Awards from "./components/Awards";
-import Footer from "./components/Footer";
-import Hero from "./components/Hero";
-import Milestones from "./components/Milestones";
-import NavBar from "./components/NavBar";
-import Regulations from "./components/Regulations";
-import ResearchFields from "./components/ResearchFields";
-import Workshops from "./components/Workshops";
+import AboutUs from "./components/about/AboutUs";
+import Awards from "./components/awards/Awards";
+import Footer from "./components/footer/Footer";
+import Hero from "./components/hero/Hero";
+import Milestones from "./components/milestones/Milestones";
+import NavBar from "./components/navbar/NavBar";
+import Regulations from "./components/regulations/Regulations";
+import ResearchFields from "./components/research/ResearchFields";
+import Workshops from "./components/workshops/Workshops";
 
 const App = () => {
   return (
