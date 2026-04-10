@@ -102,6 +102,7 @@ const Regulations = () => {
                       For the Proposal Template, please access the provided{" "}
                       <a
                         href="https://docs.google.com/document/d/1ZotIDMEigdV3vwdZ6xt8UvOqfnJ1x3KF/edit?usp=sharing&ouid=113520801588464821299&rtpof=true&sd=truee"
+                        target="_blank"
                         className="link link-primary"
                       >
                         Template
@@ -133,6 +134,7 @@ const Regulations = () => {
                           Technology. For more details, please visit{" "}
                           <a
                             href="https://owl.purdue.edu/owl/research_and_citation/ieee_style/index.html"
+                            target="_blank"
                             className="link link-primary"
                           >
                             IEEE Style Guidelines
@@ -146,6 +148,7 @@ const Regulations = () => {
                           please visit{" "}
                           <a
                             href="https://owl.purdue.edu/owl/research_and_citation/apa_style/index.html"
+                            target="_blank"
                             className="link link-primary"
                           >
                             APA Style Guidelines

@@ -40,7 +40,7 @@ const Hero = () => {
     text.split("").map((character, index) => (
       <span
         key={`${text}-${character}-${index}`}
-        className="flicker-letter select-none"
+        className="flicker-letter"
         style={getFlickerTimings(text, index)}
       >
         {character === " " ? "\u00A0" : character}
@@ -160,7 +160,7 @@ const Hero = () => {
         </div>
         <div className="relative mt-10 z-20 flex h-[40vh] w-full items-start justify-center bg-linear-to-b from-black/70 to-black">
           <div className="flex flex-col justify-center items-center text-3xl pt-10">
-            <span className="font-extrabold text-sm mb-2 flex w-full justify-center gap-2">
+            <span className="font-extrabold text-base mb-2 flex w-full justify-center gap-2">
               <svg
                 viewBox="0 0 292.828 292.828"
                 xmlns="http://www.w3.org/2000/svg"

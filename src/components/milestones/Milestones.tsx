@@ -14,7 +14,7 @@ const milestones: Milestone[] = [
   },
   {
     id: 2,
-    date: "April 6",
+    date: "April 16",
     title: "Preliminary round's Workshops",
   },
   {
