@@ -4,12 +4,14 @@ import resfesTour from "../../assets/resfes_tour.jpg";
 import resfesWind from "../../assets/resfes_wind.jpg";
 import resfesMentor from "../../assets/resfes_mentor.jpg";
 import { useFadeIn } from "../../hook/useFadeIn";
+import { useCheckMobile } from "../../hook/useCheckMobile";
 
 const AboutUs = () => {
+  const { isMobile } = useCheckMobile();
+  const images = [resfesPlasma, resfesTour, resfesWind, resfesMentor];
+
   const [activeIndex, setActiveIndex] = useState(0);
   const { inView, ref } = useFadeIn();
-
-  const images = [resfesPlasma, resfesTour, resfesWind, resfesMentor];
 
   const handleCarouselScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const carousel = e.currentTarget;
@@ -17,6 +19,7 @@ const AboutUs = () => {
     const activeIdx = Math.round(carousel.scrollTop / itemHeight);
     setActiveIndex(Math.min(activeIdx, images.length - 1));
   };
+
 
   return (
     <div
@@ -40,7 +43,7 @@ const AboutUs = () => {
       </span>
 
       <div className="flex w-3/4 mt-20 items-center">
-        <div className="flex flex-1 gap-4 items-center justify-start">
+        <div className={`flex flex-1 gap-4 items-center justify-start`}>
           <div className="flex flex-col gap-2 justify-center">
             {images.map((_, index) => (
               <div

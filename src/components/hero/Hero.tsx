@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import heroGlow from "../../assets/home-hero-slide-1-glow.webp";
 import heroRibbon from "../../assets/home-hero01.png";
+import { useCheckMobile } from "../../hook/useCheckMobile";
 
 const Hero = () => {
+  const { isMobile } = useCheckMobile()
   const initialSeconds = 15 * 24 * 60 * 60 + 10 * 60 * 60 + 24 * 60 + 59;
   const [totalSeconds, setTotalSeconds] = useState(initialSeconds);
 
@@ -76,17 +78,18 @@ const Hero = () => {
                   <h1 className="font-thin">{renderFlickerText("FESTIVAL")}</h1>
                   <h1 className="font-bold">{renderFlickerText("2026")}</h1>
                 </div>
-                <span className="text-rotate mb-3">
+                <div className={`text-rotate mb-3 `}>
                   <span className="justify-items-start">
                     <span className="max-w-lg text-white/80">
                       RBL in Action, Researchers Ready
                     </span>
                     <span className="max-w-lg text-white/80">
-                      Triển khai RBL, Triển vọng trong nghiên cứu
+                      Triển khai RBL,
+                      Triển vọng trong nghiên cứu
                     </span>
                   </span>
-                </span>
-                <div className="grid grid-flow-col gap-3 text-center auto-cols-max lg:gap-5">
+                </div>
+                <div className={`grid grid-flow-col gap-2 text-center auto-cols-max lg:gap-5 `}>
                   <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
                       <span
@@ -136,7 +139,7 @@ const Hero = () => {
                     sec
                   </div>
                 </div>
-                <div className="flex gap-5">
+                <div className={`flex ${isMobile ? `flex-col max-w-xs` : `gap-5`}`}>
                   <a
                     href="https://docs.google.com/forms/d/e/1FAIpQLScEo6HgWxAHJbjeiE2MoVAMRfM1ltmtt3hTJZ0cza6Pz4F1HQ/viewform"
                     target="_blank"
