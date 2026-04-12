@@ -10,7 +10,7 @@ const Footer = () => {
       <footer className="w-2/3 footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
         <aside>
           <img src={logo} className="w-1/3" />
-          <p className="mt-3 font-bold text-2xl">
+          <div className="mt-3 font-bold text-2xl">
             Think bigger
             <p className="font-thin"> Build Smarter</p>
             <p className="text-4xl mt-3 font-medium">Join ResFes</p>
@@ -33,7 +33,7 @@ const Footer = () => {
                 Register Non-FPTers
               </a>
             </div>
-          </p>
+          </div>
         </aside>
         <nav className="justify-self-end">
           <h6 className="footer-title">Contact Us</h6>

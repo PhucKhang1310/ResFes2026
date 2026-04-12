@@ -17,9 +17,13 @@ const App = () => {
       <AboutUs />
       <ResearchFields />
       <Awards />
-      <LazyWrapper>
+      <LazyWrapper id="regulations">
         <Regulations />
+      </LazyWrapper>
+      <LazyWrapper id="milestones">
         <Milestones />
+      </LazyWrapper>
+      <LazyWrapper id="workshops">
         <Workshops />
       </LazyWrapper>
       <Footer />

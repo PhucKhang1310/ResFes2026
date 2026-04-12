@@ -9,11 +9,11 @@ const Regulations = () => {
           <h2 className="text-4xl font-bold text-black lg:text-5xl">
             Regulations
           </h2>
-          <p className="mt-3 font-thin text-sm text-black/70 lg:text-base">
-            <div className="divider divider-neutral">
+          <div className="mt-3 font-thin text-sm text-black/70 lg:text-base">
+            <p className="divider divider-neutral">
               Key rules and submission requirements for ResFes 2026.
-            </div>
-          </p>
+            </p>
+          </div>
         </div>
 
         <div className="join join-vertical w-full rounded-2xl bg-white text-black shadow-xl">
