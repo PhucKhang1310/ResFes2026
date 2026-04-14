@@ -179,7 +179,7 @@ const ResearchFields = () => {
             onScroll={handleCarouselScroll}
           >
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black border-2 rounded-2xl">
+              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -218,7 +218,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black border-2 rounded-2xl">
+              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -242,7 +242,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black border-2 rounded-2xl">
+              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -268,7 +268,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black border-2 rounded-2xl">
+              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -295,7 +295,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black border-2 rounded-2xl">
+              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
