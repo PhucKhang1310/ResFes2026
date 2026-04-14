@@ -8,7 +8,7 @@ const useCheckMobile = () => {
         };
 
         checkMobile();
-    }, []);
+    }, [window.innerWidth]);
 
     return { isMobile };
 };
