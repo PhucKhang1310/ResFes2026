@@ -1,16 +1,18 @@
 import { useFadeIn } from "../../hook/useFadeIn";
+import type { ReactNode } from "react";
 
-const LazyWrapper = ({ children, id }) => {
-    const { ref, inView } = useFadeIn();
-    return (
-        <div
-            id={id}
-            className={`${inView ? "fade-in" : "opacity-0"}`}
-            ref={ref}
-        >
-            {inView && children}
-        </div>
-    );
-}
+type LazyWrapperProps = {
+  children: ReactNode;
+  id: string;
+};
+
+const LazyWrapper = ({ children, id }: LazyWrapperProps) => {
+  const { ref, inView } = useFadeIn();
+  return (
+    <div id={id} className={`${inView ? "fade-in" : "opacity-0"}`} ref={ref}>
+      {inView && children}
+    </div>
+  );
+};
 
 export default LazyWrapper;

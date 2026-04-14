@@ -18,7 +18,12 @@ const listItem = [
     },
 ];
 
-const MobileMenu = ({ isOpen, onClose }) => {
+type MobileMenuProps = {
+    isOpen: boolean;
+    onClose: () => void;
+};
+
+const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
     return (
         <>
             <div
