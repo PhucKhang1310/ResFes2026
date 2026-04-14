@@ -43,7 +43,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                     <span className="text-sm font-semibold tracking-wide">Menu</span>
                     <button
                         type="button"
-                        className="btn btn-ghost btn-sm text-white"
+                        className="btn btn-ghost btn-sm text-white!"
                         onClick={onClose}
                         aria-label="Close menu"
                     >
@@ -51,7 +51,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                     </button>
                 </div>
 
-                <ul className="menu menu-vertical gap-1 p-4">
+                <ul className="menu menu-vertical gap-1 p-4 [&>li>a]:text-white!">
                     {listItem.map((item) => (
                         <li key={item.href}>
                             <a href={item.href} onClick={onClose}>
