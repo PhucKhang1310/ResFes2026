@@ -1,11 +1,14 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
 
 :root,
 html,
 body,
 #root {
-  background-color: #ffffff;
+  background-color: #fff7ed;
   margin: 0;
   min-height: 100%;
   overflow-x: hidden;

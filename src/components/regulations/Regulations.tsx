@@ -2,7 +2,7 @@ const Regulations = () => {
   return (
     <section
       id="regulations"
-      className="bg-white px-6 py-20 text-black lg:px-10 scroll-mt-24"
+      className="bg-amber-50 px-6 py-20 text-black lg:px-10 scroll-mt-24"
     >
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 text-center">
@@ -16,7 +16,7 @@ const Regulations = () => {
           </div>
         </div>
 
-        <div className="join join-vertical w-full rounded-2xl bg-white text-black shadow-xl">
+        <div className="join join-vertical w-full rounded-2xl bg-amber-50 text-black shadow-xl">
           <div className="collapse collapse-arrow join-item border-b border-black/10 rounded-t-2xl">
             <input type="radio" name="regulations-accordion" defaultChecked />
             <div className="collapse-title text-xl font-bold">

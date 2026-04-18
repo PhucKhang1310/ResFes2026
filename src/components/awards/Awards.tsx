@@ -14,7 +14,7 @@ const Awards = () => {
           inView ? "fade-in" : "opacity-0"
         }`}
       >
-        <div className="divider font-extrabold text-sm text-white! before:bg-white/15! after:bg-white/15!">
+        <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15!">
           AWARDS
         </div>
         <div className="mx-auto mt-30 grid w-full max-w-5xl grid-cols-2 items-end gap-4 md:grid-cols-4 md:gap-5">

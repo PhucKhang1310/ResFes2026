@@ -88,7 +88,7 @@ const Milestones = () => {
           <ul className="timeline timeline-snap-icon timeline-vertical w-full">
             {milestones.map((item, index) => (
               <li key={item.id}>
-                {index !== 0 && <hr className="bg-white/40" />}
+                {index !== 0 && <hr className="bg-amber-50/40" />}
 
                 {index % 2 === 0 ? (
                   <div className="timeline-start timeline-box border-white/25 bg-black text-right">
@@ -127,7 +127,7 @@ const Milestones = () => {
                 ) : null}
 
                 {index !== milestones.length - 1 && (
-                  <hr className="bg-white/40" />
+                  <hr className="bg-amber-50/40" />
                 )}
               </li>
             ))}

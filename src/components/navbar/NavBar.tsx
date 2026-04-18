@@ -3,6 +3,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import MobileMenu from "./MobileMenu";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import logo from "../../assets/logo.png";
+import fptLogo from "../../assets/fpt_logo.jpg";
 
 const NavBar = () => {
   const { isMobile } = useCheckMobile();
@@ -42,28 +43,28 @@ const NavBar = () => {
   if (!isMobile) {
     return (
       <header
-        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${
+        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 shadow-xl ${
           isHidden ? "-translate-y-full" : "translate-y-0"
         }`}
       >
         <div
           className={`${
-            isAtTop ? "bg-transparent" : "bg-black"
+            isAtTop ? "bg-transparent" : "bg-amber-50"
           } border-b border-white/20 transition-colors duration-500`}
         >
           <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
-            <div className="navbar text-white">
-              <div className="navbar-start flex items-center gap-6">
+            <div className="navbar text-black!">
+              <div className="navbar-start flex items-center gap-6 ">
                 <a
                   href="#home"
                   className="inline-flex items-center justify-center leading-none"
                 >
-                  <img
-                    src={logo}
-                    className="block h-10 w-auto object-contain"
+                  <img 
+                    src={fptLogo}
+                    className="block h-15 w-auto object-contain"
                   />
                 </a>
-                <ul className="menu menu-horizontal px-1 [&>li>a]:text-white!">
+                <ul className="menu menu-horizontal px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-500 [&>li>a]:transition-all">
                   <li>
                     <a href="#about">About</a>
                   </li>
@@ -79,7 +80,7 @@ const NavBar = () => {
                 </ul>
               </div>
               <div className="navbar-end">
-                <ul className="menu menu-horizontal px-1 [&>li>a]:text-white!">
+                <ul className="menu menu-horizontal px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-500 [&>li>a]:transition-all">
                   <li>
                     <a href="#workshops">News</a>
                   </li>
@@ -92,9 +93,7 @@ const NavBar = () => {
           </div>
         </div>
         <div
-          className={`h-7 bg-linear-to-b from-black/75 to-transparent transition-opacity duration-500 ${
-            isAtTop ? "opacity-0" : "opacity-100"
-          }`}
+          className="h-0.5 bg-black"
         />
       </header>
     );
@@ -109,7 +108,7 @@ const NavBar = () => {
       >
         <button
           type="button"
-          className="btn btn-ghost btn-sm text-white!"
+          className="btn btn-ghost btn-sm text-amber-500"
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
@@ -118,7 +117,7 @@ const NavBar = () => {
         </button>
 
         <a href="#home" className="inline-flex items-center leading-none">
-          <img src={logo} className="block h-10 w-auto object-contain" />
+          <img src={fptLogo} className="block h-10 w-auto object-contain" />
         </a>
       </header>
 

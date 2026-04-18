@@ -178,7 +178,7 @@ const AboutUs = () => {
     <div
       ref={ref}
       id="about"
-      className={`flex bg-white flex-col justify-center items-center pb-10 scroll-mt-24 
+      className={`flex bg-amber-50 flex-col justify-center items-center pb-10 scroll-mt-24 
         ${inView ? "fade-in" : "opacity-0"}`}
     >
       <span className="mt-20 font-extrabold text-xl text-black flex gap-3">

@@ -28,7 +28,7 @@ const Footer = () => {
                 href="https://docs.google.com/forms/d/e/1FAIpQLScZllL6Ewl8_tId9eMffO2UgYer41U3_6LjW0-SmYNVi2ocnw/viewform"
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-outline mt-2 rounded-full bg-transparent px-8 text-white hover:bg-white hover:text-black"
+                className="btn btn-outline mt-2 rounded-full bg-transparent px-8 text-white hover:bg-amber-50 hover:text-black"
               >
                 Register Non-FPTers
               </a>

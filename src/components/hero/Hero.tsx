@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import heroGlow from "../../assets/home-hero-slide-1-glow.webp";
+import heroGlow from "../../assets/glow_bg.png";
 import heroRibbon from "../../assets/home-hero01.png";
+import resfesMentorNoBg from "../../assets/resfes_mentor_nobg.png";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 
 const Hero = () => {
@@ -53,37 +54,37 @@ const Hero = () => {
     <>
       <section
         id="home"
-        className="relative isolate min-h-screen overflow-hidden bg-black text-white scroll-mt-24"
+        className="relative isolate min-h-screen overflow-hidden bg-amber-50 scroll-mt-24"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)]" />
-        <img
+        {/* <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)]" /> */}
+        {/* <img
           src={heroGlow}
           alt=""
           aria-hidden="true"
           className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw]"
-        />
+        /> */}
         <img
-          src={heroRibbon}
+          src={resfesMentorNoBg}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute right-[20vw] -top-[10vh] w-[125vw] max-w-none translate-x-[36%] -translate-y-[18%] opacity-95 sm:w-[108vw] sm:translate-x-[28%] sm:-translate-y-[16%] lg:w-[72vw] lg:translate-x-[18%] lg:-translate-y-[10%]"
+          className="pointer-events-none absolute right-5 w-[55vw] max-w-none"
         />
 
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 pb-16 pt-28 lg:px-10">
+        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 pb-16 pt-28 lg:px-10 ">
           <div className="flex w-full flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
             <div className="hero-content self-start p-0 text-neutral-content lg:flex-1 lg:justify-start">
-              <div className="max-w-xl">
-                <div className="mb-3 text-5xl lg:text-7xl">
-                  <h1 className="font-bold">{renderFlickerText("RESEARCH")}</h1>
+              <div className="max-w-xl ">
+                <div className="mb-3 text-5xl lg:text-7xl text-orange-400">
+                  <h1 className="font-bold ">{renderFlickerText("RESEARCH")}</h1>
                   <h1 className="font-thin">{renderFlickerText("FESTIVAL")}</h1>
                   <h1 className="font-bold">{renderFlickerText("2026")}</h1>
                 </div>
-                <div className={`text-rotate mb-3 `}>
+                <div className="text-rotate mb-3 text-orange-400">
                   <span className="justify-items-start">
-                    <span className="max-w-lg text-white/80">
+                    <span className="max-w-lg">
                       RBL in Action, Researchers Ready
                     </span>
-                    <span className="max-w-lg text-white/80">
+                    <span className="max-w-lg">
                       Triển khai RBL,
                       Triển vọng trong nghiên cứu
                     </span>
@@ -152,7 +153,7 @@ const Hero = () => {
                     href="https://docs.google.com/forms/d/e/1FAIpQLScZllL6Ewl8_tId9eMffO2UgYer41U3_6LjW0-SmYNVi2ocnw/viewform"
                     target="_blank"
                     rel="noreferrer"
-                    className="btn btn-outline mt-8 rounded-full bg-transparent px-8 text-white hover:bg-white hover:text-black"
+                    className="btn btn-outline mt-8 rounded-full bg-transparent px-8 hover:border-amber-500 text-amber-500 hover:bg-amber-100 hover:text-amber-600"
                   >
                     Register Non-FPTers
                   </a>
