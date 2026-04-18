@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import MobileMenu from "./MobileMenu";
 import { useCheckMobile } from "../../hook/useCheckMobile";
-import logo from "../../assets/logo.png";
 import fptLogo from "../../assets/fpt_logo.jpg";
 
 const NavBar = () => {
