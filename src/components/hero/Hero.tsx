@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import resfesMentor from "../../assets/resfes_mentor.jpg";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import HeroGlow from "../../assets/home-hero01.png";
 
