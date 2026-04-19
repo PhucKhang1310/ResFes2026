@@ -10,9 +10,8 @@ const Awards = () => {
       className={`bg-black px-6 py-20 lg:px-10 pt-30 scroll-mt-24`}
     >
       <div
-        className={`mx-auto w-full max-w-6xl ${
-          inView ? "fade-in" : "opacity-0"
-        }`}
+        className={`mx-auto w-full max-w-6xl ${inView ? "fade-in" : "opacity-0"
+          }`}
       >
         <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15!">
           AWARDS

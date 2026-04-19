@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import resfesMentorNoBg from "../../assets/resfes_mentor_nobg.png";
+import resfesMentor from "../../assets/resfes_mentor.jpg";
 import { useCheckMobile } from "../../hook/useCheckMobile";
+import HeroGlow from "../../assets/home-hero01.png";
 
 const Hero = () => {
   const { isMobile } = useCheckMobile()
@@ -52,26 +53,13 @@ const Hero = () => {
     <>
       <section
         id="home"
-        className="relative isolate min-h-screen overflow-hidden bg-amber-50 scroll-mt-24"
+        className="relative isolate min-h-screen overflow-hidden bg-black scroll-mt-24"
       >
-        {/* <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)]" /> */}
-        {/* <img
-          src={heroGlow}
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw]"
-        /> */}
-        <img
-          src={resfesMentorNoBg}
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute right-5 w-[55vw] max-w-none"
-        />
 
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 pb-16 pt-28 lg:px-10 ">
-          <div className="flex w-full flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
-            <div className="hero-content self-start p-0 text-neutral-content lg:flex-1 lg:justify-start">
-              <div className="max-w-xl ">
+          <div className="flex w-full flex-col lg:gap-90 lg:flex-row lg:items-center lg:justify-between">
+            <div className="hero-content self-start p-0 text-neutral-content lg:justify-start">
+              <div className="max-w-xl">
                 <div className="mb-3 text-5xl lg:text-7xl text-orange-400">
                   <h1 className="font-bold ">{renderFlickerText("RESEARCH")}</h1>
                   <h1 className="font-thin">{renderFlickerText("FESTIVAL")}</h1>
@@ -89,7 +77,7 @@ const Hero = () => {
                   </span>
                 </div>
                 <div className={`grid grid-flow-col gap-2 text-center auto-cols-max lg:gap-5 `}>
-                  <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <div className="flex flex-col p-2 bg-[#111827] rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(days)}
@@ -101,7 +89,7 @@ const Hero = () => {
                     </span>
                     days
                   </div>
-                  <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <div className="flex flex-col p-2  bg-[#111827] rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(hours)}
@@ -113,7 +101,7 @@ const Hero = () => {
                     </span>
                     hours
                   </div>
-                  <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <div className="flex flex-col p-2  bg-[#111827] rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(minutes)}
@@ -125,7 +113,7 @@ const Hero = () => {
                     </span>
                     min
                   </div>
-                  <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <div className="flex flex-col p-2  bg-[#111827] rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(seconds)}
@@ -158,9 +146,36 @@ const Hero = () => {
                 </div>
               </div>
             </div>
+            {/* <div className="lg:flex lg:flex-1 fade-in">
+              <div className="h-64 w-full max-w-md rounded-3xl border-2
+              border-orange-300/80 bg-orange-100/40 lg:h-[26rem] relative overflow-hidden">
+                <div>
+                  {!isMobile &&
+                    <div>
+                      <img
+                        src={resfesMentor}
+                        alt="Mentor photo"
+                        aria-hidden="true"
+                        className="pointer-events-none absolute object-cover max-w-none"
+                        style={{
+                        }}
+                      />
+                    </div>}
+                </div>
+              </div>
+            </div> */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)] "
+            />
+            <img
+              src={HeroGlow}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw] ml-48"
+            />
           </div>
         </div>
-        <div className="relative mt-10 z-20 flex h-[40vh] w-full items-start justify-center bg-linear-to-b from-black/70 to-black">
+
+        <div className="relative mt-10 z-20 flex h-[40vh] w-full items-start justify-center bg-linear-to-b from-black/80 to-black">
           <div className="flex flex-col text-center justify-center items-center text-3xl pt-10">
             <span className="font-extrabold text-base mb-2 flex w-full justify-center gap-2">
               <svg
@@ -183,7 +198,7 @@ const Hero = () => {
             <h1 className="font-bold"> progress, innovation, and change</h1>
           </div>
         </div>
-      </section>
+      </section >
     </>
   );
 };
