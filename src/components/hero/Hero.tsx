@@ -169,7 +169,7 @@ const Hero = () => {
               src={HeroGlow}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw] ml-48"
+              className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw] ml-48 fade-in"
             />
           </div>
         </div>
