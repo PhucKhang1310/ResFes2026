@@ -42,10 +42,10 @@ const ResearchFields = () => {
     <div
       id="research-fields"
       ref={ref}
-      className={`flex flex-col justify-center items-center mt-10 pb-20 bg-black scroll-mt-24
+      className={`flex flex-col justify-center items-center pt-10 pb-20 bg-amber-50 scroll-mt-24
         ${inView ? "fade-in" : "opacity-0"}`}
     >
-      <span className="mt-20 font-extrabold text-sm text-white flex gap-3">
+      <span className="mt-20 font-extrabold text-sm text-black flex gap-3">
         <svg
           viewBox="0 0 292.828 292.828"
           xmlns="http://www.w3.org/2000/svg"
@@ -53,26 +53,26 @@ const ResearchFields = () => {
         >
           <polygon
             points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
-            fill="#ffffff"
+            fill="#000000"
           />
         </svg>
         RESEARCH FIELDS
       </span>
       <div className="flex gap-10 mt-10 items-center">
         <div className="flex flex-1 justify-center w-3/4 h-full">
-          <div className="join join-vertical bg-white rounded-2xl text-black">
-            <div className="collapse collapse-arrow join-item border-base-300 border rounded-t-2xl">
+          <div className="join join-vertical bg-amber-50 rounded-2xl text-black">
+            <div className="collapse collapse-arrow join-item border-b border-black/10 rounded-t-2xl">
               <input
                 type="radio"
                 name="research-fields-accordion"
                 checked={activeField === 0}
                 onChange={() => handleAccordionChange(0)}
               />
-              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none">
+              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none text-black">
                 <FaLaptopCode className="shrink-0 text-xl translate-y-px" />
                 <span>Information Technology</span>
               </div>
-              <div className="collapse-content font-thin">
+              <div className="collapse-content font-thin text-black">
                 <ul className="list-disc pl-5 whitespace-normal wrap-break-word">
                   <li>Automotive Technology</li>
                   <li>Artificial Intelligence</li>
@@ -85,18 +85,18 @@ const ResearchFields = () => {
                 </ul>
               </div>
             </div>
-            <div className="collapse collapse-arrow join-item border-base-300 border">
+            <div className="collapse collapse-arrow join-item border-b border-black/10">
               <input
                 type="radio"
                 name="research-fields-accordion"
                 checked={activeField === 1}
                 onChange={() => handleAccordionChange(1)}
               />
-              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none">
+              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none text-black">
                 <FaPalette className="shrink-0 text-xl translate-y-px" />
                 <span>Digital Art and Design</span>
               </div>
-              <div className="collapse-content font-thin">
+              <div className="collapse-content font-thin text-black">
                 <ul className="list-disc pl-5 whitespace-normal wrap-break-word">
                   <li>Digital Art and Design</li>
                   <li>Graphic Design</li>
@@ -104,18 +104,18 @@ const ResearchFields = () => {
                 </ul>
               </div>
             </div>
-            <div className="collapse collapse-arrow join-item border-base-300 border">
+            <div className="collapse collapse-arrow join-item border-b border-black/10">
               <input
                 type="radio"
                 name="research-fields-accordion"
                 checked={activeField === 2}
                 onChange={() => handleAccordionChange(2)}
               />
-              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none">
+              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none text-black">
                 <FaFilm className="shrink-0 text-xl translate-y-px" />
                 <span>Communication Technology</span>
               </div>
-              <div className="collapse-content font-thin">
+              <div className="collapse-content font-thin text-black">
                 <ul className="list-disc pl-5 whitespace-normal wrap-break-word">
                   <li>Multimedia Communication</li>
                   <li>Public Relations</li>
@@ -125,18 +125,18 @@ const ResearchFields = () => {
                 </ul>
               </div>
             </div>
-            <div className="collapse collapse-arrow join-item border-base-300 border">
+            <div className="collapse collapse-arrow join-item border-b border-black/10">
               <input
                 type="radio"
                 name="research-fields-accordion"
                 checked={activeField === 3}
                 onChange={() => handleAccordionChange(3)}
               />
-              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none">
+              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none text-black">
                 <FaChartLine className="shrink-0 text-xl translate-y-px" />
                 <span>Business Administration</span>
               </div>
-              <div className="collapse-content font-thin">
+              <div className="collapse-content font-thin text-black">
                 <ul className="list-disc pl-5 whitespace-normal wrap-break-word">
                   <li>Marketing</li>
                   <li>International Business</li>
@@ -150,18 +150,18 @@ const ResearchFields = () => {
                 </ul>
               </div>
             </div>
-            <div className="collapse collapse-arrow join-item border-base-300 border rounded-b-2xl">
+            <div className="collapse collapse-arrow join-item border-b border-black/10 rounded-b-2xl">
               <input
                 type="radio"
                 name="research-fields-accordion"
                 checked={activeField === 4}
                 onChange={() => handleAccordionChange(4)}
               />
-              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none">
+              <div className="collapse-title flex items-center gap-2 font-semibold text-xl leading-none text-black">
                 <FaLanguage className="shrink-0 text-xl translate-y-px" />
                 <span>Linguistics</span>
               </div>
-              <div className="collapse-content font-thin">
+              <div className="collapse-content font-thin text-black">
                 <ul className="list-disc pl-5 whitespace-normal wrap-break-word">
                   <li>English</li>
                   <li>Korean</li>
@@ -172,6 +172,7 @@ const ResearchFields = () => {
             </div>
           </div>
         </div>
+        <div className="divider divider-horizontal divider-neutral " />
         <div className="flex-1">
           <div
             ref={carouselRef}
@@ -179,7 +180,7 @@ const ResearchFields = () => {
             onScroll={handleCarouselScroll}
           >
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
+              <div className="card w-[40vw] bg-transparent text-black rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -218,7 +219,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
+              <div className="card w-[40vw] bg-transparent text-black rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -242,7 +243,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
+              <div className="card w-[40vw] bg-transparent text-black rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -268,7 +269,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
+              <div className="card w-[40vw] bg-transparent text-black rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">
@@ -295,7 +296,7 @@ const ResearchFields = () => {
               </div>
             </div>
             <div className="carousel-item h-full">
-              <div className="card w-[40vw] bg-black text-white border-2 border-white/20 rounded-2xl">
+              <div className="card w-[40vw] bg-transparent text-black rounded-2xl">
                 <div className="card-body">
                   <div className="flex justify-between">
                     <h2 className="text-3xl font-bold">

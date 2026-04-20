@@ -59,12 +59,12 @@ const Hero = () => {
           <div className="flex w-full flex-col lg:gap-90 lg:flex-row lg:items-center lg:justify-between">
             <div className="hero-content self-start p-0 text-neutral-content lg:justify-start">
               <div className="max-w-xl">
-                <div className="mb-3 text-5xl lg:text-7xl text-orange-400">
+                <div className="mb-3 text-5xl lg:text-7xl text-white">
                   <h1 className="font-bold ">{renderFlickerText("RESEARCH")}</h1>
                   <h1 className="font-thin">{renderFlickerText("FESTIVAL")}</h1>
                   <h1 className="font-bold">{renderFlickerText("2026")}</h1>
                 </div>
-                <div className="text-rotate mb-3 text-orange-400">
+                <div className="text-rotate mb-3 font-semibold text-orange-400">
                   <span className="justify-items-start">
                     <span className="max-w-lg">
                       RBL in Action, Researchers Ready
@@ -138,7 +138,7 @@ const Hero = () => {
                     href="https://docs.google.com/forms/d/e/1FAIpQLScZllL6Ewl8_tId9eMffO2UgYer41U3_6LjW0-SmYNVi2ocnw/viewform"
                     target="_blank"
                     rel="noreferrer"
-                    className="btn btn-outline mt-8 rounded-full bg-transparent px-8 hover:border-amber-500 text-amber-500 hover:bg-amber-100 hover:text-amber-600"
+                    className="btn btn-outline mt-8 rounded-full bg-transparent px-8 hover:border-transparent text-amber-500 hover:bg-amber-100 hover:text-amber-400"
                   >
                     Register Non-FPTers
                   </a>
