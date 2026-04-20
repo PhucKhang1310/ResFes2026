@@ -43,6 +43,14 @@ const mentors = [
   },
 ];
 
+const splitName = (name: string) => {
+  const parts = name.split(" ");
+  const last = parts.pop() ?? "";
+  const first = parts.join(" ");
+
+  return { first, last };
+};
+
 const Mentor = () => {
   return (
     <main className="min-h-screen bg-amber-50 px-6 py-20 text-black lg:px-10">
@@ -60,39 +68,46 @@ const Mentor = () => {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {mentors.map((mentor) => (
-            <article
-              key={mentor.name}
-              className="card card-compact bg-base-100 shadow-xl ring-1 ring-black/5 transition-transform duration-300 hover:-translate-y-1"
-            >
-              <figure className="relative aspect-4/5 overflow-hidden bg-base-200">
-                <img
-                  src={mentor.image}
-                  alt={mentor.name}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
+            <li key={mentor.name} className="flex">
+              <article className="group relative w-full overflow-hidden rounded-2xl bg-black shadow-xl transition-transform duration-300 hover:-translate-y-1">
+                <picture>
+                  <img
+                    src={mentor.image}
+                    alt={mentor.name}
+                    className="h-full min-h-104 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </picture>
+
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-linear-to-t from-black via-black/45 to-transparent"
                 />
-              </figure>
-              <div className="card-body gap-3 p-6">
-                <div>
-                  <h2 className="card-title text-2xl font-bold text-black">
-                    {mentor.name}
+
+                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white lg:p-6">
+                  <h2 className="text-3xl font-black leading-tight">
+                    {splitName(mentor.name).first}{" "}
+                    <strong>{splitName(mentor.name).last}</strong>
                   </h2>
-                  <p className="mt-1 text-sm font-semibold uppercase tracking-[0.2em] text-[#ff6a1f]">
+                  <h3 className="mt-2 text-sm font-semibold uppercase tracking-[0.22em] text-white/85">
                     {mentor.role}
+                  </h3>
+                  <p className="mt-4 text-sm leading-6 text-white/80">
+                    {mentor.description}
                   </p>
                 </div>
-                <p className="text-sm leading-7 text-black/75 lg:text-base">
-                  {mentor.description}
-                </p>
-              </div>
-            </article>
+              </article>
+            </li>
           ))}
-        </div>
+        </ul>
 
         <div className="mt-12 text-center">
-          <a href="/" className="btn btn-primary border-none bg-[#ff6a1f] text-white hover:bg-[#e85f1b]">
+          <a
+            href="/"
+            className="btn btn-primary border-none bg-[#ff6a1f] text-white hover:bg-[#e85f1b]"
+          >
             Back to home
           </a>
         </div>
