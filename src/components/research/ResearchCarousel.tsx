@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 
 interface ResearchCarouselProps {
-  carouselRef: RefObject<HTMLDivElement>;
+  carouselRef: RefObject<HTMLDivElement | null>;
   onScroll: () => void;
 }
 
