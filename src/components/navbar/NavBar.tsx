@@ -43,13 +43,14 @@ const NavBar = () => {
   if (!isMobile) {
     return (
       <header
-        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 shadow-xl ${isHidden ? "-translate-y-full" : "translate-y-0"
-          }`}
-        style={{ backgroundColor: "#ff6a1f" }}
+        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${
+          isAtTop ? "shadow-none" : "shadow-xl"
+        } ${isHidden ? "-translate-y-full" : "translate-y-0"}`}
       >
         <div
-          className={`${isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
-            } border-b border-white/20 transition-colors duration-500`}
+          className={`${
+            isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
+          } border-b border-white/20 transition-colors duration-500`}
         >
           <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
             <div className="navbar text-black!">
@@ -61,10 +62,9 @@ const NavBar = () => {
                   <img
                     src={fptLogoFixed}
                     className="block h-15 w-auto object-contain scale-180 "
-
                   />
                 </a>
-                <ul className="menu menu-horizontal text-white px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-500 [&>li>a]:transition-all">
+                <ul className="menu menu-horizontal text-white px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-200 [&>li>a]:transition-all">
                   <li>
                     <a href="#about">About</a>
                   </li>
@@ -80,12 +80,15 @@ const NavBar = () => {
                 </ul>
               </div>
               <div className="navbar-end">
-                <ul className="menu menu-horizontal text-white px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-500 [&>li>a]:transition-all">
+                <ul className="menu menu-horizontal text-white px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-200 [&>li>a]:transition-all">
                   <li>
                     <a href="#workshops">News</a>
                   </li>
                   <li>
                     <a href="#awards">History</a>
+                  </li>
+                  <li>
+                    <a href="/mentors">Mentors</a>
                   </li>
                 </ul>
               </div>
@@ -93,7 +96,9 @@ const NavBar = () => {
           </div>
         </div>
         <div
-          className="h-0.5 bg-[#ff6a1f] shadow-md"
+          className={`h-0.5 transition-colors duration-500 ${
+            isAtTop ? "bg-transparent shadow-none" : "bg-[#ff6a1f] shadow-md"
+          }`}
         />
       </header>
     );
@@ -102,8 +107,9 @@ const NavBar = () => {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-4 lg:px-10 transition-transform duration-200 ${isHidden ? "-translate-y-full" : "translate-y-0"
-          } ${isAtTop ? "bg-transparent" : "bg-black/80 backdrop-blur"}`}
+        className={`fixed inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-4 lg:px-10 transition-transform duration-200 ${
+          isHidden ? "-translate-y-full" : "translate-y-0"
+        } ${isAtTop ? "bg-transparent" : "bg-black/80 backdrop-blur"}`}
       >
         <button
           type="button"
@@ -116,7 +122,10 @@ const NavBar = () => {
         </button>
 
         <a href="#home" className="inline-flex items-center leading-none">
-          <img src={fptLogoWithoutText} className="block h-10 w-auto object-contain" />
+          <img
+            src={fptLogoWithoutText}
+            className="block h-10 w-auto object-contain"
+          />
         </a>
       </header>
 

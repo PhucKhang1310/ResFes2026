@@ -15,6 +15,7 @@ const App = () => {
       <NavBar />
       <Hero />
       <AboutUs />
+      
       <ResearchFields />
       <Awards />
       <LazyWrapper id="regulations">
