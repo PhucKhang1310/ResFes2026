@@ -33,6 +33,17 @@ const ResearchCarousel = ({ carouselRef, onScroll }: ResearchCarouselProps) => {
       ],
     },
     {
+      title: "Communication Technology: Exploring Media Innovation",
+      items: [
+        "Interactive & Immersive Storytelling (AR/VR, 360-degree video, interactive narratives)",
+        "Short-form Visual Communication",
+        "AI-mediated Multimedia Communication (AI-generated content, Human vs. AI communicator)",
+        "Ethical & Responsible Multimedia Communication",
+        "Fake News, Visual Misinformation & Deepfakes",
+        "CSR & Sustainability Communication in Multimedia Contexts",
+      ],
+    },
+    {
       title: "Business Administration: Business Insight through Inquiry",
       items: [
         "Student research on digital business models",
@@ -43,17 +54,6 @@ const ResearchCarousel = ({ carouselRef, onScroll }: ResearchCarouselProps) => {
         "Policy makers and economic developments",
         "Policy makers and ESG/Environmental/Green practices - drivers and consequences",
         "Stock market exchanges: implications for the authority",
-      ],
-    },
-    {
-      title: "Communication Technology: Exploring Media Innovation",
-      items: [
-        "Interactive & Immersive Storytelling (AR/VR, 360-degree video, interactive narratives)",
-        "Short-form Visual Communication",
-        "AI-mediated Multimedia Communication (AI-generated content, Human vs. AI communicator)",
-        "Ethical & Responsible Multimedia Communication",
-        "Fake News, Visual Misinformation & Deepfakes",
-        "CSR & Sustainability Communication in Multimedia Contexts",
       ],
     },
     {
