@@ -2,8 +2,11 @@ import { useRef, useState } from "react";
 import { useFadeIn } from "../../hook/useFadeIn";
 import ResearchAccordion from "./ResearchAccordion";
 import ResearchCarousel from "./ResearchCarousel";
+import { useCheckMobile } from "../../hook/useCheckMobile";
+import ResearchFieldsMobile from "./ResearchfieldsMobile";
 
 const ResearchFields = () => {
+  const { isMobile } = useCheckMobile();
   const [activeField, setActiveField] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const { inView, ref } = useFadeIn();
@@ -32,6 +35,15 @@ const ResearchFields = () => {
       setActiveField(index);
     }
   };
+
+  if (isMobile) {
+    return (
+      <ResearchFieldsMobile
+        activeField={activeField}
+        onAccordionChange={handleAccordionChange}
+      />
+    )
+  }
 
   return (
     <div
