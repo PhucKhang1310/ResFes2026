@@ -1,57 +1,35 @@
-const mentors = [
-  {
-    name: "Dr. Lan Nguyen",
-    role: "Research Lead, Information Technology",
-    image: "https://picsum.photos/seed/resfes-mentor-1/800/1000",
-    description:
-      "Guides student teams through AI, software engineering, and data-driven research with a focus on practical experimentation.",
-  },
-  {
-    name: "Prof. Minh Tran",
-    role: "Innovation Mentor, Business Administration",
-    image: "https://picsum.photos/seed/resfes-mentor-2/800/1000",
-    description:
-      "Supports market analysis, startup validation, and strategy-focused research grounded in evidence and clear business framing.",
-  },
-  {
-    name: "Dr. An Pham",
-    role: "Creative Mentor, Digital Art & Design",
-    image: "https://picsum.photos/seed/resfes-mentor-3/800/1000",
-    description:
-      "Helps students turn concepts into compelling visual narratives using design thinking, prototyping, and user-centered critique.",
-  },
-  {
-    name: "Ms. Thu Le",
-    role: "Communication Mentor",
-    image: "https://picsum.photos/seed/resfes-mentor-4/800/1000",
-    description:
-      "Supports multimedia storytelling, media ethics, and presentation clarity for projects in communication technology.",
-  },
-  {
-    name: "Dr. Quang Ho",
-    role: "Language Research Mentor",
-    image: "https://picsum.photos/seed/resfes-mentor-5/800/1000",
-    description:
-      "Advises linguistics teams on corpus research, translation studies, and language-focused inquiry with academic precision.",
-  },
-  {
-    name: "Assoc. Prof. Huyen Vo",
-    role: "Cross-Disciplinary Mentor",
-    image: "https://picsum.photos/seed/resfes-mentor-6/800/1000",
-    description:
-      "Brings together interdisciplinary perspectives so teams can refine ideas, structure their research, and present confidently.",
-  },
-];
-
-const splitName = (name: string) => {
-  const parts = name.split(" ");
-  const last = parts.pop() ?? "";
-  const first = parts.join(" ");
-
-  return { first, last };
-};
+import { useMemo, useState } from "react";
+import MentorCard from "./MentorCard";
+import { mentors } from "./mentorData";
 
 const Mentor = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeDepartment, setActiveDepartment] = useState("All");
+
+  const departments = useMemo(() => {
+    const uniqueDepartments = new Set(
+      mentors.map((mentor) => mentor.role.split("|")[1]?.trim() ?? "Other")
+    );
+
+    return ["All", ...Array.from(uniqueDepartments).sort()];
+  }, []);
+
+  const filteredMentors = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return mentors.filter((mentor) => {
+      const department = mentor.role.split("|")[1]?.trim() ?? "Other";
+      const matchesDepartment =
+        activeDepartment === "All" || department === activeDepartment;
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        mentor.name.toLowerCase().includes(normalizedSearch) ||
+        mentor.role.toLowerCase().includes(normalizedSearch);
+
+      return matchesDepartment && matchesSearch;
+    });
+  }, [activeDepartment, searchTerm]);
+
   return (
     <main className="min-h-screen bg-amber-50 px-6 py-20 text-black lg:px-10">
       <section className="mx-auto max-w-7xl">
@@ -63,45 +41,76 @@ const Mentor = () => {
             Meet the mentors guiding ResFes 2026
           </h1>
           <p className="mt-6 text-base leading-7 text-black/70 lg:text-lg">
-            A six-person mentoring team supporting research, creativity, and
-            presentation quality across every field in the competition.
+            A multidisciplinary mentoring team of {mentors.length} experts
+            supporting research, creativity, and presentation quality across
+            every field in the competition.
+          </p>
+        </div>
+
+        <div className="mb-8 space-y-4">
+          <label className="input input-bordered mx-auto flex w-full max-w-7xl items-center gap-2 bg-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-4 w-4 opacity-70"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.965 11.026a5.5 5.5 0 1 1 1.06-1.06l3.474 3.474a.75.75 0 1 1-1.06 1.06l-3.474-3.474ZM10.5 6.5a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              type="text"
+              className="grow"
+              placeholder="Search mentors by name or role"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </label>
+
+          <div className="filter flex flex-wrap gap-2 max-w-7xl">
+            {departments.map((department) => (
+              <button
+                key={department}
+                type="button"
+                onClick={() => setActiveDepartment(department)}
+                className={`btn btn-sm rounded-full ${
+                  activeDepartment === department
+                    ? "btn-neutral text-white"
+                    : "btn-outline"
+                }`}
+              >
+                {department}
+              </button>
+            ))}
+          </div>
+
+          <p className="text-sm text-black/70">
+            Showing {filteredMentors.length} of {mentors.length} mentors
           </p>
         </div>
 
         <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {mentors.map((mentor) => (
-            <li key={mentor.name} className="flex">
-              <article className="group relative w-full overflow-hidden rounded-2xl bg-black shadow-xl transition-transform duration-300 hover:-translate-y-1">
-                <picture>
-                  <img
-                    src={mentor.image}
-                    alt={mentor.name}
-                    className="h-full min-h-104 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </picture>
-
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-linear-to-t from-black via-black/45 to-transparent"
-                />
-
-                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white lg:p-6">
-                  <h2 className="text-3xl font-black leading-tight">
-                    {splitName(mentor.name).first}{" "}
-                    <strong>{splitName(mentor.name).last}</strong>
-                  </h2>
-                  <h3 className="mt-2 text-sm font-semibold uppercase tracking-[0.22em] text-white/85">
-                    {mentor.role}
-                  </h3>
-                  <p className="mt-4 text-sm leading-6 text-white/80">
-                    {mentor.description}
-                  </p>
-                </div>
-              </article>
-            </li>
+          {filteredMentors.map((mentor, index) => (
+            <MentorCard
+              key={`${mentor.name}-${index}`}
+              name={mentor.name}
+              role={mentor.role}
+              image={mentor.image}
+              description={mentor.description}
+              links={mentor.links}
+            />
           ))}
         </ul>
+
+        {filteredMentors.length === 0 && (
+          <div className="mt-8 rounded-2xl border border-black/10 bg-white p-6 text-center text-black/70">
+            No mentors matched your search or filter.
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <a
