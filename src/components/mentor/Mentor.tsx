@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import MentorList from "./MentorList";
 import { mentors } from "./mentorData";
+import NavBar from "../navbar/NavBar";
 
 const Mentor = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,6 +34,7 @@ const Mentor = () => {
 
   return (
     <main className="min-h-screen bg-amber-50 px-6 py-20 text-black lg:px-10">
+      <NavBar />
       <section className="mx-auto max-w-7xl">
         <div className="mx-auto mb-12 max-w-3xl text-center">
           <p className="mb-4 text-sm font-bold uppercase tracking-[0.35em] text-black/60">
@@ -55,11 +57,10 @@ const Mentor = () => {
                 key={department}
                 type="button"
                 onClick={() => setActiveDepartment(department)}
-                className={`btn btn-sm rounded-full ${
-                  activeDepartment === department
+                className={`btn btn-sm rounded-full ${activeDepartment === department
                     ? "btn-neutral text-white"
                     : "btn-outline"
-                }`}
+                  }`}
               >
                 {department}
               </button>

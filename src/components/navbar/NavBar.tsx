@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import MobileMenu from "./MobileMenu";
 import { useCheckMobile } from "../../hook/useCheckMobile";
-import fptLogoWithoutText from "../../assets/fpt_logo_without_text.png";
 import fptLogoFixed from "../../assets/fpt_logo-removebg-preview.png";
 
 const NavBar = () => {
@@ -43,14 +42,12 @@ const NavBar = () => {
   if (!isMobile) {
     return (
       <header
-        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${
-          isAtTop ? "shadow-none" : "shadow-xl"
-        } ${isHidden ? "-translate-y-full" : "translate-y-0"}`}
+        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${isAtTop ? "shadow-none" : "shadow-xl"
+          } ${isHidden ? "-translate-y-full" : "translate-y-0"}`}
       >
         <div
-          className={`${
-            isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
-          } border-b border-white/20 transition-colors duration-500`}
+          className={`${isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
+            } border-b border-white/20 transition-colors duration-500`}
         >
           <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
             <div className="navbar text-black!">
@@ -96,9 +93,8 @@ const NavBar = () => {
           </div>
         </div>
         <div
-          className={`h-0.5 transition-colors duration-500 ${
-            isAtTop ? "bg-transparent shadow-none" : "bg-[#ff6a1f] shadow-md"
-          }`}
+          className={`h-0.5 transition-colors duration-500 ${isAtTop ? "bg-transparent shadow-none" : "bg-[#ff6a1f] shadow-md"
+            }`}
         />
       </header>
     );
@@ -107,9 +103,8 @@ const NavBar = () => {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-4 lg:px-10 transition-transform duration-200 ${
-          isHidden ? "-translate-y-full" : "translate-y-0"
-        } ${isAtTop ? "bg-transparent" : "bg-black/80 backdrop-blur"}`}
+        className={`fixed inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-4 lg:px-10 transition-all duration-200 ${isHidden ? "-translate-y-full" : "translate-y-0"
+          } ${isAtTop ? "bg-black" : "bg-[#ff6a1f]"} `}
       >
         <button
           type="button"
@@ -118,12 +113,12 @@ const NavBar = () => {
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
         >
-          <RxHamburgerMenu size={20} />
+          <RxHamburgerMenu size={20} color="white" />
         </button>
 
         <a href="#home" className="inline-flex items-center leading-none">
           <img
-            src={fptLogoWithoutText}
+            src={fptLogoFixed}
             className="block h-10 w-auto object-contain"
           />
         </a>
