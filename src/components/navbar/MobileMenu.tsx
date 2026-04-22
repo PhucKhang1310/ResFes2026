@@ -1,19 +1,27 @@
 const listItem = [
   {
-    href: "#about",
+    href: "/#about",
     label: "About",
   },
   {
-    href: "#research-fields",
+    href: "/#research-fields",
     label: "Research Fields",
   },
   {
-    href: "#regulations",
+    href: "/#awards",
+    label: "Awards",
+  },
+  {
+    href: "/#regulations",
     label: "Regulations",
   },
   {
-    href: "#milestones",
+    href: "/#milestones",
     label: "Milestones",
+  },
+  {
+    href: "/#workshops",
+    label: "Workshops",
   },
   {
     href: "/mentors",

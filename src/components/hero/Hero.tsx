@@ -176,7 +176,7 @@ const Hero = () => {
 
         <div className="relative mt-10 z-20 flex h-[40vh] w-full items-start justify-center bg-linear-to-b from-black/80 to-black">
           <div className="flex flex-col text-center justify-center items-center text-3xl pt-10">
-            <span className="font-extrabold text-base mb-2 flex w-full justify-center gap-2">
+            <span className="font-extrabold text-white text-base mb-2 flex w-full justify-center gap-2">
               <svg
                 viewBox="0 0 292.828 292.828"
                 xmlns="http://www.w3.org/2000/svg"
@@ -189,12 +189,12 @@ const Hero = () => {
               </svg>
               WE ARE
             </span>
-            <h1 className="font-thin">
+            <h1 className="font-thin text-white">
               <span className="font-bold">Empowering minds</span>
               {isMobile && <br />} to turn
               research into
             </h1>
-            <h1 className="font-bold"> progress, innovation, and change</h1>
+            <h1 className="font-bold text-white"> progress, innovation, and change</h1>
           </div>
         </div>
       </section >
