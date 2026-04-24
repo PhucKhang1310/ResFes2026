@@ -2,7 +2,7 @@ import workshopImage from "../../assets/resfes_tour.jpg";
 
 const Workshops = () => {
   return (
-    <section id="workshops" className="scroll-mt-24 px-6 py-20 lg:px-10">
+    <section id="workshops" className="scroll-mt-24 px-6 py-20 lg:px-10 ">
       <div
         className="relative mx-auto flex min-h-[70vh] max-w-7xl items-center overflow-hidden rounded-4xl border border-white/10 bg-black text-white shadow-2xl"
         style={{

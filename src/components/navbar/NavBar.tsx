@@ -42,14 +42,12 @@ const NavBar = () => {
   if (!isMobile) {
     return (
       <header
-        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${
-          isAtTop ? "shadow-none" : "shadow-xl"
-        } ${isHidden ? "-translate-y-full" : "translate-y-0"}`}
+        className={`fixed inset-x-0 top-0 z-30 transition-transform duration-300 ${isAtTop ? "shadow-none" : "shadow-xl"
+          } ${isHidden ? "-translate-y-full" : "translate-y-0"}`}
       >
         <div
-          className={`${
-            isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
-          } border-b border-white/20 transition-colors duration-500`}
+          className={`${isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
+            } border-b border-white/20 transition-colors duration-500`}
         >
           <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
             <div className="navbar text-black!">
@@ -81,7 +79,7 @@ const NavBar = () => {
               <div className="navbar-end">
                 <ul className="menu menu-horizontal text-white px-1 [&>li>a]:text-lg [&>li>a]:font-thin [&>li>a]:hover:bg-transparent [&>li>a]:hover:text-amber-200 [&>li>a]:transition-all">
                   <li>
-                    <a href="/home#workshops">News</a>
+                    <a href="/home#news">News</a>
                   </li>
                   <li>
                     <a href="/home#awards">History</a>
@@ -95,9 +93,8 @@ const NavBar = () => {
           </div>
         </div>
         <div
-          className={`h-0.5 transition-colors duration-500 ${
-            isAtTop ? "bg-transparent shadow-none" : "bg-[#ff6a1f] shadow-md"
-          }`}
+          className={`h-0.5 transition-colors duration-500 ${isAtTop ? "bg-transparent shadow-none" : "bg-[#ff6a1f] shadow-md"
+            }`}
         />
       </header>
     );
@@ -106,9 +103,8 @@ const NavBar = () => {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-4 lg:px-10 transition-all duration-200 ${
-          isHidden ? "-translate-y-full" : "translate-y-0"
-        } ${isAtTop ? "bg-black" : "bg-[#ff6a1f]"} `}
+        className={`fixed inset-x-0 top-0 z-30 flex items-center gap-4 px-6 py-4 lg:px-10 transition-all duration-200 ${isHidden ? "-translate-y-full" : "translate-y-0"
+          } ${isAtTop ? "bg-black" : "bg-[#ff6a1f]"} `}
       >
         <button
           type="button"
