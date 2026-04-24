@@ -8,63 +8,48 @@ interface ResearchCarouselProps {
 const ResearchCarousel = ({ carouselRef, onScroll }: ResearchCarouselProps) => {
   const carouselItems = [
     {
-      title: "Information Technology: Experimenting with Emerging Technologies",
+      title: "Information Technology, Semiconductor IC and Digital Automotive",
       items: [
-        "Student-led AI and data science research driven by real-world problems",
-        "Prototyping intelligent applications through research-based experimentation",
-        "Cybersecurity experiments and ethical hacking labs",
-        "IoT and edge AI systems developed through inquiry-based learning",
-        "Safe, responsible, and explainable AI research",
-        "Quantum Machine Learning exploration through simulation and hybrid models",
-        "Research-based design and evaluation of digital and AI-oriented chips",
+        "AI-powered campus assistant for student services and advising",
+        "Low-power semiconductor prototype for edge sensing workloads",
+        "Digital twin simulation for predictive automotive maintenance",
+        "Secure IoT architecture for smart classroom infrastructure",
       ],
     },
     {
-      title: "Digital Art & Design: Design Thinking Informed by Research",
+      title: "Graphic Design and Multimedia Communication",
       items: [
-        "Research-driven visual communication design",
-        "Human-AI co-creation in design studios",
-        "User-experience testing and evidence-based design",
-        "Cultural research in visual identity creation",
-        "Sustainable design experiments",
-        "Data, measurement in Design",
-        "Emerging modalities and embodied experience (e.g. VR, XR, ...)",
-        "Service Design",
+        "Brand identity system for science communication campaigns",
+        "Short-form multimedia storytelling for public research impact",
+        "Accessible infographic design for technical findings",
+        "Cross-platform motion graphics for event promotion",
       ],
     },
     {
-      title: "Communication Technology: Exploring Media Innovation",
+      title: "Economics and Business Administration",
       items: [
-        "Interactive & Immersive Storytelling (AR/VR, 360-degree video, interactive narratives)",
-        "Short-form Visual Communication",
-        "AI-mediated Multimedia Communication (AI-generated content, Human vs. AI communicator)",
-        "Ethical & Responsible Multimedia Communication",
-        "Fake News, Visual Misinformation & Deepfakes",
-        "CSR & Sustainability Communication in Multimedia Contexts",
+        "Consumer behavior analysis for education technology adoption",
+        "Financial feasibility model for student-led startup ideas",
+        "Operations optimization for campus service workflows",
+        "Market entry strategy for sustainable youth-focused products",
       ],
     },
     {
-      title: "Business Administration: Business Insight through Inquiry",
+      title: "English Language",
       items: [
-        "Student research on digital business models",
-        "Data-driven market analysis projects",
-        "Startup experiments and lean validation research",
-        "Consumer behavior investigation",
-        "ESG and sustainability strategy research",
-        "Policy makers and economic developments",
-        "Policy makers and ESG/Environmental/Green practices - drivers and consequences",
-        "Stock market exchanges: implications for the authority",
+        "Project-based English writing outcomes in research contexts",
+        "Academic presentation anxiety and speaking performance factors",
+        "Corpus-informed vocabulary development for undergraduates",
+        "Peer feedback patterns in collaborative language learning",
       ],
     },
     {
-      title: "Linguistics: Discovering Language through Inquiry",
+      title: "Japanese Language",
       items: [
-        "Corpus-based language research projects",
-        "Comparative linguistics",
-        "AI-assisted language learning experiments",
-        "Discourse analysis in digital communication",
-        "Translation studies using real datasets",
-        "Language and culture research in global contexts",
+        "Pragmatics in Japanese business email communication",
+        "Kanji retention improvement through spaced repetition methods",
+        "Intercultural communication challenges in JP-VN teamwork",
+        "Role-play-based speaking fluency in beginner cohorts",
       ],
     },
   ];
@@ -78,18 +63,18 @@ const ResearchCarousel = ({ carouselRef, onScroll }: ResearchCarouselProps) => {
       >
         {carouselItems.map((item, index) => (
           <div key={index} className="carousel-item h-full">
-            <div className="card w-[40vw] bg-transparent text-black rounded-2xl">
-              <div className="card-body">
+            <div className="card h-full w-[40vw] overflow-hidden rounded-2xl bg-transparent text-black">
+              <div className="card-body min-h-0 overflow-hidden">
                 <div className="flex justify-between">
                   <h2 className="text-3xl font-bold">{item.title}</h2>
                 </div>
-                <ul className="flex flex-col mt-6 pl-5 font-thin text-lg gap-2 list-disc">
-                  {index === 0 && (
-                    <h2 className="-ml-5 font-bold">What you'll do:</h2>
-                  )}
+                <ul className="mt-6 flex min-h-0 flex-col gap-2 overflow-hidden pl-5 text-lg font-thin list-disc">
                   {item.items.map((listItem, itemIndex) => (
-                    <li key={itemIndex}>
-                      <span>{listItem}</span>
+                    <li
+                      key={itemIndex}
+                      className="whitespace-nowrap"
+                    >
+                      <span className="block truncate">{listItem}</span>
                     </li>
                   ))}
                 </ul>

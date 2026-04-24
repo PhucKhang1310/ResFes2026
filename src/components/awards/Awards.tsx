@@ -10,76 +10,60 @@ const Awards = () => {
       className={`bg-black px-6 py-20 lg:px-10 pt-30 scroll-mt-24`}
     >
       <div
-        className={`mx-auto w-full max-w-6xl ${inView ? "fade-in" : "opacity-0"
-          }`}
+        className={`mx-auto w-full max-w-6xl ${
+          inView ? "fade-in" : "opacity-0"
+        }`}
       >
         <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15!">
           AWARDS
         </div>
-        <div className="mx-auto mt-30 grid w-full max-w-5xl grid-cols-2 items-end gap-4 md:grid-cols-4 md:gap-5">
+        <div className="mx-auto mt-12 grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
           <div className="flex flex-col items-center">
             <div className="mb-3 text-center text-sm font-semibold text-white sm:text-base">
-              First Runner-up
+              For sub-committees with 4-5 topics
             </div>
-            <div className="flex h-45 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 text-white px-3 py-5">
+            <div className="flex h-56 w-full flex-col items-center justify-between rounded-2xl bg-zinc-900 text-white px-3 py-5">
               <div className="text-center">
                 <FaMedal className="mx-auto mb-2 text-3xl text-white" />
-                <p className="text-4xl font-bold text-white">2</p>
+                <p className="text-3xl font-bold text-white">1 Prize</p>
               </div>
-              <p className="text-center text-base font-bold">15 million VND*</p>
-            </div>
-          </div>
-
-          <div className="order-first md:order-0 flex flex-col items-center">
-            <div className="mb-3 text-center text-base font-bold sm:text-lg text-yellow-300">
-              The Champion
-            </div>
-            <div className="flex h-65 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 bg-linear-to-b text-white px-3 py-5">
-              <div className="text-center">
-                <FaTrophy className="mx-auto mb-3 text-4xl text-yellow-300" />
-                <p className="text-5xl font-extrabold text-yellow-300">1</p>
-              </div>
-              <p className="text-center text-lg font-extrabold text-white">
-                20 million VND*
+              <p className="text-center text-base font-bold">
+                Khoi nguon Tri thuc: 6,000,000 VND
               </p>
             </div>
           </div>
 
           <div className="flex flex-col items-center">
-            <div className="mb-3 text-center text-sm font-semibold text-amber-500 sm:text-base">
-              Second Runner-up
+            <div className="mb-3 text-center text-sm font-semibold text-yellow-300 sm:text-base">
+              For sub-committees with 6+ topics
             </div>
-            <div className="flex h-37.5 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 text-white px-3 py-5">
+            <div className="flex h-56 w-full flex-col items-center justify-between rounded-2xl bg-zinc-900 text-white px-3 py-5">
               <div className="text-center">
-                <FaMedal className="mx-auto mb-2 text-3xl text-amber-500" />
-                <p className="text-4xl font-bold text-amber-500">3</p>
-              </div>
-              <p className="text-center text-base font-bold text-white">
-                10 million VND*
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <div className="mb-3 text-center text-sm font-semibold text-purple-500 sm:text-base">
-              Consolation Prize
-            </div>
-            <div className="flex h-30 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 text-white px-3 py-4">
-              <div className="text-center">
-                <FaMedal className="mx-auto mb-1 text-2xl text-purple-500" />
-                <p className="text-3xl font-bold text-purple-500">4</p>
+                <FaTrophy className="mx-auto mb-2 text-3xl text-yellow-300" />
+                <p className="text-3xl font-bold text-yellow-300">Top 3</p>
               </div>
               <p className="text-center text-sm font-bold text-white sm:text-base">
-                3 million VND*
+                1st: 10,000,000 VND | 2nd: 6,000,000 VND | 3rd: 4,000,000 VND
               </p>
             </div>
           </div>
         </div>
+
+        <div className="mx-auto mt-6 max-w-5xl rounded-2xl border border-amber-200/25 bg-zinc-900/70 p-5 text-sm text-white/90">
+          <p className="font-semibold text-amber-200">
+            Special note for Information Technology sub-committee:
+          </p>
+          <p className="mt-2">
+            If there are at least 10 final presentations, the award structure is
+            expanded with 02 second prizes and 02 third prizes.
+          </p>
+        </div>
       </div>
-      <p className="italic text-sm font-thin text-white/35 justify-self-center mt-10">
-        *Notice: Teams are subject to a specific amount of tax that adheres to
-        the Vietnam's Law on Personal Income Tax if win one of the
-        aforementioned prizes.
+      <p className="italic text-sm font-thin text-white/35 justify-self-center mt-10 max-w-5xl text-center mx-auto">
+        Important: Teams that submit papers on time must present at the Final
+        Round and attend the full program, especially the closing ceremony.
+        Absence may affect award structure and can lead to cancellation of the
+        team's result.
       </p>
     </section>
   );
