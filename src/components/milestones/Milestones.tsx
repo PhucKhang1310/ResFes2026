@@ -47,6 +47,25 @@ const CheckIcon = () => (
 const Milestones = () => {
   return (
     <>
+      <style>
+        {`
+          @keyframes firstTimelineBlink {
+            0%,
+            100% {
+              opacity: 1;
+              box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+            }
+            50% {
+              opacity: 0.32;
+              box-shadow: 0 0 18px rgba(255, 255, 255, 0.28);
+            }
+          }
+
+          .first-timeline-box-blink {
+            animation: firstTimelineBlink 1.5s ease-in-out infinite;
+          }
+        `}
+      </style>
       <section
         id="milestones"
         className="bg-black px-6 py-16 text-white lg:px-10 scroll-mt-24"
@@ -71,7 +90,11 @@ const Milestones = () => {
                 {index !== 0 && <hr className="bg-amber-50/40" />}
 
                 {index % 2 === 0 ? (
-                  <div className="timeline-start timeline-box border-white/25 bg-black text-right">
+                  <div
+                    className={`timeline-start timeline-box border-white/25 bg-black text-right ${
+                      index === 0 ? "first-timeline-box-blink" : ""
+                    }`}
+                  >
                     {item.detail ? (
                       <span className="badge badge-outline badge-xs mb-2 border-white text-white">
                         {item.detail}

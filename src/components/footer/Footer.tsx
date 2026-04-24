@@ -54,11 +54,11 @@ const Footer = () => {
               <span>Follow us on Facebook</span>
             </a>
             <a
-              href="mailto:resfes@fe.edu.vn"
+              href="mailto:src@fe.edu.vn"
               className="flex items-center gap-3 transition hover:text-orange-500"
             >
               <FaEnvelope className="text-lg" />
-              <span>resfes@fe.edu.vn</span>
+              <span>src@fe.edu.vn</span>
             </a>
             <a
               href="tel:+842465549806"
