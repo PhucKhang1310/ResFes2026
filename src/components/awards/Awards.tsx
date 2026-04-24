@@ -1,5 +1,5 @@
 import { useRef, useCallback } from "react";
-import { FaMedal, FaTrophy } from "react-icons/fa6";
+import { FaMedal, FaTrophy, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useFadeIn } from "../../hook/useFadeIn";
 
 interface AwardTier {
@@ -123,7 +123,7 @@ const AwardCard = ({ award }: { award: AwardTier }) => (
 
 const AwardSlide = ({ sc }: { sc: SubCommittee }) => (
   <div
-    className={`rounded-box border ${sc.borderColor} bg-gradient-to-br ${sc.accentGradient} backdrop-blur-xl p-6 sm:p-8 md:p-10 w-[85vw] max-w-3xl`}
+    className={`rounded-box backdrop-blur-xl p-6 sm:p-8 md:p-10 w-[85vw] max-w-3xl`}
   >
     <div className="text-center mb-8">
       <div
@@ -206,11 +206,7 @@ const Awards = () => {
     requestAnimationFrame(() => scrollToChild(node, REAL_START));
   }, []);
 
-  // When scrolling stops, if we're in a clone set, jump to the equivalent real item
-  const handleScrollEnd = useCallback(() => {
-    const el = carouselRef.current;
-    if (!el || isResetting.current) return;
-
+  const getClosestIdx = useCallback((el: HTMLDivElement) => {
     const centerX = el.scrollLeft + el.offsetWidth / 2;
     const children = Array.from(el.children) as HTMLElement[];
 
@@ -223,6 +219,15 @@ const Awards = () => {
         closestIdx = i;
       }
     });
+    return closestIdx;
+  }, []);
+
+  // When scrolling stops, if we're in a clone set, jump to the equivalent real item
+  const handleScrollEnd = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isResetting.current) return;
+
+    const closestIdx = getClosestIdx(el);
 
     // If in the first clone set (0..REAL_COUNT-1), jump to the real set
     if (closestIdx < REAL_START) {
@@ -236,7 +241,21 @@ const Awards = () => {
       scrollToChild(el, closestIdx - REAL_COUNT);
       requestAnimationFrame(() => { isResetting.current = false; });
     }
-  }, []);
+  }, [getClosestIdx]);
+
+  const handlePrev = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isResetting.current) return;
+    const currentIdx = getClosestIdx(el);
+    scrollToChild(el, Math.max(0, currentIdx - 1), "smooth");
+  }, [getClosestIdx]);
+
+  const handleNext = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isResetting.current) return;
+    const currentIdx = getClosestIdx(el);
+    scrollToChild(el, Math.min(el.children.length - 1, currentIdx + 1), "smooth");
+  }, [getClosestIdx]);
 
   const onScroll = useCallback(() => {
     if (scrollTimer.current) clearTimeout(scrollTimer.current);
@@ -259,7 +278,23 @@ const Awards = () => {
         </div>
 
         {/* DaisyUI Carousel - center snap, 30px bleed, infinite loop */}
-        <div className="mx-auto mt-12 w-[calc(85vw+60px)] max-w-[828px]">
+        <div className="relative mx-auto mt-12 w-[calc(85vw+60px)] max-w-[828px]">
+          {/* Navigation Arrows */}
+          <button
+            onClick={handlePrev}
+            aria-label="Previous sub-committee"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-6 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 cursor-pointer hover:scale-110 shadow-lg"
+          >
+            <FaChevronLeft className="text-sm sm:text-base mr-1" />
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next sub-committee"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-6 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 cursor-pointer hover:scale-110 shadow-lg"
+          >
+            <FaChevronRight className="text-sm sm:text-base ml-1" />
+          </button>
+
           <div
             ref={initRef}
             onScroll={onScroll}
