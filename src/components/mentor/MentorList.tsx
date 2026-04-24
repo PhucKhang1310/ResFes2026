@@ -14,9 +14,9 @@ const MentorList = ({
   onSearchChange,
 }: MentorListProps) => {
   return (
-    <ul className="list max-h-[70vh] overflow-y-auto rounded-box border border-black/10 bg-amber-50">
-      <li className="sticky top-0 z-20 border-b border-black/10 bg-amber-50 px-4 py-3">
-        <label className="input input-bordered flex w-full items-center gap-2 bg-white">
+    <ul className="list max-h-[70vh] overflow-y-auto rounded-box border border-amber-50/20 bg-zinc-900 text-amber-50">
+      <li className="sticky top-0 z-20 border-b border-amber-50/15 bg-zinc-900 px-4 py-3">
+        <label className="input input-bordered flex w-full items-center gap-2 border-amber-50/20 bg-zinc-800 text-amber-50">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -43,7 +43,7 @@ const MentorList = ({
       {mentors.map((mentor, index) => (
         <li
           key={`${mentor.name}-${index}`}
-          className="list-row border-b border-black/10"
+          className="list-row border-b border-amber-50/10"
         >
           <div>
             <img

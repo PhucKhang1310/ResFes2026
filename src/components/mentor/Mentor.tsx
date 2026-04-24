@@ -33,41 +33,42 @@ const Mentor = () => {
   }, [activeDepartment, searchTerm]);
 
   return (
-    <main className="min-h-screen bg-amber-50 px-6 py-20 text-black lg:px-10">
+    <main className="min-h-screen bg-black px-6 py-50 text-amber-50 lg:px-10">
       <NavBar />
       <section className="mx-auto max-w-7xl">
         <div className="mx-auto mb-12 max-w-3xl text-center">
-          <p className="mb-4 text-sm font-bold uppercase tracking-[0.35em] text-black/60">
+          <p className="mb-4 text-sm font-bold uppercase tracking-[0.35em] text-amber-50/60">
             Mentors
           </p>
-          <h1 className="text-4xl font-black leading-tight lg:text-6xl">
-            Meet the mentors guiding ResFes 2026
+          <h1 className="text-4xl font-black leading-tight text-amber-50 lg:text-6xl">
+            Meet the mentors guiding SRC 2026
           </h1>
-          <p className="mt-6 text-base leading-7 text-black/70 lg:text-lg">
+          <p className="mt-6 text-base leading-7 text-amber-50/75 lg:text-lg">
             A multidisciplinary mentoring team of {mentors.length} experts
             supporting research, creativity, and presentation quality across
             every field in the competition.
           </p>
         </div>
 
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 space-y-4 text-amber-50">
           <div className="filter mx-auto flex max-w-7xl flex-wrap justify-center gap-2">
             {departments.map((department) => (
               <button
                 key={department}
                 type="button"
                 onClick={() => setActiveDepartment(department)}
-                className={`btn btn-sm rounded-full ${activeDepartment === department
-                    ? "btn-neutral text-white"
-                    : "btn-outline"
-                  }`}
+                className={`btn btn-sm rounded-full border ${
+                  activeDepartment === department
+                    ? "border-white bg-white text-black hover:bg-white/90"
+                    : "border-white bg-transparent text-white hover:bg-white hover:text-black"
+                }`}
               >
                 {department}
               </button>
             ))}
           </div>
 
-          <p className="text-sm text-black/70">
+          <p className="text-sm text-amber-50/70">
             Showing {filteredMentors.length} of {mentors.length} mentors
           </p>
         </div>
@@ -79,7 +80,7 @@ const Mentor = () => {
         />
 
         {filteredMentors.length === 0 && (
-          <div className="mt-8 rounded-2xl border border-black/10 bg-white p-6 text-center text-black/70">
+          <div className="mt-8 rounded-2xl border border-amber-50/20 bg-zinc-900 p-6 text-center text-amber-50/70">
             No mentors matched your search or filter.
           </div>
         )}

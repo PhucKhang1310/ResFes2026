@@ -11,7 +11,8 @@ const Regulations = () => {
           </h2>
           <div className="mt-3 font-thin text-sm text-black/70 lg:text-base">
             <p className="divider divider-neutral">
-              Key rules and submission requirements for ResFes 2026.
+              Official rules and submission requirements for SRC 2026 (FPTU
+              HCMC).
             </p>
           </div>
         </div>
@@ -20,22 +21,26 @@ const Regulations = () => {
           <div className="collapse collapse-arrow join-item border-b border-black/10 rounded-t-2xl">
             <input type="radio" name="regulations-accordion" defaultChecked />
             <div className="collapse-title text-xl font-bold">
-              1. Team Composition &amp; Eligibility
+              1. Eligible Participants
             </div>
             <div className="collapse-content text-sm leading-7 text-black/80">
               <ul className="list-disc pl-5 space-y-2">
                 <li>
-                  Each team has <strong>no more than three (03) members</strong>
-                  , including the team leader (individual performance is also
-                  accepted).
+                  Students from all majors at{" "}
+                  <strong>FPT University HCMC</strong> are eligible.
                 </li>
                 <li>
-                  Team members might be from the same or different
-                  disciplines/departments.
-                </li>
-                <li>
-                  Each member can only register for{" "}
-                  <strong>one (01) research team</strong> only.
+                  The competition includes 5 sub-committees:
+                  <ul className="mt-2 list-disc pl-5 space-y-1">
+                    <li>
+                      Information Technology, Semiconductor IC and Digital
+                      Automotive
+                    </li>
+                    <li>Graphic Design &amp; Multimedia Communication</li>
+                    <li>Economics &amp; Business Administration</li>
+                    <li>English Language</li>
+                    <li>Japanese Language</li>
+                  </ul>
                 </li>
               </ul>
             </div>
@@ -44,167 +49,104 @@ const Regulations = () => {
           <div className="collapse collapse-arrow join-item border-b border-black/10">
             <input type="radio" name="regulations-accordion" />
             <div className="collapse-title text-xl font-bold">
-              2. Submission Requirements
+              2. General Rules
             </div>
             <div className="collapse-content text-sm leading-7 text-black/80">
               <ul className="list-disc pl-5 space-y-2">
                 <li>
-                  Each research topic can be registered under{" "}
-                  <strong>only one sub-committee</strong>. The Board of
-                  Reviewers will check for similarity and eligibility of all
-                  submissions.
+                  Teams can register as{" "}
+                  <strong>individuals or groups (max 3 members/group)</strong>.
                 </li>
                 <li>
-                  The official language for both{" "}
-                  <strong>oral and written presentations</strong> is{" "}
-                  <strong>English</strong>.
+                  Each student can join up to <strong>2 research topics</strong>
+                  .
                 </li>
                 <li>
-                  All submitted papers must follow the{" "}
-                  <strong>ResFes 2026 mandatory format</strong>. Submissions
-                  that do not meet the requirements will be{" "}
-                  <strong>disqualified</strong>.
+                  Each topic can only join <strong>one sub-committee</strong>.
                 </li>
                 <li>
-                  Presentation slides can follow a{" "}
-                  <strong>free-style format</strong>.
-                </li>
-                <li>Turnitin similarity must not exceed 25%</li>
-                <li>
-                  Research teams must check their plagiarism on Turnitin before
-                  submission (if possible)
+                  Topics that previously won awards at SRC or other FPTU HCMC
+                  scientific research competitions are{" "}
+                  <strong>not accepted</strong>.
                 </li>
                 <li>
-                  Teams whose similarity index exceeds 25% will be disqualified
-                  for the Preliminary Round or The Finale.
+                  There is normally <strong>no preliminary round</strong>; teams
+                  that submit full papers on time can present directly at the
+                  Final Round.
+                </li>
+                <li>
+                  A preliminary screening round may be organized for any
+                  sub-committee with{" "}
+                  <strong>more than 25 registered topics</strong>.
+                </li>
+                <li>
+                  Evaluation councils and rankings are established only for
+                  sub-committees with <strong>at least 6 topics</strong>.
+                </li>
+                <li>
+                  If a sub-committee has 4-5 topics, one council may still be
+                  formed but only <strong>one award</strong> will be granted.
+                </li>
+                <li>
+                  Teams must present at the Final Round and attend the closing
+                  ceremony where results are announced.
                 </li>
               </ul>
-            </div>
-          </div>
-
-          <div className="collapse collapse-arrow join-item border-b border-black/10">
-            <input type="radio" name="regulations-accordion" />
-            <div className="collapse-title text-xl font-bold">
-              3. Competition Rounds
-            </div>
-            <div className="collapse-content text-sm leading-7 text-black/80">
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-base font-bold text-black">
-                    Round 1: Preliminary Round (Online Mode)
-                  </h4>
-                  <ul className="mt-3 list-disc pl-5 space-y-2">
-                    <li>
-                      Each team must submit their Proposal via the registration
-                      link
-                    </li>
-                    <li>
-                      For the Proposal Template, please access the provided{" "}
-                      <a
-                        href="https://docs.google.com/document/d/1ZotIDMEigdV3vwdZ6xt8UvOqfnJ1x3KF/edit?usp=sharing&ouid=113520801588464821299&rtpof=true&sd=truee"
-                        target="_blank"
-                        className="link link-primary"
-                      >
-                        Template
-                      </a>
-                      .
-                    </li>
-                    <li>
-                      All research teams must comply with and sign in the
-                      commitment on responsible usage of AI in their Proposal.
-                    </li>
-                    <li>
-                      Research proposal format:
-                      <ul className="mt-2 list-disc pl-5 space-y-1">
-                        <li>Language: English</li>
-                        <li>Paper size: A4</li>
-                        <li>Layout: Single column</li>
-                        <li>Font: Times New Roman, size 11</li>
-                        <li>
-                          Maximum length: 10 pages (excluding references and
-                          appendices)
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      For citations and references, please refer to:
-                      <ul className="mt-2 list-disc pl-5 space-y-1">
-                        <li>
-                          IEEE style should be applied for Information
-                          Technology. For more details, please visit{" "}
-                          <a
-                            href="https://owl.purdue.edu/owl/research_and_citation/ieee_style/index.html"
-                            target="_blank"
-                            className="link link-primary"
-                          >
-                            IEEE Style Guidelines
-                          </a>
-                          .
-                        </li>
-                        <li>
-                          APA style should be applied for Business
-                          Administration, Linguistics, Multimedia Communication,
-                          and Digital Arts &amp; Design. For more details,
-                          please visit{" "}
-                          <a
-                            href="https://owl.purdue.edu/owl/research_and_citation/apa_style/index.html"
-                            target="_blank"
-                            className="link link-primary"
-                          >
-                            APA Style Guidelines
-                          </a>
-                          .
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      Research teams with the highest scores in each
-                      sub-committee will advance to the Finale.
-                    </li>
-                    <li>
-                      Presentation time per team: 20 minutes
-                      <ul className="mt-2 list-disc pl-5 space-y-1">
-                        <li>10-minute presentation</li>
-                        <li>10-minute Q&amp;A</li>
-                      </ul>
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-base font-bold text-black">
-                    Round 2: The Finale (On-Site at FPT University, Can Tho
-                    Campus, Vietnam)
-                  </h4>
-                  <ul className="mt-3 list-disc pl-5 space-y-2">
-                    <li>
-                      Finalist teams must prepare and submit:
-                      <ul className="mt-2 list-disc pl-5 space-y-1">
-                        <li>Full research paper</li>
-                        <li>Presentation slides (mandatory)</li>
-                        <li>Other visual aids (optional)</li>
-                      </ul>
-                    </li>
-                    <li>
-                      Presentation time per team: 30 minutes
-                      <ul className="mt-2 list-disc pl-5 space-y-1">
-                        <li>10-minute presentation</li>
-                        <li>20-minute Q&amp;A</li>
-                      </ul>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
 
           <div className="collapse collapse-arrow join-item border-b border-black/10 rounded-b-2xl">
             <input type="radio" name="regulations-accordion" />
             <div className="collapse-title text-xl font-bold">
-              4. Full Paper Submission Guidelines
+              3. Submission Requirements
             </div>
             <div className="collapse-content text-sm leading-7 text-black/80">
-              <span className="block text-black/70">To be updated soon</span>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  Teams submit a <strong>full research paper</strong>.
+                </li>
+                <li>
+                  Use IEEE/IEEE Word template, single-column format, maximum 10
+                  A4 pages (excluding References and Appendices).
+                </li>
+                <li>
+                  Citation style:
+                  <ul className="mt-2 list-disc pl-5 space-y-1">
+                    <li>
+                      IEEE for Information Technology:{" "}
+                      <a
+                        href="https://libguides.murdoch.edu.au/IEEE/home"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link link-primary"
+                      >
+                        Reference
+                      </a>
+                    </li>
+                    <li>
+                      APA for Economics, Languages, Multimedia Communication and
+                      Digital Art/Design:{" "}
+                      <a
+                        href="https://libguides.murdoch.edu.au/APA/all"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link link-primary"
+                      >
+                        Reference
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li>Prepare presentation slides for the Final Round.</li>
+                <li>
+                  Presentation language (written and oral): English, or Japanese
+                  for the Japanese Language sub-committee.
+                </li>
+                <li>
+                  Full paper writing instructions: available in the official
+                  guideline ("Xem tai day").
+                </li>
+              </ul>
             </div>
           </div>
         </div>

@@ -145,24 +145,6 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            {/* <div className="lg:flex lg:flex-1 fade-in">
-              <div className="h-64 w-full max-w-md rounded-3xl border-2
-              border-orange-300/80 bg-orange-100/40 lg:h-[26rem] relative overflow-hidden">
-                <div>
-                  {!isMobile &&
-                    <div>
-                      <img
-                        src={resfesMentor}
-                        alt="Mentor photo"
-                        aria-hidden="true"
-                        className="pointer-events-none absolute object-cover max-w-none"
-                        style={{
-                        }}
-                      />
-                    </div>}
-                </div>
-              </div>
-            </div> */}
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)] "
             />
             <img

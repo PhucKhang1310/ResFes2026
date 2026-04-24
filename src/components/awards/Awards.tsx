@@ -1,86 +1,321 @@
-import { FaMedal, FaTrophy } from "react-icons/fa6";
+import { useRef, useCallback } from "react";
+import { FaMedal, FaTrophy, FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useFadeIn } from "../../hook/useFadeIn";
+
+interface AwardTier {
+  label: string;
+  amount: string;
+  count: number;
+  icon: "trophy" | "medal";
+  color: string;
+}
+
+interface SubCommittee {
+  name: string;
+  nameVi: string;
+  color: string;
+  accentGradient: string;
+  borderColor: string;
+  standardAwards: AwardTier[];
+  smallAwards: AwardTier[];
+  expandedNote?: string;
+  expandedAwards?: AwardTier[];
+}
+
+const subCommittees: SubCommittee[] = [
+  {
+    name: "Information Technology, Semiconductor & Digital Automotive",
+    nameVi: "Công nghệ thông tin, Vi mạch bán dẫn và Ô tô số",
+    color: "from-blue-500 to-cyan-400",
+    accentGradient: "from-blue-500/20 to-cyan-400/10",
+    borderColor: "border-blue-400/30",
+    standardAwards: [
+      { label: "1st Prize", amount: "10,000,000 VND", count: 1, icon: "trophy", color: "text-yellow-300" },
+      { label: "2nd Prize", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-gray-300" },
+      { label: "3rd Prize", amount: "4,000,000 VND", count: 1, icon: "medal", color: "text-amber-600" },
+    ],
+    smallAwards: [
+      { label: "Khơi nguồn Tri thức", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-white" },
+    ],
+    expandedNote: "If 10+ final presentations, award structure expands:",
+    expandedAwards: [
+      { label: "1st Prize", amount: "10,000,000 VND", count: 1, icon: "trophy", color: "text-yellow-300" },
+      { label: "2nd Prize", amount: "6,000,000 VND", count: 2, icon: "medal", color: "text-gray-300" },
+      { label: "3rd Prize", amount: "4,000,000 VND", count: 2, icon: "medal", color: "text-amber-600" },
+    ],
+  },
+  {
+    name: "Graphic Design & Multimedia Communication",
+    nameVi: "Thiết kế đồ hoạ & Truyền thông đa phương tiện",
+    color: "from-pink-500 to-rose-400",
+    accentGradient: "from-pink-500/20 to-rose-400/10",
+    borderColor: "border-pink-400/30",
+    standardAwards: [
+      { label: "1st Prize", amount: "10,000,000 VND", count: 1, icon: "trophy", color: "text-yellow-300" },
+      { label: "2nd Prize", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-gray-300" },
+      { label: "3rd Prize", amount: "4,000,000 VND", count: 1, icon: "medal", color: "text-amber-600" },
+    ],
+    smallAwards: [
+      { label: "Khơi nguồn Tri thức", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-white" },
+    ],
+  },
+  {
+    name: "Economics & Business Administration",
+    nameVi: "Kinh tế & Quản trị kinh doanh",
+    color: "from-emerald-500 to-teal-400",
+    accentGradient: "from-emerald-500/20 to-teal-400/10",
+    borderColor: "border-emerald-400/30",
+    standardAwards: [
+      { label: "1st Prize", amount: "10,000,000 VND", count: 1, icon: "trophy", color: "text-yellow-300" },
+      { label: "2nd Prize", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-gray-300" },
+      { label: "3rd Prize", amount: "4,000,000 VND", count: 1, icon: "medal", color: "text-amber-600" },
+    ],
+    smallAwards: [
+      { label: "Khơi nguồn Tri thức", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-white" },
+    ],
+  },
+  {
+    name: "English Language",
+    nameVi: "Ngôn ngữ Anh",
+    color: "from-violet-500 to-purple-400",
+    accentGradient: "from-violet-500/20 to-purple-400/10",
+    borderColor: "border-violet-400/30",
+    standardAwards: [
+      { label: "1st Prize", amount: "10,000,000 VND", count: 1, icon: "trophy", color: "text-yellow-300" },
+      { label: "2nd Prize", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-gray-300" },
+      { label: "3rd Prize", amount: "4,000,000 VND", count: 1, icon: "medal", color: "text-amber-600" },
+    ],
+    smallAwards: [
+      { label: "Khơi nguồn Tri thức", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-white" },
+    ],
+  },
+  {
+    name: "Japanese Language",
+    nameVi: "Ngôn ngữ Nhật",
+    color: "from-red-500 to-orange-400",
+    accentGradient: "from-red-500/20 to-orange-400/10",
+    borderColor: "border-red-400/30",
+    standardAwards: [
+      { label: "1st Prize", amount: "10,000,000 VND", count: 1, icon: "trophy", color: "text-yellow-300" },
+      { label: "2nd Prize", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-gray-300" },
+      { label: "3rd Prize", amount: "4,000,000 VND", count: 1, icon: "medal", color: "text-amber-600" },
+    ],
+    smallAwards: [
+      { label: "Khơi nguồn Tri thức", amount: "6,000,000 VND", count: 1, icon: "medal", color: "text-white" },
+    ],
+  },
+];
+
+const AwardCard = ({ award }: { award: AwardTier }) => (
+  <div className="flex flex-col items-center gap-1 rounded-xl bg-white/5 backdrop-blur-sm px-4 py-4 border border-white/10 transition-all duration-300 hover:bg-white/10 hover:scale-105">
+    {award.icon === "trophy" ? (
+      <FaTrophy className={`text-2xl sm:text-3xl ${award.color} drop-shadow-lg`} />
+    ) : (
+      <FaMedal className={`text-2xl sm:text-3xl ${award.color} drop-shadow-lg`} />
+    )}
+    <p className={`text-sm sm:text-base font-bold ${award.color}`}>
+      {award.count > 1 ? `${award.count}x ` : ""}
+      {award.label}
+    </p>
+    <p className="text-xs sm:text-sm font-semibold text-white/80">{award.amount}</p>
+  </div>
+);
+
+const AwardSlide = ({ sc }: { sc: SubCommittee }) => (
+  <div
+    className={`rounded-box backdrop-blur-xl p-6 sm:p-8 md:p-10 w-[85vw] max-w-3xl`}
+  >
+    <div className="text-center mb-8">
+      <div
+        className={`inline-block bg-gradient-to-r ${sc.color} bg-clip-text text-transparent text-lg sm:text-xl md:text-2xl font-extrabold tracking-wide`}
+      >
+        {sc.name}
+      </div>
+      <p className="text-white/40 text-xs sm:text-sm mt-1 italic">
+        {sc.nameVi}
+      </p>
+    </div>
+
+    <div className="mb-6">
+      <p className="text-center text-xs sm:text-sm text-yellow-300/80 font-semibold mb-4 tracking-wide uppercase">
+        ★ 6+ topics at the Final Round ★
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-xl mx-auto">
+        {sc.standardAwards.map((award, i) => (
+          <AwardCard key={`std-${i}`} award={award} />
+        ))}
+      </div>
+    </div>
+
+    <div className="mb-4">
+      <p className="text-center text-xs sm:text-sm text-white/50 font-semibold mb-3 tracking-wide uppercase">
+        4–5 topics at the Final Round
+      </p>
+      <div className="flex justify-center">
+        <div className="max-w-[200px] w-full">
+          {sc.smallAwards.map((award, i) => (
+            <AwardCard key={`small-${i}`} award={award} />
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {sc.expandedNote && sc.expandedAwards && (
+      <div
+        className={`mt-6 rounded-xl border ${sc.borderColor} bg-white/5 backdrop-blur-sm p-4 sm:p-5`}
+      >
+        <p className="text-amber-200 text-xs sm:text-sm font-semibold mb-3 text-center">
+          ⚡ {sc.expandedNote}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
+          {sc.expandedAwards.map((award, i) => (
+            <AwardCard key={`exp-${i}`} award={award} />
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+);
+
+// Triple the items: [clone set] [real set] [clone set] for seamless infinite loop
+const loopedItems = [...subCommittees, ...subCommittees, ...subCommittees];
+const REAL_COUNT = subCommittees.length;
+const REAL_START = REAL_COUNT; // real items start at index 5 (middle set)
+
+function scrollToChild(el: HTMLDivElement, childIdx: number, behavior: ScrollBehavior = "instant") {
+  const child = el.children[childIdx] as HTMLElement;
+  if (!child) return;
+  el.scrollTo({
+    left: child.offsetLeft - (el.offsetWidth - child.offsetWidth) / 2,
+    behavior,
+  });
+}
+
 const Awards = () => {
   const { inView, ref } = useFadeIn(0.15, 80);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const isResetting = useRef(false);
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasInitialized = useRef(false);
+
+  // Position to first real item (middle set, index REAL_START)
+  const initRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node || hasInitialized.current) return;
+    carouselRef.current = node;
+    hasInitialized.current = true;
+    requestAnimationFrame(() => scrollToChild(node, REAL_START));
+  }, []);
+
+  const getClosestIdx = useCallback((el: HTMLDivElement) => {
+    const centerX = el.scrollLeft + el.offsetWidth / 2;
+    const children = Array.from(el.children) as HTMLElement[];
+
+    let closestIdx = 0;
+    let closestDist = Infinity;
+    children.forEach((child, i) => {
+      const dist = Math.abs(child.offsetLeft + child.offsetWidth / 2 - centerX);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIdx = i;
+      }
+    });
+    return closestIdx;
+  }, []);
+
+  // When scrolling stops, if we're in a clone set, jump to the equivalent real item
+  const handleScrollEnd = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isResetting.current) return;
+
+    const closestIdx = getClosestIdx(el);
+
+    // If in the first clone set (0..REAL_COUNT-1), jump to the real set
+    if (closestIdx < REAL_START) {
+      isResetting.current = true;
+      scrollToChild(el, closestIdx + REAL_COUNT);
+      requestAnimationFrame(() => { isResetting.current = false; });
+    }
+    // If in the last clone set (REAL_START+REAL_COUNT .. end), jump to the real set
+    else if (closestIdx >= REAL_START + REAL_COUNT) {
+      isResetting.current = true;
+      scrollToChild(el, closestIdx - REAL_COUNT);
+      requestAnimationFrame(() => { isResetting.current = false; });
+    }
+  }, [getClosestIdx]);
+
+  const handlePrev = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isResetting.current) return;
+    const currentIdx = getClosestIdx(el);
+    scrollToChild(el, Math.max(0, currentIdx - 1), "smooth");
+  }, [getClosestIdx]);
+
+  const handleNext = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isResetting.current) return;
+    const currentIdx = getClosestIdx(el);
+    scrollToChild(el, Math.min(el.children.length - 1, currentIdx + 1), "smooth");
+  }, [getClosestIdx]);
+
+  const onScroll = useCallback(() => {
+    if (scrollTimer.current) clearTimeout(scrollTimer.current);
+    scrollTimer.current = setTimeout(handleScrollEnd, 100);
+  }, [handleScrollEnd]);
 
   return (
     <section
       id="awards"
       ref={ref}
-      className={`bg-black px-6 py-20 lg:px-10 pt-30 scroll-mt-24`}
+      className="bg-black py-20 pt-30 scroll-mt-24"
     >
       <div
-        className={`mx-auto w-full max-w-6xl ${inView ? "fade-in" : "opacity-0"
-          }`}
+        className={`mx-auto w-full ${
+          inView ? "fade-in" : "opacity-0"
+        }`}
       >
-        <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15!">
+        <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15! max-w-6xl mx-auto px-6">
           AWARDS
         </div>
-        <div className="mx-auto mt-30 grid w-full max-w-5xl grid-cols-2 items-end gap-4 md:grid-cols-4 md:gap-5">
-          <div className="flex flex-col items-center">
-            <div className="mb-3 text-center text-sm font-semibold text-white sm:text-base">
-              First Runner-up
-            </div>
-            <div className="flex h-45 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 text-white px-3 py-5">
-              <div className="text-center">
-                <FaMedal className="mx-auto mb-2 text-3xl text-white" />
-                <p className="text-4xl font-bold text-white">2</p>
-              </div>
-              <p className="text-center text-base font-bold">15 million VND*</p>
-            </div>
-          </div>
 
-          <div className="order-first md:order-0 flex flex-col items-center">
-            <div className="mb-3 text-center text-base font-bold sm:text-lg text-yellow-300">
-              The Champion
-            </div>
-            <div className="flex h-65 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 bg-linear-to-b text-white px-3 py-5">
-              <div className="text-center">
-                <FaTrophy className="mx-auto mb-3 text-4xl text-yellow-300" />
-                <p className="text-5xl font-extrabold text-yellow-300">1</p>
-              </div>
-              <p className="text-center text-lg font-extrabold text-white">
-                20 million VND*
-              </p>
-            </div>
-          </div>
+        {/* DaisyUI Carousel - center snap, 30px bleed, infinite loop */}
+        <div className="relative mx-auto mt-12 w-[calc(85vw+60px)] max-w-[828px]">
+          {/* Navigation Arrows */}
+          <button
+            onClick={handlePrev}
+            aria-label="Previous sub-committee"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-6 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 cursor-pointer hover:scale-110 shadow-lg"
+          >
+            <FaChevronLeft className="text-sm sm:text-base mr-1" />
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next sub-committee"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-6 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 cursor-pointer hover:scale-110 shadow-lg"
+          >
+            <FaChevronRight className="text-sm sm:text-base ml-1" />
+          </button>
 
-          <div className="flex flex-col items-center">
-            <div className="mb-3 text-center text-sm font-semibold text-amber-500 sm:text-base">
-              Second Runner-up
-            </div>
-            <div className="flex h-37.5 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 text-white px-3 py-5">
-              <div className="text-center">
-                <FaMedal className="mx-auto mb-2 text-3xl text-amber-500" />
-                <p className="text-4xl font-bold text-amber-500">3</p>
+          <div
+            ref={initRef}
+            onScroll={onScroll}
+            className="carousel carousel-center rounded-box w-full items-center space-x-4 p-4"
+          >
+            {loopedItems.map((sc, i) => (
+              <div className="carousel-item" key={i}>
+                <AwardSlide sc={sc} />
               </div>
-              <p className="text-center text-base font-bold text-white">
-                10 million VND*
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <div className="mb-3 text-center text-sm font-semibold text-purple-500 sm:text-base">
-              Consolation Prize
-            </div>
-            <div className="flex h-30 w-full flex-col items-center justify-between rounded-t-2xl bg-zinc-900 text-white px-3 py-4">
-              <div className="text-center">
-                <FaMedal className="mx-auto mb-1 text-2xl text-purple-500" />
-                <p className="text-3xl font-bold text-purple-500">4</p>
-              </div>
-              <p className="text-center text-sm font-bold text-white sm:text-base">
-                3 million VND*
-              </p>
-            </div>
+            ))}
           </div>
         </div>
+
+        {/* Important note */}
+        <p className="italic text-sm font-thin text-white/35 justify-self-center mt-10 max-w-5xl text-center mx-auto px-6">
+          Important: Teams that submit papers on time must present at the Final
+          Round and attend the full program, especially the closing ceremony.
+          Absence may affect award structure and can lead to cancellation of the
+          team's result.
+        </p>
       </div>
-      <p className="italic text-sm font-thin text-white/35 justify-self-center mt-10">
-        *Notice: Teams are subject to a specific amount of tax that adheres to
-        the Vietnam's Law on Personal Income Tax if win one of the
-        aforementioned prizes.
-      </p>
     </section>
   );
 };

@@ -1,6 +1,5 @@
 import {
   FaChartLine,
-  FaFilm,
   FaLanguage,
   FaLaptopCode,
   FaPalette,
@@ -18,57 +17,32 @@ const ResearchAccordion = ({
   const fields = [
     {
       icon: FaLaptopCode,
-      title: "Information Technology",
+      title: "Information Technology, Semiconductor IC and Digital Automotive",
       items: [
-        "Automotive Technology",
-        "Artificial Intelligence",
-        "Software Engineering",
-        "Information System",
-        "Information Assurance",
-        "Applied Data Science",
-        "IC Design",
-        "Other related fields",
+        "Information Technology",
+        "Semiconductor IC",
+        "Digital Automotive",
       ],
     },
     {
       icon: FaPalette,
-      title: "Digital Art and Design",
-      items: [
-        "Digital Art and Design",
-        "Graphic Design",
-        "Other related fields",
-      ],
-    },
-    {
-      icon: FaFilm,
-      title: "Communication Technology",
-      items: [
-        "Multimedia Communication",
-        "Public Relations",
-        "Integrated Marketing Communication",
-        "Brand Communication",
-        "Other related fields",
-      ],
+      title: "Graphic Design and Multimedia Communication",
+      items: ["Graphic Design", "Multimedia Communication"],
     },
     {
       icon: FaChartLine,
-      title: "Business Administration",
-      items: [
-        "Marketing",
-        "International Business",
-        "Business Administration",
-        "Business Analytics",
-        "Logistics & Global Supply Chain Management",
-        "Fin-Tech",
-        "Law",
-        "Eco-Law",
-        "Other related fields",
-      ],
+      title: "Economics and Business Administration",
+      items: ["Economics", "Business Administration"],
     },
     {
       icon: FaLanguage,
-      title: "Linguistics",
-      items: ["English", "Korean", "Chinese", "Other related fields"],
+      title: "English Language",
+      items: ["English Language Studies and research topics"],
+    },
+    {
+      icon: FaLanguage,
+      title: "Japanese Language",
+      items: ["Japanese Language Studies and research topics"],
     },
   ];
 

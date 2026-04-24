@@ -8,44 +8,24 @@ type Milestone = {
 const milestones: Milestone[] = [
   {
     id: 1,
-    date: "March 16 - 5:00 PM, April 16",
-    title: "Registration and Proposal submission",
+    date: "26.01.2026 - 20.02.2026",
+    title: "Competition registration period",
     detail: "START",
   },
   {
     id: 2,
-    date: "April 16",
-    title: "Preliminary round's Workshops",
+    date: "01.03.2026",
+    title: "Workshop: Scientific research methodology",
   },
   {
     id: 3,
-    date: "April 23",
-    title: "Announcement on Preliminary Round Candidates",
+    date: "10.03.2026 - 05.04.2026",
+    title: "Full research paper submission",
   },
   {
     id: 4,
-    date: "May 09 & 10",
-    title: "Preliminary Round",
-  },
-  {
-    id: 5,
-    date: "May 19",
-    title: "Preliminary Round result announcement",
-  },
-  {
-    id: 6,
-    date: "5:00 PM, July 19",
-    title: "Full paper submission",
-  },
-  {
-    id: 7,
-    date: "July 22",
-    title: "Announcement on The Finale Candidates",
-  },
-  {
-    id: 8,
-    date: "August 15",
-    title: "The Finale",
+    date: "19.04.2026",
+    title: "Final Round",
   },
 ];
 
@@ -67,6 +47,25 @@ const CheckIcon = () => (
 const Milestones = () => {
   return (
     <>
+      <style>
+        {`
+          @keyframes firstTimelineBlink {
+            0%,
+            100% {
+              opacity: 1;
+              box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+            }
+            50% {
+              opacity: 0.32;
+              box-shadow: 0 0 18px rgba(255, 255, 255, 0.28);
+            }
+          }
+
+          .first-timeline-box-blink {
+            animation: firstTimelineBlink 1.5s ease-in-out infinite;
+          }
+        `}
+      </style>
       <section
         id="milestones"
         className="bg-black px-6 py-16 text-white lg:px-10 scroll-mt-24"
@@ -91,7 +90,11 @@ const Milestones = () => {
                 {index !== 0 && <hr className="bg-amber-50/40" />}
 
                 {index % 2 === 0 ? (
-                  <div className="timeline-start timeline-box border-white/25 bg-black text-right">
+                  <div
+                    className={`timeline-start timeline-box border-white/25 bg-black text-right ${
+                      index === 0 ? "first-timeline-box-blink" : ""
+                    }`}
+                  >
                     {item.detail ? (
                       <span className="badge badge-outline badge-xs mb-2 border-white text-white">
                         {item.detail}
@@ -134,8 +137,8 @@ const Milestones = () => {
           </ul>
 
           <p className="mt-8 text-center text-sm italic font-thin opacity-40">
-            Acknowledged. All future time-related milestones and event schedules
-            will be provided using the GMT+7 (Indochina Time) offset.
+            All dates are announced according to the official SRC 2026 schedule
+            from FPT University HCMC.
           </p>
         </div>
       </section>

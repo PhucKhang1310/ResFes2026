@@ -17,7 +17,7 @@ const Footer = () => {
           <div className=" font-bold text-2xl">
             Think bigger
             <p className="font-thin"> Build Smarter</p>
-            <p className="text-4xl mt-3 font-medium">Join ResFes</p>
+            <p className="text-4xl mt-3 font-medium">Join SRC</p>
             <br />
             <div className={`flex ${isMobile ? "flex-col" : ""} gap-5`}>
               <a
@@ -52,11 +52,11 @@ const Footer = () => {
               <span>Follow us on Facebook</span>
             </a>
             <a
-              href="mailto:resfes@fe.edu.vn"
+              href="mailto:src@fe.edu.vn"
               className="flex items-center gap-3 transition hover:text-orange-500"
             >
               <FaEnvelope className="text-lg" />
-              <span>resfes@fe.edu.vn</span>
+              <span>src@fe.edu.vn</span>
             </a>
             <a
               href="tel:+842465549806"
@@ -72,7 +72,7 @@ const Footer = () => {
         <div className="divider w-2/3" />
       </div>
       <p className="font-thin opacity-40 text-sm pb-1">
-        © 2026 Research Festival
+        © 2026 Student Research Competition
       </p>
       <p className="font-thin opacity-40 text-sm pb-20">All rights reserved</p>
     </div>

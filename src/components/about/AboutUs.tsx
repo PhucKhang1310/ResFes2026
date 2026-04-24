@@ -27,13 +27,15 @@ const AboutUs = () => {
     const itemWidth = carousel.scrollWidth / images.length;
     const activeIdx = Math.round(carousel.scrollLeft / itemWidth);
     setActiveIndex(Math.min(activeIdx, images.length - 1));
-  }
+  };
 
   const renderCarousel = () => {
     if (isMobile) {
       return (
         <div className="flex flex-col w-3/4 mt-20 items-center">
-          <div className={`flex flex-col flex-1 gap-4 items-center justify-start`}>
+          <div
+            className={`flex flex-col flex-1 gap-4 items-center justify-start`}
+          >
             <div
               className="carousel carousel-horizontal rounded-box h-[90vh]"
               onScroll={handleCarouselScrollHorizontal}
@@ -55,10 +57,11 @@ const AboutUs = () => {
               {images.map((_, index) => (
                 <div
                   key={index}
-                  className={`w-6 h-1 rounded transition-all ${index === activeIndex
-                    ? "bg-gray-800 opacity-100"
-                    : "bg-gray-300 opacity-50"
-                    }`}
+                  className={`w-6 h-1 rounded transition-all ${
+                    index === activeIndex
+                      ? "bg-gray-800 opacity-100"
+                      : "bg-gray-300 opacity-50"
+                  }`}
                 />
               ))}
             </div>
@@ -71,39 +74,42 @@ const AboutUs = () => {
               <span className="font-semibold text-black">
                 Research-Based Learning (RBL)
               </span>{" "}
-              places students at the center of educational activity, shifting the
-              focus from teacher-centered delivery to student-driven inquiry.
-              Through active research practice, students strengthen core skills in
-              problem definition, data collection, analysis, and evidence-based
-              explanation.
+              places students at the center of educational activity, shifting
+              the focus from teacher-centered delivery to student-driven
+              inquiry. Through active research practice, students strengthen
+              core skills in problem definition, data collection, analysis, and
+              evidence-based explanation.
             </p>
             {!showMore ? (
               <div className="">
                 <p className="text-base leading-8 text-black/75">
                   At{" "}
                   <span className="font-semibold text-black">
-                    Research Festival 2026
+                    Student Research Competition 2026
                   </span>
-                  , students are encouraged to move from passive learners to active
-                  participants in the scientific journey. ResFes 2026 integrates RBL
-                  into major-specific curricula to cultivate practical, relevant
-                  capabilities for each field.
+                  , students are encouraged to move from passive learners to
+                  active participants in the scientific journey. SRC 2026
+                  integrates RBL into major-specific curricula to cultivate
+                  practical, relevant capabilities for each field.
                 </p>
                 <p className="text-base leading-8 text-black/75">
-                  We encourage research teams across majors and sub-committees to
-                  apply research-based learning in authentic contexts, equipping
-                  students with the mindset and skills needed to meet evolving
-                  industry demands.
+                  We encourage research teams across majors and sub-committees
+                  to apply research-based learning in authentic contexts,
+                  equipping students with the mindset and skills needed to meet
+                  evolving industry demands.
                 </p>
               </div>
             ) : (
               <div className="flex justify-center">
-                <FaChevronDown color="black" onClick={() => setShowMore(!showMore)} />
+                <FaChevronDown
+                  color="black"
+                  onClick={() => setShowMore(!showMore)}
+                />
               </div>
             )}
           </div>
-        </div >
-      )
+        </div>
+      );
     }
 
     return (
@@ -113,10 +119,11 @@ const AboutUs = () => {
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-6 rounded transition-all ${index === activeIndex
-                  ? "bg-gray-800 opacity-100"
-                  : "bg-gray-300 opacity-50"
-                  }`}
+                className={`w-1 h-6 rounded transition-all ${
+                  index === activeIndex
+                    ? "bg-gray-800 opacity-100"
+                    : "bg-gray-300 opacity-50"
+                }`}
               />
             ))}
           </div>
@@ -155,11 +162,11 @@ const AboutUs = () => {
           <p className="text-base leading-8 text-black/75">
             At{" "}
             <span className="font-semibold text-black">
-              Research Festival 2026
+              Student Research Competition 2026
             </span>
             , students are encouraged to move from passive learners to active
-            participants in the scientific journey. ResFes 2026 integrates RBL
-            into major-specific curricula to cultivate practical, relevant
+            participants in the scientific journey. SRC 2026 integrates RBL into
+            major-specific curricula to cultivate practical, relevant
             capabilities for each field.
           </p>
           <p className="text-base leading-8 text-black/75">
@@ -170,9 +177,8 @@ const AboutUs = () => {
           </p>
         </div>
       </div>
-    )
-  }
-
+    );
+  };
 
   return (
     <div
@@ -192,7 +198,7 @@ const AboutUs = () => {
             fill="#00000"
           />
         </svg>
-        ABOUT RESFES 2026
+        ABOUT SRC 2026
       </span>
 
       {renderCarousel()}

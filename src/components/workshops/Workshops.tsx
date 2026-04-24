@@ -4,7 +4,7 @@ const Workshops = () => {
   return (
     <section id="workshops" className="scroll-mt-24 px-6 py-20 lg:px-10">
       <div
-        className="relative mx-auto flex min-h-[70vh] max-w-7xl items-center overflow-hidden rounded-[2rem] border border-white/10 bg-black text-white shadow-2xl"
+        className="relative mx-auto flex min-h-[70vh] max-w-7xl items-center overflow-hidden rounded-4xl border border-white/10 bg-black text-white shadow-2xl"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.8)), url(${workshopImage})`,
           backgroundSize: "cover",
@@ -16,21 +16,33 @@ const Workshops = () => {
             Workshops
           </p>
           <h2 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Elevate Your Research Skills!
+            Scientific Research Guidance Workshops
           </h2>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-white/80 sm:text-lg">
-            Our workshops are designed to equip students with the essential
-            tools to build stronger research papers, sharpen methodology, and
-            present work that meets international standards.
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">
+            Registration link: available in official announcement ("Tai day").
           </p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <button className="btn border-0 bg-orange-500 px-8 text-white hover:bg-orange-500/90">
-              Join the Workshop
-            </button>
-            <button className="btn btn-outline border-white/50 bg-transparent px-8 text-white hover:bg-white hover:text-black">
-              View Agenda
-            </button>
+          <div className="mt-8 w-full rounded-2xl border border-white/20 bg-black/45 p-5 text-left text-sm leading-7 text-white/90">
+            <p className="font-bold text-orange-300">
+              1) Research Methodology Guidance - Engineering
+            </p>
+            <p>Speaker: Dr. Ta Hoang Thang</p>
+            <p>Time: 8:30 - 10:30, Sunday, 01.03.2026</p>
+            <p>Venue: Hall Academic, FPTU HCMC</p>
+
+            <p className="mt-4 font-bold text-orange-300">
+              2) Research Methodology Guidance - Economics and Social Sciences
+            </p>
+            <p>Speaker: Dr. Le Ha Van</p>
+            <p>Time: 8:30 - 10:30, Sunday, 01.03.2026</p>
+            <p>Venue: Hall Business, FPTU HCMC</p>
+
+            <p className="mt-4 font-bold text-orange-300">
+              3) Reporting with LaTeX/Overleaf
+            </p>
+            <p>Speaker: PhD Candidate Pham Minh Tri</p>
+            <p>Time: 10:30 - 12:00, Sunday, 01.03.2026</p>
+            <p>Venue: Hall Academic, FPTU HCMC</p>
           </div>
         </div>
 
