@@ -198,7 +198,7 @@ const AboutUs = () => {
             fill="#00000"
           />
         </svg>
-        ABOUT RESFES 2026
+        ABOUT SRC 2026
       </span>
 
       {renderCarousel()}

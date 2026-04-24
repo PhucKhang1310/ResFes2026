@@ -65,7 +65,7 @@ const ResearchFields = () => {
         </svg>
         RESEARCH FIELDS
       </span>
-      <div className="flex gap-10 mt-10 items-center">
+      <div className="flex gap-10 mt-10 items-center w-2/3">
         <ResearchAccordion
           activeField={activeField}
           onAccordionChange={handleAccordionChange}

@@ -1,32 +1,32 @@
 const listItem = [
   {
-    href: "/#about",
+    href: "/home#about",
     label: "About",
   },
   {
-    href: "/#research-fields",
+    href: "/home#research-fields",
     label: "Research Fields",
   },
   {
-    href: "/#awards",
+    href: "/home#awards",
     label: "Awards",
   },
   {
-    href: "/#regulations",
+    href: "/home#regulations",
     label: "Regulations",
   },
   {
-    href: "/#milestones",
+    href: "/home#milestones",
     label: "Milestones",
   },
   {
-    href: "/#workshops",
+    href: "/home#workshops",
     label: "Workshops",
   },
   {
     href: "/mentors",
-    label: "Mentors"
-  }
+    label: "Mentors",
+  },
 ];
 
 type MobileMenuProps = {
@@ -38,15 +38,17 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   return (
     <>
       <div
-        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-200 ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-          }`}
+        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-200 ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
         onClick={onClose}
         aria-hidden="true"
       />
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-dvh w-80 max-w-[85vw] bg-black text-white shadow-2xl transition-transform duration-200 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`fixed right-0 top-0 z-50 h-dvh w-80 max-w-[85vw] bg-black text-white shadow-2xl transition-transform duration-200 ease-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
         role="dialog"
         aria-modal="true"
       >
