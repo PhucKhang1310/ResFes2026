@@ -1,5 +1,5 @@
 import { FaEnvelope, FaFacebookF, FaPhone } from "react-icons/fa6";
-import logo from "../../assets/logo.png";
+import fptLogoFixed from '../../assets/fpt_logo-removebg-preview_cropped.png'
 import { useCheckMobile } from "../../hook/useCheckMobile";
 
 const Footer = () => {
@@ -9,14 +9,12 @@ const Footer = () => {
       id="footer"
       className="flex flex-col items-center bg-neutral scroll-mt-24"
     >
-      <footer
-        className={`${
-          isMobile ? "" : "w/2-3"
-        } footer sm:footer-horizontal bg-neutral text-neutral-content p-10`}
-      >
-        <aside>
-          <img src={logo} className="w-1/3" />
-          <div className="mt-3 font-bold text-2xl">
+      <footer className={`${isMobile ? "" : "w-4/5"} footer sm:footer-horizontal bg-neutral text-neutral-content p-10`}>
+        <aside className="flex flex-col justify-center">
+          <div className="">
+            <img src={fptLogoFixed} className="w-1/3 scale-110" />
+          </div>
+          <div className=" font-bold text-2xl">
             Think bigger
             <p className="font-thin"> Build Smarter</p>
             <p className="text-4xl mt-3 font-medium">Join SRC</p>
