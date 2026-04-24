@@ -114,7 +114,7 @@ const Milestones = () => {
           </ul>
 
           <p className="mt-8 text-center text-sm italic font-thin opacity-40">
-            All dates are announced according to the official ResFes 2026
+            All dates are announced according to the official SRC 2026
             schedule from FPT University HCMC.
           </p>
         </div>

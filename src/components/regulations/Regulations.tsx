@@ -11,7 +11,7 @@ const Regulations = () => {
           </h2>
           <div className="mt-3 font-thin text-sm text-black/70 lg:text-base">
             <p className="divider divider-neutral">
-              Official rules and submission requirements for ResFes 2026 (FPTU
+              Official rules and submission requirements for SRC 2026 (FPTU
               HCMC).
             </p>
           </div>
@@ -65,7 +65,7 @@ const Regulations = () => {
                   Each topic can only join <strong>one sub-committee</strong>.
                 </li>
                 <li>
-                  Topics that previously won awards at ResFes or other FPTU HCMC
+                  Topics that previously won awards at SRC or other FPTU HCMC
                   scientific research competitions are{" "}
                   <strong>not accepted</strong>.
                 </li>

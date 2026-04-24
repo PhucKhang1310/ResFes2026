@@ -85,7 +85,7 @@ const AboutUs = () => {
                     Research Festival 2026
                   </span>
                   , students are encouraged to move from passive learners to active
-                  participants in the scientific journey. ResFes 2026 integrates RBL
+                  participants in the scientific journey. SRC 2026 integrates RBL
                   into major-specific curricula to cultivate practical, relevant
                   capabilities for each field.
                 </p>
@@ -158,7 +158,7 @@ const AboutUs = () => {
               Research Festival 2026
             </span>
             , students are encouraged to move from passive learners to active
-            participants in the scientific journey. ResFes 2026 integrates RBL
+            participants in the scientific journey. SRC 2026 integrates RBL
             into major-specific curricula to cultivate practical, relevant
             capabilities for each field.
           </p>

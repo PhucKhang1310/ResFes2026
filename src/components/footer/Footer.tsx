@@ -15,7 +15,7 @@ const Footer = () => {
           <div className="mt-3 font-bold text-2xl">
             Think bigger
             <p className="font-thin"> Build Smarter</p>
-            <p className="text-4xl mt-3 font-medium">Join ResFes</p>
+            <p className="text-4xl mt-3 font-medium">Join SRC</p>
             <br />
             <div className={`flex ${isMobile ? "flex-col" : ""} gap-5`}>
               <a
