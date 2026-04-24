@@ -9,7 +9,7 @@ const Footer = () => {
       id="footer"
       className="flex flex-col items-center bg-neutral scroll-mt-24"
     >
-      <footer className={`${isMobile ? "" : "w/2-3"} footer sm:footer-horizontal bg-neutral text-neutral-content p-10`}>
+      <footer className={`${isMobile ? "" : "w-2/3"} footer sm:footer-horizontal bg-neutral text-neutral-content p-10`}>
         <aside>
           <img src={logo} className="w-1/3" />
           <div className="mt-3 font-bold text-2xl">
