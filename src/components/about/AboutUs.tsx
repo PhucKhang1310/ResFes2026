@@ -85,7 +85,7 @@ const AboutUs = () => {
                 <p className="text-base leading-8 text-black/75">
                   At{" "}
                   <span className="font-semibold text-black">
-                    Research Festival 2026
+                    Student Research Competition 2026
                   </span>
                   , students are encouraged to move from passive learners to
                   active participants in the scientific journey. SRC 2026
@@ -162,7 +162,7 @@ const AboutUs = () => {
           <p className="text-base leading-8 text-black/75">
             At{" "}
             <span className="font-semibold text-black">
-              Research Festival 2026
+              Student Research Competition 2026
             </span>
             , students are encouraged to move from passive learners to active
             participants in the scientific journey. SRC 2026 integrates RBL into

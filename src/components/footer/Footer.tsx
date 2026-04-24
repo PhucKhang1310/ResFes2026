@@ -74,7 +74,7 @@ const Footer = () => {
         <div className="divider w-2/3" />
       </div>
       <p className="font-thin opacity-40 text-sm pb-1">
-        © 2026 Research Festival
+        © 2026 Student Research Competition
       </p>
       <p className="font-thin opacity-40 text-sm pb-20">All rights reserved</p>
     </div>
