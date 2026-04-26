@@ -144,7 +144,7 @@ const Regulations = () => {
                 </li>
                 <li>
                   Full paper writing instructions: available in the official
-                  guideline ("Xem tai day").
+                  guideline.
                 </li>
               </ul>
             </div>

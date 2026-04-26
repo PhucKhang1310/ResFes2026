@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 interface NewsItem {
@@ -26,6 +27,7 @@ const newsData: NewsItem[] = [
 ]
 
 const News = () => {
+    const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
     const renderNewsItem = (newsArray: typeof newsData) => {
         return newsArray.map((newsItem) => (
@@ -38,7 +40,10 @@ const News = () => {
                         {new Date(newsItem.date).toLocaleDateString("vi-VN")}
                     </p>
                 </div>
-                <button className="bg-[#f27255] text-white px-4 py-2 rounded mt-4 hover:bg-[#e65c3b] transition-colors duration-300">
+                <button
+                    className="bg-[#f27255] text-white px-4 py-2 rounded mt-4 hover:bg-[#e65c3b] transition-colors duration-300 cursor-pointer"
+                    onClick={() => setSelectedNews(newsItem)}
+                >
                     Read more
                 </button>
             </article>
@@ -69,6 +74,46 @@ const News = () => {
                     View all news
                 </Link>
             </div>
+
+            {/* News Detail Overlay Modal */}
+            {selectedNews && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                    onClick={() => setSelectedNews(null)}
+                >
+                    <div
+                        className="relative max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8 max-h-[85vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Close button */}
+                        <button
+                            className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-lg"
+                            onClick={() => setSelectedNews(null)}
+                        >
+                            ✕
+                        </button>
+
+                        {/* Title */}
+                        <h3 className="text-xl sm:text-2xl font-bold text-[#f27255] pr-8 leading-snug">
+                            {selectedNews.title}
+                        </h3>
+
+                        {/* Meta info */}
+                        <div className="flex items-center gap-3 mt-3 text-sm text-gray-500">
+                            <span>{selectedNews.author}</span>
+                            <span>•</span>
+                            <span>{new Date(selectedNews.date).toLocaleDateString("vi-VN")}</span>
+                        </div>
+
+                        <div className="divider" />
+
+                        {/* Full content */}
+                        <div className="text-base text-gray-800 leading-relaxed whitespace-pre-line">
+                            {selectedNews.description}
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
 
     )

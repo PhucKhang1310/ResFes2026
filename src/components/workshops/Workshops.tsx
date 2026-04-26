@@ -19,7 +19,7 @@ const Workshops = () => {
             Scientific Research Guidance Workshops
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">
-            Registration link: available in official announcement ("Tai day").
+            Registration link: available in official announcement.
           </p>
 
           <div className="mt-8 w-full rounded-2xl border border-white/20 bg-black/45 p-5 text-left text-sm leading-7 text-white/90">
