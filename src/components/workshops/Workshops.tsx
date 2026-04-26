@@ -18,32 +18,54 @@ const Workshops = () => {
           <h2 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
             Scientific Research Guidance Workshops
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">
-            Registration link: available in official announcement.
-          </p>
+          <a
+            href="https://forms.gle/uDwrApEKfoRjaobb8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn mt-6 rounded-full border-0 bg-orange-600 px-8 text-base text-white hover:bg-orange-600/90"
+          >
+            Register for Workshop
+          </a>
 
-          <div className="mt-8 w-full rounded-2xl border border-white/20 bg-black/45 p-5 text-left text-sm leading-7 text-white/90">
-            <p className="font-bold text-orange-300">
-              1) Research Methodology Guidance - Engineering
-            </p>
-            <p>Speaker: Dr. Ta Hoang Thang</p>
-            <p>Time: 8:30 - 10:30, Sunday, 01.03.2026</p>
-            <p>Venue: Hall Academic, FPTU HCMC</p>
+          <ul className="list mt-8 w-full rounded-2xl bg-black/50 backdrop-blur-sm border border-white/15 text-start">
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide text-white">Upcoming workshops — Sunday, 01.03.2026</li>
 
-            <p className="mt-4 font-bold text-orange-300">
-              2) Research Methodology Guidance - Economics and Social Sciences
-            </p>
-            <p>Speaker: Dr. Le Ha Van</p>
-            <p>Time: 8:30 - 10:30, Sunday, 01.03.2026</p>
-            <p>Venue: Hall Business, FPTU HCMC</p>
+            <li className="list-row border-white/10">
 
-            <p className="mt-4 font-bold text-orange-300">
-              3) Reporting with LaTeX/Overleaf
-            </p>
-            <p>Speaker: PhD Candidate Pham Minh Tri</p>
-            <p>Time: 10:30 - 12:00, Sunday, 01.03.2026</p>
-            <p>Venue: Hall Academic, FPTU HCMC</p>
-          </div>
+              <div>
+                <div className="text-white font-semibold">Research Methodology — Engineering</div>
+                <div className="text-xs uppercase font-semibold opacity-60 text-white/70">Dr. Ta Hoang Thang</div>
+              </div>
+              <div className="flex flex-col items-end text-xs text-white/60">
+                <span>8:30 – 10:30</span>
+                <span className="text-orange-300">Hall Academic</span>
+              </div>
+            </li>
+
+            <li className="list-row border-white/10">
+
+              <div>
+                <div className="text-white font-semibold">Research Methodology — Economics & Social Sciences</div>
+                <div className="text-xs uppercase font-semibold opacity-60 text-white/70">Dr. Le Ha Van</div>
+              </div>
+              <div className="flex flex-col items-end text-xs text-white/60">
+                <span>8:30 – 10:30</span>
+                <span className="text-orange-300">Hall Business</span>
+              </div>
+            </li>
+
+            <li className="list-row border-white/10">
+
+              <div>
+                <div className="text-white font-semibold">Reporting with LaTeX/Overleaf</div>
+                <div className="text-xs uppercase font-semibold opacity-60 text-white/70">PhD Candidate Pham Minh Tri</div>
+              </div>
+              <div className="flex flex-col items-end text-xs text-white/60">
+                <span>10:30 – 12:00</span>
+                <span className="text-orange-300">Hall Academic</span>
+              </div>
+            </li>
+          </ul>
         </div>
 
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,153,0,0.15),transparent_40%),radial-gradient(circle_at_50%_70%,rgba(255,255,255,0.08),transparent_45%)]" />

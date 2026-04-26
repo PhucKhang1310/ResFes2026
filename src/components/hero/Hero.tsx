@@ -60,9 +60,10 @@ const Hero = () => {
             <div className="hero-content self-start p-0 text-neutral-content lg:justify-start">
               <div className="max-w-xl">
                 <div className="mb-3 text-5xl lg:text-7xl text-white">
-                  <h1 className="font-bold ">{renderFlickerText("RESEARCH")}</h1>
-                  <h1 className="font-thin">{renderFlickerText("FESTIVAL")}</h1>
-                  <h1 className="font-bold">{renderFlickerText("2026")}</h1>
+                  <h1 className="font-bold ">{renderFlickerText("STUDENT")}</h1>
+                  <h1 className="font-thin">{renderFlickerText("RESEARCH")}</h1>
+                  <h1 className="font-bold">{renderFlickerText("COMPETITION")}</h1>
+                  <h1 className="font-thin">{renderFlickerText("2026")}</h1>
                 </div>
                 <div className="text-rotate mb-3 font-semibold text-orange-400">
                   <span className="justify-items-start">
