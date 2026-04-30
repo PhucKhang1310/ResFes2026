@@ -49,7 +49,7 @@ const NavBar = () => {
           className={`${isAtTop ? "bg-transparent" : "bg-[#ff6a1f]"
             } border-b border-white/20 transition-colors duration-500`}
         >
-          <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
+          <div className="mx-auto w-full max-w-7xl px-6 py-4 lg:px-8">
             <div className="navbar text-black!">
               <div className="navbar-start flex items-center gap-6 ">
                 <a

@@ -127,7 +127,7 @@ const AwardSlide = ({ sc }: { sc: SubCommittee }) => (
   >
     <div className="text-center mb-8">
       <div
-        className={`inline-block bg-gradient-to-r ${sc.color} bg-clip-text text-transparent text-lg sm:text-xl md:text-2xl font-extrabold tracking-wide`}
+        className={`inline-block bg-linear-to-r ${sc.color} bg-clip-text text-transparent text-lg sm:text-xl md:text-2xl font-extrabold tracking-wide`}
       >
         {sc.name}
       </div>
@@ -152,7 +152,7 @@ const AwardSlide = ({ sc }: { sc: SubCommittee }) => (
         4–5 topics at the Final Round
       </p>
       <div className="flex justify-center">
-        <div className="max-w-[200px] w-full">
+        <div className="max-w-50 w-full">
           {sc.smallAwards.map((award, i) => (
             <AwardCard key={`small-${i}`} award={award} />
           ))}
@@ -269,16 +269,15 @@ const Awards = () => {
       className="bg-black py-20 pt-30 scroll-mt-24"
     >
       <div
-        className={`mx-auto w-full ${
-          inView ? "fade-in" : "opacity-0"
-        }`}
+        className={`mx-auto w-full ${inView ? "fade-in" : "opacity-0"
+          }`}
       >
         <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15! max-w-6xl mx-auto px-6">
           AWARDS
         </div>
 
         {/* DaisyUI Carousel - center snap, 30px bleed, infinite loop */}
-        <div className="relative mx-auto mt-12 w-[calc(85vw+60px)] max-w-[828px]">
+        <div className="relative mx-auto mt-12 w-[calc(85vw+60px)] max-w-207">
           {/* Navigation Arrows */}
           <button
             onClick={handlePrev}
