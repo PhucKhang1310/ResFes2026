@@ -24,6 +24,7 @@ const Pagination = ({
         totalCount,
         siblingCount,
         pageSize,
+
     });
 
     if (currentPage === 0 || (paginationRange && paginationRange?.length < 2)) {
