@@ -9,6 +9,7 @@ const useCheckMobile = () => {
         };
 
         checkMobile();
+        //adding resize event for debugging, but it is not necessary for the final version
         window.addEventListener("resize", checkMobile);
         return () => window.removeEventListener("resize", checkMobile);
     }, []);

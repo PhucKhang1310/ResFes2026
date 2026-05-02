@@ -10,8 +10,9 @@ const NewsDetail = () => {
     const { isMobile } = useCheckMobile();
 
     const { id } = useParams<{ id: string }>();
+
     const newsItem = newsData.find(item => item.id === Number(id));
-    if (!newsItem) return <p>News not found</p>;
+    const filteredNewsData = newsData.filter(item => item.id !== Number(id));
 
     const handleBack = () => {
         window.history.back();
@@ -24,46 +25,54 @@ const NewsDetail = () => {
                 <div>
                     <button
                         onClick={handleBack}
-                        className="text-md flex items-center gap-2 cursor-pointer">
+                        className="text-md flex items-center mt-2 ml-1 gap-2 cursor-pointer">
                         <FaArrowLeft size={16} />
                         Back
                     </button>
                 </div>
 
-                {isMobile && (
-                    <img
-                        src={fptLogo}
-                        alt="FPT Logo"
-                        className="mt-6 w-full max-h-105 object-cover rounded-lg"
-                    />
+                {newsItem ? (
+                    <>
+                        {isMobile && (
+                            <img
+                                src={fptLogo}
+                                alt="FPT Logo"
+                                className="mt-6 w-full max-h-105 object-cover rounded-lg"
+                            />
+                        )}
+
+                        <div className="mt-6">
+                            <h2
+                                className="text-3xl font-bold mb-4 text-[#f27255]"
+                            >
+                                {newsItem.title}
+                            </h2>
+
+                            {!isMobile && (
+                                <img
+                                    src={fptLogo}
+                                    alt="FPT Logo"
+                                    className="w-full max-h-105 object-cover rounded-lg"
+                                />
+                            )}
+
+                            <p className="mt-4 text-amber-50/90 leading-7">{newsItem.description}</p>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <h2 className="text-3xl font-bold text-[#f27255] mt-6">News not found</h2>
+                        <p className="mt-4 text-amber-50/90">Something went wrong.</p>
+                    </>
                 )}
-
-                <div className="mt-6">
-                    <h2
-                        className="text-3xl font-bold mb-4 text-[#f27255]"
-                    >
-                        {newsItem.title}
-
-                    </h2>
-
-                    {!isMobile && (
-                        <img
-                            src={fptLogo}
-                            alt="FPT Logo"
-                            className="w-full max-h-105 object-cover rounded-lg"
-                        />
-                    )}
-
-                    <p className="mt-4 text-amber-50/90 leading-7">{newsItem.description}</p>
-                </div>
             </section>
 
             <div className=" mx-auto ">
                 <h3 className="text-2xl font-bold mt-10">Related News</h3>
                 <div className=" mx-auto pb-20">
                     <div className="mt-6 grid grid-cols-12 gap-8">
-                        {newsData
-                            .filter(item => item.id !== newsItem.id)
+                        {filteredNewsData
+                            .filter(item => item.id !== Number(id))
                             .slice(0, 3)
                             .map((item) => (
                                 <Link

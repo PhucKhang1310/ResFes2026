@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import HeroGlow from "../../assets/home-hero01.png";
+import logoFptu from '../../assets/logo-fptu.png'
+import resfes2025 from '../../assets/2025-RES FES-VUÔNG-WHITE.png'
+import fptLogoFixed from "../../assets/fpt_logo-removebg-preview_cropped.png";
+
 
 const Hero = () => {
   const { isMobile } = useCheckMobile()
@@ -54,7 +58,6 @@ const Hero = () => {
         id="home"
         className="relative isolate min-h-screen overflow-hidden bg-black scroll-mt-24"
       >
-
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 pb-16 pt-28 lg:px-10 ">
           <div className="flex w-full flex-col lg:gap-90 lg:flex-row lg:items-center lg:justify-between">
             <div className="hero-content self-start p-0 text-neutral-content lg:justify-start">
@@ -157,27 +160,46 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="relative mt-10 z-20 flex h-[40vh] w-full items-start justify-center bg-linear-to-b from-black/80 to-black">
-          <div className="flex flex-col text-center justify-center items-center text-3xl pt-10">
-            <span className="font-extrabold text-white text-base mb-2 flex w-full justify-center gap-2">
-              <svg
-                viewBox="0 0 292.828 292.828"
-                xmlns="http://www.w3.org/2000/svg"
-                width="10"
-              >
-                <polygon
-                  points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
-                  fill="#ffffff"
-                />
-              </svg>
-              WE ARE
-            </span>
-            <h1 className="font-thin text-white">
-              <span className="font-bold">Empowering minds</span>
-              {isMobile && <br />} to turn
-              research into
-            </h1>
-            <h1 className="font-bold text-white"> progress, innovation, and change</h1>
+        <div className="relative mt-10 mb-10 z-20 flex w-full items-start justify-center bg-linear-to-b from-black/80 to-black">
+          <div className="grid grid-cols-6 w-full justify-center gap-y-6">
+            {!isMobile && (
+              <span className="col-span-6 font-extrabold text-white text-base mb-2 flex w-full justify-center gap-2 mt-6">
+                <svg
+                  viewBox="0 0 292.828 292.828"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="10"
+                >
+                  <polygon
+                    points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
+                    fill="#ffffff"
+                  />
+                </svg>
+                WE ARE
+              </span>
+            )}
+            {isMobile ? (
+              <>
+                <div className="flex flex-col justify-center col-span-6">
+                  <img src={logoFptu} alt="Fpt University Logo" className="w-100 h-28 object-contain" />
+                  <img src={fptLogoFixed} alt="Fpt logo 20 năm" className="w-100 h-36 object-contain" />
+                  <img src={resfes2025} alt="2025 Resfes Logo" className="w-100 h-28 object-contain" />
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-center col-span-6">
+                <img src={logoFptu} alt="Fpt University Logo" className="w-100 h-28 object-contain" />
+                <img src={fptLogoFixed} alt="Fpt logo 20 năm" className="w-100 h-36 object-contain" />
+                <img src={resfes2025} alt="2025 Resfes Logo" className="w-100 h-28 object-contain" />
+              </div>
+            )}
+            <div className="col-span-6 text-center text-2xl">
+              <h1 className="font-thin text-white ">
+                <span className="font-bold">Empowering minds</span>
+                {isMobile && <br />} to turn
+                research into
+              </h1>
+              <h1 className="font-bold text-white"> progress, innovation, and change</h1>
+            </div>
           </div>
         </div>
       </section >

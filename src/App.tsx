@@ -13,21 +13,42 @@ import LazyWrapper from "./components/wrapper/LazyWrapper";
 
 const App = () => {
   useEffect(() => {
-    const handleHashChange = () => {
+    const scrollToHash = () => {
       const hash = window.location.hash;
       if (hash) {
-        const element = document.querySelector(hash);
-        if (element) {
-          setTimeout(() => {
-            element.scrollIntoView({ behavior: "smooth" });
-          }, 100);
-        }
+        // Use a requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          const element = document.querySelector(hash);
+          if (element) {
+            // Get the element's position
+            const offsetTop = element.getBoundingClientRect().top + window.scrollY;
+            // Adjust for fixed na  vbar height (approximately 64px)
+            const scrollTarget = Math.max(0, offsetTop - 80);
+
+            window.scrollTo({
+              top: scrollTarget,
+              behavior: "smooth",
+            });
+          }
+        });
       }
     };
 
-    window.addEventListener("hashchange", handleHashChange);
+    // Handle hash change events
+    window.addEventListener("hashchange", scrollToHash);
+
+    // Handle initial page load with hash
+    if (window.location.hash) {
+      // Use setTimeout to ensure components are mounted
+      const timer = setTimeout(scrollToHash, 500);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("hashchange", scrollToHash);
+      };
+    }
+
     return () => {
-      window.removeEventListener("hashchange", handleHashChange);
+      window.removeEventListener("hashchange", scrollToHash);
     };
   }, []);
 

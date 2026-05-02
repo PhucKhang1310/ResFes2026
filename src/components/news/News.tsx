@@ -35,12 +35,6 @@ const News = () => {
                             alt="Top story"
                             className="w-full h-64 object-cover"
                         />
-                        <div className="mt-4">
-                            <p className="text-sm text-blue-600 font-medium">SRC 2026</p>
-                            <h3 className="mt-1 text-2xl font-semibold leading-snug line-clamp-3">
-                                {topStory.title}
-                            </h3>
-                        </div>
                     </button>
 
                     <div className="mt-6 space-y-4">
