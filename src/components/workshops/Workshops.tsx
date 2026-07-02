@@ -1,28 +1,39 @@
 import workshopImage from "../../assets/resfes_tour.jpg";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import { usePageContent } from "../../hook/usePageContent";
+import {
+  getContentSectionStyle,
+  sectionCssVars,
+} from "../../config/pageCustomization";
 
 const Workshops = () => {
   const { isMobile } = useCheckMobile();
   const { content } = usePageContent();
   const workshop = content?.workshops[0];
+  const sectionStyle = getContentSectionStyle(content, "workshops");
 
   if (!workshop) {
     return null;
   }
 
+  const backgroundImage = workshop.backgroundImageUrl.trim() || workshopImage;
+
   return (
-    <section id="workshops" className="scroll-mt-24 px-6 py-20 lg:px-10 ">
+    <section
+      id="workshops"
+      style={sectionCssVars(sectionStyle)}
+      className="scroll-mt-24 bg-[var(--section-bg)] px-6 py-20 text-[var(--section-text)] lg:px-10"
+    >
       <div
         className="relative mx-auto flex min-h-[70vh] max-w-7xl items-center overflow-hidden rounded-4xl border border-white/10 bg-black text-white shadow-2xl"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.8)), url(${workshopImage})`,
+          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-6 py-16 text-center lg:px-10">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-orange-400/90">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-[var(--section-accent)]">
             {workshop.eyebrow}
           </p>
           <h2 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
@@ -35,7 +46,7 @@ const Workshops = () => {
           <ul className="list mt-8 w-full rounded-2xl bg-black/50 backdrop-blur-sm border border-white/15 text-start">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide text-white">
               {workshop.scheduleLabel} - {workshop.date}
-              <span className="ml-2 text-orange-300 italic">({workshop.note})</span>
+              <span className="ml-2 italic text-[var(--section-accent)]">({workshop.note})</span>
             </li>
 
             <li className={`list-row border-white/10 ${isMobile ? "flex flex-col" : ""}`} >
@@ -45,7 +56,7 @@ const Workshops = () => {
               </div>
               <div className={`flex flex-col items-end text-xs text-white/60 ${isMobile ? 'items-start' : ''}`}>
                 <span>{workshop.date}</span>
-                <span className="text-orange-300">{workshop.time}</span>
+                <span className="text-[var(--section-accent)]">{workshop.time}</span>
               </div>
             </li>
           </ul>

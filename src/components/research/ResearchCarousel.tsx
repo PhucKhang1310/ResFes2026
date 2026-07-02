@@ -17,12 +17,12 @@ const ResearchCarousel = ({ carouselRef, onScroll, fields }: ResearchCarouselPro
       >
         {fields.map((item, index) => (
           <div key={index} className="carousel-item h-full">
-            <div className="card h-full w-[40vw] overflow-hidden rounded-2xl bg-transparent text-black">
+            <div className="card h-full w-[40vw] overflow-hidden rounded-2xl bg-transparent text-[var(--section-text)]">
               <div className="card-body min-h-0 overflow-hidden">
                 <div className="flex justify-between">
                   <h2 className="text-3xl font-bold">{item.title}</h2>
                 </div>
-                <ul className="mt-6 flex min-h-0 flex-col gap-2 overflow-hidden pl-5 text-lg font-thin list-disc">
+                <ul className="mt-6 flex min-h-0 flex-col gap-2 overflow-hidden pl-5 text-lg font-thin list-disc text-[var(--section-text)]/80 marker:text-[var(--section-accent)]">
                   {item.carouselItems.map((listItem, itemIndex) => (
                     <li
                       key={itemIndex}

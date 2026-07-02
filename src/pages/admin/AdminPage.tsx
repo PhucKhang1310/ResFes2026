@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   FaArrowRight,
+  FaChevronDown,
   FaClockRotateLeft,
   FaEye,
   FaFileLines,
@@ -10,6 +11,7 @@ import {
   FaPen,
   FaPlus,
   FaRotateRight,
+  FaRocket,
   FaTrash,
   FaUserTie,
   FaXmark,
@@ -23,17 +25,35 @@ import {
   updatePageContent,
   type ContentVersionSummary,
 } from "../../api/pageContentApi";
+import {
+  archivePage,
+  createDraftPage,
+  publishPage,
+  submitPageForReview,
+} from "../../api/pageAdminApi";
+import {
+  getPageVersionDiff,
+  restorePageVersionAsDraft,
+  type VersionDiffItem,
+} from "../../api/contentVersionApi";
+import { getSectionStyle } from "../../data/contentData";
 import type {
   AwardCommittee,
   AwardTier,
   EditableContent,
+  PageImageItem,
   PageSectionKind,
+  PageSectionStyle,
   RegulationSection,
   ResearchFieldItem,
   WorkshopItem,
 } from "../../data/contentData";
+import { researchIconOptions } from "../../config/pageCustomization";
 import { useUser } from "../../hook/useUser";
 import LoadingPage from "../../components/loading/LoadingPage";
+import { validatePageContentInput } from "../../validation/contentValidation";
+import VersionDiffViewer from "../../components/admin/version/VersionDiffViewer";
+import VersionRestoreDialog from "../../components/admin/version/VersionRestoreDialog";
 
 const dateFormatter = new Intl.DateTimeFormat("vi-VN");
 const inputClass =
@@ -72,6 +92,27 @@ const textToList = (value: string) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
+const imagesToText = (items: PageImageItem[]) =>
+  items.map((item) => `${item.url}|${item.alt}`).join("\n");
+
+const textToImages = (value: string): PageImageItem[] =>
+  value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item, index) => {
+      const [url, ...altParts] = item.split("|");
+      return {
+        id: index + 1,
+        url: url.trim(),
+        alt: altParts.join("|").trim(),
+      };
+    })
+    .filter((item) => item.url);
+
+const isHexColor = (value: string) =>
+  /^#[0-9A-Fa-f]{6}$/.test(value.trim());
+
 const AdminPage = () => {
   const { user, isLoading: isUserLoading } = useUser();
   const navigate = useNavigate();
@@ -81,6 +122,8 @@ const AdminPage = () => {
   const [isNewsLoading, setIsNewsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isRestoringVersion, setIsRestoringVersion] = useState(false);
   const [isSaveBarVisible, setIsSaveBarVisible] = useState(false);
   const [contentError, setContentError] = useState("");
   const [newsError, setNewsError] = useState("");
@@ -89,6 +132,10 @@ const AdminPage = () => {
   const [versionsError, setVersionsError] = useState("");
   const [selectedVersion, setSelectedVersion] =
     useState<ContentVersionSummary | null>(null);
+  const [versionToRestore, setVersionToRestore] =
+    useState<ContentVersionSummary | null>(null);
+  const [versionDiff, setVersionDiff] = useState<VersionDiffItem[]>([]);
+  const [versionDiffError, setVersionDiffError] = useState("");
   const [activeTab, setActiveTab] = useState<string>("layout");
   const lastScrollY = useRef(0);
 
@@ -208,42 +255,163 @@ const AdminPage = () => {
     }
   };
 
-  const handleSave = async () => {
+  const validateCurrentContent = () => {
+    const result = validatePageContentInput(content);
+    if (!result.valid) {
+      setContentError(Object.values(result.errors)[0] ?? "Page content is invalid.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const saveDraftVersion = async (label: string) => {
+    if (!content) throw new Error("No page content is loaded.");
+    const draft = await createContentVersion(label, content);
+    await loadVersions();
+    return draft;
+  };
+
+  const handleSaveDraft = async () => {
     if (!content) return;
+    if (!validateCurrentContent()) return;
 
     try {
       setIsSaving(true);
       setContentError("");
       setSaveMessage("");
-      const savedContent = await updatePageContent(content);
-      setContent(savedContent);
-
+      await saveDraftVersion(`Draft ${new Date().toLocaleString()}`);
       try {
-        await createContentVersion(
-          `Saved ${new Date().toLocaleString()}`,
-          savedContent,
+        await createDraftPage({
+          slug: "homepage",
+          title: "SRC2026 Homepage",
+          type: "homepage",
+          content,
+        });
+        setSaveMessage("Draft saved.");
+      } catch {
+        setSaveMessage(
+          "Draft saved in legacy version history. New CMS page API was unavailable.",
         );
-        await loadVersions();
-        setSaveMessage("Page content saved and versioned.");
-      } catch (versionError) {
-        setVersionsError(
-          versionError instanceof Error
-            ? versionError.message
-            : "Could not save page version.",
-        );
-        setSaveMessage("Page content saved. Version history was not updated.");
       }
 
       setIsEditing(false);
       setIsSaveBarVisible(false);
-    } catch (saveError) {
+    } catch (draftError) {
       setContentError(
-        saveError instanceof Error
-          ? saveError.message
-          : "Could not save page content.",
+        draftError instanceof Error
+          ? draftError.message
+          : "Could not save draft.",
       );
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!content) return;
+    if (!validateCurrentContent()) return;
+
+    try {
+      setIsPublishing(true);
+      setContentError("");
+      setSaveMessage("");
+
+      const savedContent = await updatePageContent(content);
+      setContent(savedContent);
+      await createContentVersion(`Published ${new Date().toLocaleString()}`, savedContent);
+      await loadVersions();
+
+      setSaveMessage(
+        "Content published through the legacy live endpoint. CMS publish endpoint can be used after selecting a CMS page draft.",
+      );
+      setIsEditing(false);
+      setIsSaveBarVisible(false);
+    } catch (publishError) {
+      setContentError(
+        publishError instanceof Error
+          ? publishError.message
+          : "Could not publish page content.",
+      );
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
+  const handleCmsAction = async (
+    action: "submit-review" | "publish" | "archive",
+  ) => {
+    if (!content) return;
+    if (!validateCurrentContent()) return;
+
+    try {
+      setIsSaving(true);
+      setContentError("");
+      setSaveMessage("");
+      const draft = await createDraftPage({
+        slug: "homepage",
+        title: "SRC2026 Homepage",
+        type: "homepage",
+        content,
+      });
+
+      if (action === "submit-review") {
+        await submitPageForReview(draft.id);
+        setSaveMessage("CMS draft submitted for review.");
+      } else if (action === "publish") {
+        await publishPage(draft.id);
+        setSaveMessage("CMS draft published.");
+      } else {
+        await archivePage(draft.id);
+        setSaveMessage("CMS draft archived.");
+      }
+    } catch (actionError) {
+      setContentError(
+        actionError instanceof Error
+          ? `${actionError.message}. The legacy editor is still available.`
+          : "CMS action failed.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePreview = () => {
+    if (!content) return;
+    window.sessionStorage.setItem("resfes-page-preview", JSON.stringify(content));
+    window.open("/?preview=local", "_blank", "noopener,noreferrer");
+  };
+
+  const handleCompareVersion = async (version: ContentVersionSummary) => {
+    try {
+      setVersionDiffError("");
+      setVersionDiff(await getPageVersionDiff("legacy-homepage", version.id));
+    } catch (diffError) {
+      setVersionDiff([]);
+      setVersionDiffError(
+        diffError instanceof Error ? diffError.message : "Could not compare version.",
+      );
+    }
+  };
+
+  const handleRestoreVersion = async () => {
+    if (!versionToRestore) return;
+
+    try {
+      setIsRestoringVersion(true);
+      setVersionsError("");
+      await restorePageVersionAsDraft("legacy-homepage", versionToRestore.id);
+      await loadVersions();
+      setSaveMessage("Version restored as draft. Live content was not changed.");
+      setVersionToRestore(null);
+    } catch (restoreError) {
+      setVersionsError(
+        restoreError instanceof Error
+          ? restoreError.message
+          : "Could not restore version.",
+      );
+    } finally {
+      setIsRestoringVersion(false);
     }
   };
 
@@ -492,6 +660,35 @@ const AdminPage = () => {
             </button>
             <button
               type="button"
+              disabled={!content}
+              onClick={handlePreview}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:opacity-40"
+            >
+              <FaEye />
+              <span className="hidden sm:inline">Preview</span>
+            </button>
+            <button
+              type="button"
+              disabled={!content || isSaving}
+              onClick={() => void handleCmsAction("submit-review")}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:opacity-40"
+            >
+              <FaFileLines />
+              <span className="hidden sm:inline">Submit Review</span>
+            </button>
+            <button
+              type="button"
+              disabled={!content || isPublishing}
+              onClick={() => void handlePublish()}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#ff6a1f] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e85f1b] disabled:opacity-40"
+            >
+              <FaRocket />
+              <span className="hidden sm:inline">
+                {isPublishing ? "Publishing..." : "Publish"}
+              </span>
+            </button>
+            <button
+              type="button"
               onClick={() => {
                 setIsEditing((value) => {
                   const nextValue = !value;
@@ -523,11 +720,23 @@ const AdminPage = () => {
                   onAdd={(sectionId) => setLayoutSectionEnabled(sectionId, true)}
                   onMove={moveLayoutSection}
                   onRemove={(sectionId) => setLayoutSectionEnabled(sectionId, false)}
+                  onUpdateSectionStyle={(sectionId, updates) =>
+                    updateContent((current) => ({
+                      ...current,
+                      sectionStyles: current.sectionStyles.map((style) =>
+                        style.id === sectionId ? { ...style, ...updates } : style,
+                      ),
+                    }))
+                  }
                 />
               )}
               {activeTab === "history" && (
                 <HistorySection
+                  diff={versionDiff}
+                  diffError={versionDiffError}
                   error={versionsError}
+                  onCompareVersion={(version) => void handleCompareVersion(version)}
+                  onRestoreVersion={setVersionToRestore}
                   onSelectVersion={setSelectedVersion}
                   selectedVersion={selectedVersion}
                   versions={versions}
@@ -552,9 +761,15 @@ const AdminPage = () => {
         <SaveBar
           isSaving={isSaving}
           isVisible={isSaveBarVisible}
-          onSave={() => void handleSave()}
+          onSave={() => void handleSaveDraft()}
         />
       ) : null}
+      <VersionRestoreDialog
+        isRestoring={isRestoringVersion}
+        onClose={() => setVersionToRestore(null)}
+        onConfirm={() => void handleRestoreVersion()}
+        version={versionToRestore}
+      />
     </main>
   );
 };
@@ -573,6 +788,10 @@ type LayoutSectionProps = {
   onAdd: (sectionId: PageSectionKind) => void;
   onMove: (sectionId: PageSectionKind, direction: -1 | 1) => void;
   onRemove: (sectionId: PageSectionKind) => void;
+  onUpdateSectionStyle: (
+    sectionId: PageSectionKind,
+    updates: Partial<Omit<PageSectionStyle, "id">>,
+  ) => void;
 };
 
 const LayoutSection = ({
@@ -581,6 +800,7 @@ const LayoutSection = ({
   onAdd,
   onMove,
   onRemove,
+  onUpdateSectionStyle,
 }: LayoutSectionProps) => {
   const enabledSections = content.layout.filter((section) => section.enabled);
   const disabledSections = content.layout.filter((section) => !section.enabled);
@@ -601,6 +821,32 @@ const LayoutSection = ({
                   </div>
                   <div className="text-xs text-amber-50/45">
                     Position {index + 1}
+                  </div>
+                  <div className="mt-3 grid gap-2 md:grid-cols-3">
+                    <ColorField
+                      isEditing={isEditing}
+                      label="Background"
+                      value={getSectionStyle(content.sectionStyles, section.id).backgroundColor}
+                      onChange={(value) =>
+                        onUpdateSectionStyle(section.id, { backgroundColor: value })
+                      }
+                    />
+                    <ColorField
+                      isEditing={isEditing}
+                      label="Text"
+                      value={getSectionStyle(content.sectionStyles, section.id).textColor}
+                      onChange={(value) =>
+                        onUpdateSectionStyle(section.id, { textColor: value })
+                      }
+                    />
+                    <ColorField
+                      isEditing={isEditing}
+                      label="Accent"
+                      value={getSectionStyle(content.sectionStyles, section.id).accentColor}
+                      onChange={(value) =>
+                        onUpdateSectionStyle(section.id, { accentColor: value })
+                      }
+                    />
                   </div>
                 </div>
                 <div className="flex flex-wrap justify-end gap-2">
@@ -672,14 +918,22 @@ const LayoutSection = ({
 };
 
 type HistorySectionProps = {
+  diff: VersionDiffItem[];
+  diffError: string;
   error: string;
+  onCompareVersion: (version: ContentVersionSummary) => void;
+  onRestoreVersion: (version: ContentVersionSummary) => void;
   onSelectVersion: (version: ContentVersionSummary) => void;
   selectedVersion: ContentVersionSummary | null;
   versions: ContentVersionSummary[];
 };
 
 const HistorySection = ({
+  diff,
+  diffError,
   error,
+  onCompareVersion,
+  onRestoreVersion,
   onSelectVersion,
   selectedVersion,
   versions,
@@ -699,16 +953,35 @@ const HistorySection = ({
         ) : (
           <div className="mt-4 grid gap-2">
             {versions.map((version) => (
-              <button
+              <div
                 key={version.id}
-                type="button"
-                className={`btn justify-start border-amber-50/15 bg-zinc-950 text-left text-amber-50 hover:border-[#ff6a1f] ${selectedVersion?.id === version.id ? "border-[#ff6a1f]" : ""
-                  }`}
-                onClick={() => onSelectVersion(version)}
+                className={`rounded-lg border border-amber-50/15 bg-zinc-950 p-2 ${selectedVersion?.id === version.id ? "border-[#ff6a1f]" : ""}`}
               >
-                <FaEye className="size-4 shrink-0" />
-                <span className="min-w-0 truncate">{version.label}</span>
-              </button>
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 text-left text-sm text-amber-50"
+                  onClick={() => onSelectVersion(version)}
+                >
+                  <FaEye className="size-4 shrink-0" />
+                  <span className="min-w-0 truncate">{version.label}</span>
+                </button>
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-xs border-amber-50/15 bg-transparent text-amber-50 hover:border-[#ff6a1f] hover:bg-amber-50/10"
+                    onClick={() => onCompareVersion(version)}
+                  >
+                    Compare
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-xs border-amber-50/15 bg-transparent text-amber-50 hover:border-[#ff6a1f] hover:bg-amber-50/10"
+                    onClick={() => onRestoreVersion(version)}
+                  >
+                    Restore draft
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         )}
@@ -716,7 +989,11 @@ const HistorySection = ({
 
       <ContentCard>
         {selectedVersion ? (
-          <VersionPreview version={selectedVersion} />
+          <div className="grid gap-6">
+            <VersionPreview version={selectedVersion} />
+            {diffError ? <ErrorMessage>{diffError}</ErrorMessage> : null}
+            <VersionDiffViewer diff={diff} />
+          </div>
         ) : (
           <p className="text-sm text-amber-50/55">
             Select a saved version to view a previous competition page layout.
@@ -792,6 +1069,17 @@ const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps
         />
         <EditableField
           isEditing={isEditing}
+          label="Background image URL"
+          value={content.hero.backgroundImageUrl}
+          onChange={(value) =>
+            updateContent((current) => ({
+              ...current,
+              hero: { ...current.hero, backgroundImageUrl: value },
+            }))
+          }
+        />
+        <EditableField
+          isEditing={isEditing}
           label="Registration deadline"
           value={content.hero.registrationDeadline}
           onChange={(value) =>
@@ -815,6 +1103,19 @@ const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps
             }
           />
         ))}
+        <div className="md:col-span-2">
+          <ImageListField
+            isEditing={isEditing}
+            label="Partner logos"
+            value={content.hero.partnerLogos}
+            onChange={(value) =>
+              updateContent((current) => ({
+                ...current,
+                hero: { ...current.hero, partnerLogos: value },
+              }))
+            }
+          />
+        </div>
       </div>
     </ContentCard>
   </AdminSection>
@@ -838,6 +1139,19 @@ const AboutSection = ({ content, isEditing, updateContent }: EditableSectionProp
             }
           />
         ))}
+        <div className="md:col-span-2">
+          <ImageListField
+            isEditing={isEditing}
+            label="Carousel images"
+            value={content.about.images}
+            onChange={(value) =>
+              updateContent((current) => ({
+                ...current,
+                about: { ...current.about, images: value },
+              }))
+            }
+          />
+        </div>
         {(["paragraphOne", "paragraphTwo", "paragraphThree"] as const).map((field) => (
           <div key={field} className="md:col-span-2">
             <EditableField
@@ -913,14 +1227,14 @@ const ResearchFieldCard = ({
           value={item.title}
           onChange={(value) => updateItem((field) => ({ ...field, title: value }))}
         />
-        <EditableField
+        <IconSelectField
           isEditing={isEditing}
           label="Icon"
           value={item.icon}
           onChange={(value) =>
             updateItem((field) => ({
               ...field,
-              icon: value as ResearchFieldItem["icon"],
+              icon: value,
             }))
           }
         />
@@ -1286,7 +1600,7 @@ const WorkshopCard = ({
   return (
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
-        {(["eyebrow", "title", "scheduleLabel", "date", "note", "sessionTitle", "sessionSubtitle", "time"] as const).map((field) => (
+        {(["eyebrow", "title", "backgroundImageUrl", "scheduleLabel", "date", "note", "sessionTitle", "sessionSubtitle", "time"] as const).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1329,8 +1643,21 @@ const FooterSection = ({ content, isEditing, updateContent }: EditableSectionPro
                 footer: { ...current.footer, [field]: value },
               }))
             }
-          />
+            />
         ))}
+        <div className="md:col-span-2">
+          <ImageListField
+            isEditing={isEditing}
+            label="Footer logos"
+            value={content.footer.logos}
+            onChange={(value) =>
+              updateContent((current) => ({
+                ...current,
+                footer: { ...current.footer, logos: value },
+              }))
+            }
+          />
+        </div>
       </div>
     </ContentCard>
   </AdminSection>
@@ -1341,8 +1668,8 @@ const NewsList = ({
 }: {
   news: NewsRecord[];
 }) => (
-  <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
-    <div className="grid grid-cols-[96px_1fr] gap-4 border-b border-slate-800 px-4 py-3 text-xs font-semibold uppercase text-slate-500 md:grid-cols-[120px_1fr_180px_140px]">
+  <div className="overflow-hidden rounded-lg border border-amber-50/10 bg-zinc-900">
+    <div className="grid grid-cols-[96px_1fr] gap-4 border-b border-amber-50/10 bg-black/25 px-4 py-3 text-xs font-semibold uppercase text-amber-50/45 md:grid-cols-[120px_1fr_180px_140px]">
       <span>Image</span>
       <span>Title</span>
       <span className="hidden md:block">Author</span>
@@ -1350,14 +1677,14 @@ const NewsList = ({
     </div>
 
     {news.length === 0 ? (
-      <p className="px-4 py-10 text-center text-sm text-slate-400">
+      <p className="px-4 py-10 text-center text-sm text-amber-50/55">
         No news articles found.
       </p>
     ) : (
       news.map((item) => (
         <article
           key={item._id}
-          className="grid grid-cols-[96px_1fr] gap-4 border-b border-slate-800 px-4 py-4 last:border-b-0 md:grid-cols-[120px_1fr_180px_140px] md:items-center"
+          className="grid grid-cols-[96px_1fr] gap-4 border-b border-amber-50/10 px-4 py-4 last:border-b-0 md:grid-cols-[120px_1fr_180px_140px] md:items-center"
         >
           {item.thumbNailImage ? (
             <img
@@ -1366,22 +1693,22 @@ const NewsList = ({
               className="h-16 w-24 rounded object-cover md:h-20 md:w-28"
             />
           ) : (
-            <div className="h-16 w-24 rounded bg-slate-800 md:h-20 md:w-28" />
+            <div className="h-16 w-24 rounded bg-black/40 md:h-20 md:w-28" />
           )}
           <div className="min-w-0">
             <h3 className="line-clamp-2 text-sm font-semibold text-white">
               {item.title}
             </h3>
-            <p className="mt-1 line-clamp-2 text-xs text-slate-400">
+            <p className="mt-1 line-clamp-2 text-xs text-amber-50/55">
               {item.description}
             </p>
-            <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500 md:hidden">
+            <div className="mt-2 flex flex-wrap gap-3 text-xs text-amber-50/45 md:hidden">
               <span>{item.author}</span>
               <span>{formatNewsDate(item.date)}</span>
             </div>
           </div>
-          <span className="hidden text-sm text-slate-300 md:block">{item.author}</span>
-          <span className="hidden text-sm text-slate-400 md:block">
+          <span className="hidden text-sm text-amber-50/75 md:block">{item.author}</span>
+          <span className="hidden text-sm text-amber-50/55 md:block">
             {formatNewsDate(item.date)}
           </span>
         </article>
@@ -1425,7 +1752,7 @@ const SaveBar = ({ isSaving, isVisible, onSave }: SaveBarProps) => (
         className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#ff6a1f] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#e85f1b] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <FaFloppyDisk />
-        {isSaving ? "Saving..." : "Save page content"}
+        {isSaving ? "Saving..." : "Save draft"}
       </button>
     </div>
   </div>
@@ -1473,6 +1800,128 @@ const EditableField = ({
   </label>
 );
 
+const ColorField = ({
+  isEditing,
+  label,
+  onChange,
+  value,
+}: {
+  isEditing: boolean;
+  label: string;
+  onChange: (value: string) => void;
+  value: string;
+}) => (
+  <label className="grid gap-1">
+    <span className={labelClass}>{label}</span>
+    {isEditing ? (
+      <span className="flex items-center gap-2">
+        <input
+          aria-label={`${label} color`}
+          className="h-9 w-11 cursor-pointer rounded border border-white/15 bg-black p-1"
+          type="color"
+          value={isHexColor(value) ? value : "#000000"}
+          onChange={(event) => onChange(event.target.value)}
+        />
+        <input
+          className={inputClass}
+          type="text"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </span>
+    ) : (
+      <span className="flex items-center gap-2 text-sm leading-6 text-amber-50/80">
+        <span
+          className="inline-block h-4 w-4 rounded border border-white/20"
+          style={{ backgroundColor: value }}
+        />
+        {value || "-"}
+      </span>
+    )}
+  </label>
+);
+
+const IconSelectField = ({
+  isEditing,
+  label,
+  onChange,
+  value,
+}: {
+  isEditing: boolean;
+  label: string;
+  onChange: (value: ResearchFieldItem["icon"]) => void;
+  value: ResearchFieldItem["icon"];
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selected = researchIconOptions.find((option) => option.value === value);
+  const Icon = selected?.Icon;
+
+  return (
+    <div className="relative grid gap-1">
+      <span className={labelClass}>{label}</span>
+      {isEditing ? (
+        <div
+          className="relative"
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              setIsOpen(false);
+            }
+          }}
+        >
+          <button
+            type="button"
+            className={`${inputClass} flex items-center justify-between gap-3 text-left`}
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((current) => !current)}
+          >
+            <span className="inline-flex min-w-0 items-center gap-2">
+              {Icon ? <Icon className="shrink-0 text-[#ff6a1f]" /> : null}
+              <span className="truncate">{selected?.label ?? value}</span>
+            </span>
+            <FaChevronDown
+              className={`shrink-0 text-amber-50/45 transition-transform ${
+                isOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          {isOpen ? (
+            <div className="absolute z-30 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-white/15 bg-zinc-950 p-1 shadow-xl">
+              {researchIconOptions.map((option) => {
+                const OptionIcon = option.Icon;
+                const isSelected = option.value === value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition ${
+                      isSelected
+                        ? "bg-[#ff6a1f]/15 text-[#ff6a1f]"
+                        : "text-amber-50/80 hover:bg-amber-50/10 hover:text-amber-50"
+                    }`}
+                    onClick={() => {
+                      onChange(option.value);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <OptionIcon className="shrink-0" />
+                    <span>{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <span className="inline-flex items-center gap-2 text-sm leading-6 text-amber-50/80">
+          {Icon ? <Icon className="text-[#ff6a1f]" /> : null}
+          {selected?.label ?? value}
+        </span>
+      )}
+    </div>
+  );
+};
+
 const EditableListField = ({
   isEditing,
   label,
@@ -1497,6 +1946,41 @@ const EditableListField = ({
         {value.length > 0 ? value.join(", ") : "-"}
       </span>
     )}
+  </label>
+);
+
+const ImageListField = ({
+  isEditing,
+  label,
+  onChange,
+  value,
+}: {
+  isEditing: boolean;
+  label: string;
+  onChange: (value: PageImageItem[]) => void;
+  value: PageImageItem[];
+}) => (
+  <label className="grid gap-1">
+    <span className={labelClass}>{label}</span>
+    {isEditing ? (
+      <textarea
+        className={`${inputClass} min-h-28 resize-y`}
+        placeholder="https://example.com/image.jpg|Image alt text"
+        value={imagesToText(value)}
+        onChange={(event) => onChange(textToImages(event.target.value))}
+      />
+    ) : (
+      <span className="text-sm leading-6 text-amber-50/80">
+        {value.length > 0
+          ? value.map((item) => item.alt || item.url).join(", ")
+          : "-"}
+      </span>
+    )}
+    {isEditing ? (
+      <span className="text-xs text-amber-50/35">
+        One image per line: URL|alt text.
+      </span>
+    ) : null}
   </label>
 );
 

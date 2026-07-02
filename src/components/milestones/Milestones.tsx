@@ -1,4 +1,8 @@
 import { usePageContent } from "../../hook/usePageContent";
+import {
+  getContentSectionStyle,
+  sectionCssVars,
+} from "../../config/pageCustomization";
 
 const CheckIcon = () => (
   <svg
@@ -17,6 +21,7 @@ const CheckIcon = () => (
 
 const Milestones = () => {
   const { content } = usePageContent();
+  const sectionStyle = getContentSectionStyle(content, "milestones");
 
   if (!content) {
     return null;
@@ -47,9 +52,10 @@ const Milestones = () => {
       </style>
       <section
         id="milestones"
-        className="bg-black px-6 py-16 text-white lg:px-10 scroll-mt-24"
+        style={sectionCssVars(sectionStyle)}
+        className="bg-[var(--section-bg)] px-6 py-16 text-[var(--section-text)] lg:px-10 scroll-mt-24"
       >
-        <span className="font-extrabold text-sm text-white flex gap-3 justify-center mb-10">
+        <span className="font-extrabold text-sm text-[var(--section-text)] flex gap-3 justify-center mb-10">
           <svg
             viewBox="0 0 292.828 292.828"
             xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +63,7 @@ const Milestones = () => {
           >
             <polygon
               points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
-              fill="#ffffff"
+              fill="currentColor"
             />
           </svg>
           {milestonesTitle}
@@ -66,23 +72,23 @@ const Milestones = () => {
           <ul className="timeline timeline-snap-icon timeline-vertical w-full">
             {milestones.map((item, index) => (
               <li key={item.id}>
-                {index !== 0 && <hr className="bg-amber-50/40" />}
+                {index !== 0 && <hr className="bg-[var(--section-text)]/40" />}
 
                 {index % 2 === 0 ? (
                   <div
-                    className={`timeline-start timeline-box border-white/25 bg-black text-right ${
+                    className={`timeline-start timeline-box border-[var(--section-text)]/25 bg-[var(--section-bg)] text-right ${
                       index === 0 ? "first-timeline-box-blink" : ""
                     }`}
                   >
                     {item.detail ? (
-                      <span className="badge badge-outline badge-xs mb-2 border-white text-white">
+                      <span className="badge badge-outline badge-xs mb-2 border-[var(--section-text)] text-[var(--section-text)]">
                         {item.detail}
                       </span>
                     ) : null}
-                    <time className="block text-xs font-extrabold uppercase tracking-wide text-white">
+                    <time className="block text-xs font-extrabold uppercase tracking-wide text-[var(--section-text)]">
                       {item.date}
                     </time>
-                    <div className="mt-1 text-sm font-semibold text-white/85">
+                    <div className="mt-1 text-sm font-semibold text-[var(--section-text)]/85">
                       {item.title}
                     </div>
                   </div>
@@ -93,23 +99,23 @@ const Milestones = () => {
                 </div>
 
                 {index % 2 !== 0 ? (
-                  <div className="timeline-end timeline-box border-white/25 bg-black">
+                  <div className="timeline-end timeline-box border-[var(--section-text)]/25 bg-[var(--section-bg)]">
                     {item.detail ? (
-                      <span className="badge badge-outline badge-xs mb-2 border-white text-white">
+                      <span className="badge badge-outline badge-xs mb-2 border-[var(--section-text)] text-[var(--section-text)]">
                         {item.detail}
                       </span>
                     ) : null}
-                    <time className="block text-xs font-extrabold uppercase tracking-wide text-white">
+                    <time className="block text-xs font-extrabold uppercase tracking-wide text-[var(--section-text)]">
                       {item.date}
                     </time>
-                    <div className="mt-1 text-sm font-semibold text-white/85">
+                    <div className="mt-1 text-sm font-semibold text-[var(--section-text)]/85">
                       {item.title}
                     </div>
                   </div>
                 ) : null}
 
                 {index !== milestones.length - 1 && (
-                  <hr className="bg-amber-50/40" />
+                  <hr className="bg-[var(--section-text)]/40" />
                 )}
               </li>
             ))}

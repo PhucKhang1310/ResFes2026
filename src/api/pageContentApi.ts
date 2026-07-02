@@ -174,6 +174,7 @@ export const updatePageContent = async (
   const {
     hero,
     about,
+    sectionStyles,
     researchTitle,
     researchFields,
     awardsTitle,
@@ -205,6 +206,7 @@ export const updatePageContent = async (
     body: JSON.stringify({
       hero,
       about,
+      sectionStyles,
       researchTitle,
       researchFields,
       awardsTitle,

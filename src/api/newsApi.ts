@@ -10,24 +10,54 @@ import { createBrowserCache } from "./browserCache";
 export type NewsRecord = {
   _id: string;
   title: string;
+  slug?: string;
   description: string;
+  summary?: string;
   thumbNailImage: string;
   images: string[];
   date: string;
   content: string;
+  body?: string;
   author: string;
+  coverImageId?: string;
+  coverImageUrl?: string;
+  status?: "draft" | "review" | "scheduled" | "published" | "archived";
+  category?: string;
+  tags?: string[];
+  isPinned?: boolean;
+  isFeatured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
+  scheduledFor?: string;
+  semesterId?: string;
   createdAt?: string;
   updatedAt?: string;
 };
 
 export type NewsSubmissionPayload = {
   title: string;
+  slug?: string;
   description: string;
+  summary?: string;
   thumbNailImage: string;
   images: string[];
   date: string;
   content: string;
+  body?: string;
   author: string;
+  coverImageId?: string;
+  coverImageUrl?: string;
+  status?: NewsRecord["status"];
+  category?: string;
+  tags?: string[];
+  isPinned?: boolean;
+  isFeatured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
+  scheduledFor?: string;
+  semesterId?: string;
   thumbNailImageFile?: File | null;
   imageFiles?: File[];
 };
@@ -63,6 +93,9 @@ const normalizeNewsRecords = (payload: unknown): NewsRecord[] =>
       const images = Array.isArray(record.images)
         ? record.images.filter((image): image is string => typeof image === "string")
         : [];
+      const tags = Array.isArray(record.tags)
+        ? record.tags.filter((tag): tag is string => typeof tag === "string")
+        : [];
 
       if (!id) {
         return null;
@@ -71,12 +104,27 @@ const normalizeNewsRecords = (payload: unknown): NewsRecord[] =>
       return {
         _id: id,
         title: readString(record, ["title"]),
+        slug: readString(record, ["slug"]),
         description: readString(record, ["description"]),
+        summary: readString(record, ["summary"]),
         thumbNailImage: readString(record, ["thumbNailImage", "thumbnailImage"]),
         images,
         date: readString(record, ["date"]),
         content: readString(record, ["content"]),
+        body: readString(record, ["body"]),
         author: readString(record, ["author"]),
+        coverImageId: readString(record, ["coverImageId"]),
+        coverImageUrl: readString(record, ["coverImageUrl"]),
+        status: readString(record, ["status"]) as NewsRecord["status"],
+        category: readString(record, ["category"]),
+        tags,
+        isPinned: record.isPinned === true,
+        isFeatured: record.isFeatured === true,
+        seoTitle: readString(record, ["seoTitle"]),
+        seoDescription: readString(record, ["seoDescription"]),
+        publishedAt: readString(record, ["publishedAt"]),
+        scheduledFor: readString(record, ["scheduledFor"]),
+        semesterId: readString(record, ["semesterId"]),
         createdAt: readString(record, ["createdAt"]),
         updatedAt: readString(record, ["updatedAt"]),
       };
@@ -167,10 +215,25 @@ const buildNewsFormData = (payload: NewsSubmissionPayload) => {
   const formData = new FormData();
 
   formData.append("title", payload.title);
+  if (payload.slug) formData.append("slug", payload.slug);
   formData.append("description", payload.description);
+  if (payload.summary) formData.append("summary", payload.summary);
   formData.append("date", payload.date);
   formData.append("content", payload.content);
+  if (payload.body) formData.append("body", payload.body);
   formData.append("author", payload.author);
+  if (payload.coverImageId) formData.append("coverImageId", payload.coverImageId);
+  if (payload.coverImageUrl) formData.append("coverImageUrl", payload.coverImageUrl);
+  if (payload.status) formData.append("status", payload.status);
+  if (payload.category) formData.append("category", payload.category);
+  if (payload.tags) formData.append("tags", payload.tags.join(","));
+  formData.append("isPinned", String(payload.isPinned ?? false));
+  formData.append("isFeatured", String(payload.isFeatured ?? false));
+  if (payload.seoTitle) formData.append("seoTitle", payload.seoTitle);
+  if (payload.seoDescription) formData.append("seoDescription", payload.seoDescription);
+  if (payload.publishedAt) formData.append("publishedAt", payload.publishedAt);
+  if (payload.scheduledFor) formData.append("scheduledFor", payload.scheduledFor);
+  if (payload.semesterId) formData.append("semesterId", payload.semesterId);
 
   if (payload.thumbNailImageFile) {
     formData.append("thumbNailImage", payload.thumbNailImageFile);

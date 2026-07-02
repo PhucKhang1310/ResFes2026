@@ -2,14 +2,21 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import HeroGlow from "../../assets/home-hero01.png";
+import logoFptu from '../../assets/logo-fptu.png'
 import resfes2026 from '../../assets/logo_src_white_nobg.png'
+import fptLogoFixed from "../../assets/fpt_logo-removebg-preview_cropped.png";
 import { usePageContent } from "../../hook/usePageContent";
+import {
+  getContentSectionStyle,
+  sectionCssVars,
+} from "../../config/pageCustomization";
 
 
 const Hero = () => {
   const { isMobile } = useCheckMobile()
   const { content, error } = usePageContent();
   const hero = content?.hero;
+  const sectionStyle = getContentSectionStyle(content, "hero");
   const registrationDeadline = hero?.registrationDeadline;
   const [totalSeconds, setTotalSeconds] = useState(0);
 
@@ -69,18 +76,28 @@ const Hero = () => {
         {character === " " ? "\u00A0" : character}
       </span>
     ));
+  const heroBackgroundImage = hero.backgroundImageUrl.trim() || HeroGlow;
+  const partnerLogos =
+    hero.partnerLogos.length > 0
+      ? hero.partnerLogos
+      : [
+          { id: 1, url: logoFptu, alt: "FPT University Logo" },
+          { id: 2, url: fptLogoFixed, alt: "FPT logo" },
+          { id: 3, url: resfes2026, alt: "SRC 2026 logo" },
+        ];
 
   return (
     <>
       <section
         id="home"
-        className="relative isolate min-h-screen overflow-hidden bg-black scroll-mt-24"
+        style={sectionCssVars(sectionStyle)}
+        className="relative isolate min-h-screen overflow-hidden bg-[var(--section-bg)] text-[var(--section-text)] scroll-mt-24"
       >
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 pb-16 pt-28 lg:px-10 ">
           <div className="flex w-full flex-col lg:gap-90 lg:flex-row lg:items-center lg:justify-between">
-            <div className="hero-content self-start p-0 text-neutral-content lg:justify-start">
+            <div className="hero-content self-start p-0 text-[var(--section-text)] lg:justify-start">
               <div className="max-w-xl">
-                <div className="mb-3 text-5xl lg:text-7xl text-white">
+                <div className="mb-3 text-5xl lg:text-7xl text-[var(--section-text)]">
                   {hero.titleLines.map((line, index) => (
                     <h1
                       key={`${line}-${index}`}
@@ -90,7 +107,7 @@ const Hero = () => {
                     </h1>
                   ))}
                 </div>
-                <div className="text-rotate mb-3 font-semibold text-orange-400">
+                <div className="text-rotate mb-3 font-semibold text-[var(--section-accent)]">
                   <span className="justify-items-start">
                     <span className="max-w-lg">
                       {hero.taglinePrimary}
@@ -100,7 +117,7 @@ const Hero = () => {
                     </span>
                   </span>
                 </div>
-                <p className="text-xs text-white/50 mb-2 tracking-wide">{hero.countdownLabel}</p>
+                <p className="text-xs text-[var(--section-text)]/50 mb-2 tracking-wide">{hero.countdownLabel}</p>
                 <div className={`grid grid-flow-col gap-2 text-center auto-cols-max lg:gap-5 `}>
                   <div className="flex flex-col p-2 bg-[#111827] rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
@@ -156,7 +173,8 @@ const Hero = () => {
                     href="/register"
                     target="_blank"
                     rel="noreferrer"
-                    className="btn mt-8 rounded-full border-0 bg-orange-600 px-8 text-white hover:bg-orange-600/90"
+                    style={{ backgroundColor: sectionStyle.accentColor }}
+                    className="btn mt-8 rounded-full border-0 px-8 text-white hover:brightness-110"
                   >
                     {hero.ctaLabel}
                   </a>
@@ -166,7 +184,7 @@ const Hero = () => {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_24%,rgba(42,171,94,0.34),transparent_34%),radial-gradient(circle_at_72%_34%,rgba(108,232,170,0.24),transparent_42%),radial-gradient(circle_at_54%_84%,rgba(61,73,255,0.42),transparent_46%)] "
             />
             <img
-              src={HeroGlow}
+              src={heroBackgroundImage}
               alt=""
               aria-hidden="true"
               className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw] ml-48 fade-in"
@@ -174,10 +192,10 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="relative mt-10  z-20 flex w-full items-start justify-center bg-linear-to-b from-black/80 to-black">
+        <div className="relative mt-10 z-20 flex w-full items-start justify-center bg-[linear-gradient(to_bottom,color-mix(in_srgb,var(--section-bg)_80%,transparent),var(--section-bg))]">
           <div className="grid grid-cols-6 w-full justify-center gap-y-6">
             {!isMobile && (
-              <span className="col-span-6 font-extrabold text-white text-base mb-2 flex w-full justify-center gap-2 mt-6">
+              <span className="col-span-6 font-extrabold text-[var(--section-text)] text-base mb-2 flex w-full justify-center gap-2 mt-6">
                 <svg
                   viewBox="0 0 292.828 292.828"
                   xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +203,7 @@ const Hero = () => {
                 >
                   <polygon
                     points="256.756,99.709 256.74,231.242 25.509,0 0,25.509 231.247,256.756 99.709,256.756 99.709,292.828 292.828,292.828 292.828,99.709"
-                    fill="#ffffff"
+                    fill="currentColor"
                   />
                 </svg>
                 {hero.partnerLabel}
@@ -194,23 +212,33 @@ const Hero = () => {
             {isMobile ? (
               <>
                 <div className="flex flex-col justify-center col-span-6">
-                  <img src={resfes2026} alt="SRC 2026 logo" className="w-100 h-28 object-contain" />
-                  <img src={resfes2026} alt="SRC 2026 logo" className="w-100 h-36 object-contain" />
-                  <img src={resfes2026} alt="2026 Resfes Logo" className="w-100 h-28 object-contain" />
+                  {partnerLogos.map((logo) => (
+                    <img
+                      key={logo.id}
+                      src={logo.url}
+                      alt={logo.alt}
+                      className="w-100 h-28 object-contain"
+                    />
+                  ))}
                 </div>
               </>
             ) : (
               <div className="flex justify-center col-span-6">
-                <img src={resfes2026} alt="SRC 2026 logo" className="w-100 h-28 object-contain" />
-                <img src={resfes2026} alt="SRC 2026 logo" className="w-100 h-36 object-contain" />
-                <img src={resfes2026} alt="2026 Resfes Logo" className="w-100 h-28 object-contain" />
+                {partnerLogos.map((logo) => (
+                  <img
+                    key={logo.id}
+                    src={logo.url}
+                    alt={logo.alt}
+                    className="w-100 h-28 object-contain"
+                  />
+                ))}
               </div>
             )}
             <div className="col-span-6 text-center text-2xl pb-18">
-              <h1 className="font-thin text-white ">
+              <h1 className="font-thin text-[var(--section-text)] ">
                 <span className="font-bold">{hero.closingLinePrimary}</span>
               </h1>
-              <h1 className="font-bold text-white">{hero.closingLineSecondary}</h1>
+              <h1 className="font-bold text-[var(--section-text)]">{hero.closingLineSecondary}</h1>
             </div>
           </div>
         </div>

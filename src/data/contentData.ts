@@ -11,6 +11,7 @@ export type WorkshopItem = {
   eyebrow: string;
   title: string;
   description: string;
+  backgroundImageUrl: string;
   scheduleLabel: string;
   date: string;
   note: string;
@@ -21,6 +22,7 @@ export type WorkshopItem = {
 
 export type HeroContent = {
   titleLines: string[];
+  backgroundImageUrl: string;
   taglinePrimary: string;
   taglineSecondary: string;
   countdownLabel: string;
@@ -28,6 +30,7 @@ export type HeroContent = {
   ctaLabel: string;
   ctaUrl: string;
   partnerLabel: string;
+  partnerLogos: PageImageItem[];
   closingLinePrimary: string;
   closingLineSecondary: string;
 };
@@ -35,6 +38,7 @@ export type HeroContent = {
 export type AboutContent = {
   sectionLabel: string;
   title: string;
+  images: PageImageItem[];
   highlightOne: string;
   paragraphOne: string;
   highlightTwo: string;
@@ -42,9 +46,27 @@ export type AboutContent = {
   paragraphThree: string;
 };
 
+export type PageImageItem = {
+  id: number;
+  url: string;
+  alt: string;
+};
+
+export type ResearchIconKey =
+  | "code"
+  | "chip"
+  | "design"
+  | "business"
+  | "language"
+  | "science"
+  | "robot"
+  | "database"
+  | "globe"
+  | "leaf";
+
 export type ResearchFieldItem = {
   id: number;
-  icon: "code" | "chip" | "design" | "business" | "language";
+  icon: ResearchIconKey;
   title: string;
   accordionItems: string[];
   carouselItems: string[];
@@ -91,6 +113,7 @@ export type FooterContent = {
   headlineThree: string;
   ctaLabel: string;
   ctaUrl: string;
+  logos: PageImageItem[];
   contactHeading: string;
   facebookLabel: string;
   facebookUrl: string;
@@ -119,6 +142,13 @@ export type PageLayoutSection = {
   enabled: boolean;
 };
 
+export type PageSectionStyle = {
+  id: PageSectionKind;
+  backgroundColor: string;
+  textColor: string;
+  accentColor: string;
+};
+
 export const defaultPageLayout: PageLayoutSection[] = [
   { id: "hero", enabled: true },
   { id: "about", enabled: true },
@@ -132,8 +162,85 @@ export const defaultPageLayout: PageLayoutSection[] = [
   { id: "footer", enabled: true },
 ];
 
+export const researchIconKeys: ResearchIconKey[] = [
+  "code",
+  "chip",
+  "design",
+  "business",
+  "language",
+  "science",
+  "robot",
+  "database",
+  "globe",
+  "leaf",
+];
+
+export const defaultSectionStyles: PageSectionStyle[] = [
+  {
+    id: "hero",
+    backgroundColor: "#000000",
+    textColor: "#ffffff",
+    accentColor: "#f97316",
+  },
+  {
+    id: "about",
+    backgroundColor: "#fffbeb",
+    textColor: "#111827",
+    accentColor: "#f97316",
+  },
+  {
+    id: "research",
+    backgroundColor: "#fffbeb",
+    textColor: "#111827",
+    accentColor: "#f97316",
+  },
+  {
+    id: "awards",
+    backgroundColor: "#000000",
+    textColor: "#ffffff",
+    accentColor: "#facc15",
+  },
+  {
+    id: "regulations",
+    backgroundColor: "#fffbeb",
+    textColor: "#111827",
+    accentColor: "#f97316",
+  },
+  {
+    id: "milestones",
+    backgroundColor: "#000000",
+    textColor: "#ffffff",
+    accentColor: "#f97316",
+  },
+  {
+    id: "news",
+    backgroundColor: "#ffffff",
+    textColor: "#111827",
+    accentColor: "#2563eb",
+  },
+  {
+    id: "publications",
+    backgroundColor: "#ffffff",
+    textColor: "#111827",
+    accentColor: "#0d9488",
+  },
+  {
+    id: "workshops",
+    backgroundColor: "#ffffff",
+    textColor: "#111827",
+    accentColor: "#f97316",
+  },
+  {
+    id: "footer",
+    backgroundColor: "#262626",
+    textColor: "#f5f5f5",
+    accentColor: "#f97316",
+  },
+];
+
 export type EditableContent = {
   layout: PageLayoutSection[];
+  sectionStyles: PageSectionStyle[];
   hero: HeroContent;
   about: AboutContent;
   researchTitle: string;
@@ -161,8 +268,10 @@ export const contentStorageKey = "resfes2026-editable-content";
 
 export const defaultContent: EditableContent = {
   layout: defaultPageLayout,
+  sectionStyles: defaultSectionStyles,
   hero: {
     titleLines: ["STUDENT", "RESEARCH", "COMPETITION", "2026"],
+    backgroundImageUrl: "",
     taglinePrimary: "RBL in Action, Researchers Ready",
     taglineSecondary: "Triển khai RBL, Triển vọng trong nghiên cứu",
     countdownLabel: "Registration closes 01.06.2026",
@@ -170,12 +279,14 @@ export const defaultContent: EditableContent = {
     ctaLabel: "Register Now",
     ctaUrl: "/register",
     partnerLabel: "WE ARE",
+    partnerLogos: [],
     closingLinePrimary: "Empowering minds to turn research into",
     closingLineSecondary: "progress, innovation, and change",
   },
   about: {
     sectionLabel: "ABOUT SRC 2026",
     title: "Research-Based Learning, Real-World Impact",
+    images: [],
     highlightOne: "Research-Based Learning (RBL)",
     paragraphOne:
       "places students at the center of educational activity, shifting the focus from teacher-centered delivery to student-driven inquiry. Through active research practice, students strengthen core skills in problem definition, data collection, analysis, and evidence-based explanation.",
@@ -437,6 +548,7 @@ export const defaultContent: EditableContent = {
       title: "Scientific Research Guidance Workshops",
       description:
         "Huong dan thong tin chuong trinh va pho bien. Neu sinh vien co thac mac co the den Phong Lab de duoc FARPC ho tro.",
+      backgroundImageUrl: "",
       scheduleLabel: "Upcoming workshop",
       date: "22.05.2026",
       note: "Date may change after Preliminary Round",
@@ -451,6 +563,7 @@ export const defaultContent: EditableContent = {
     headlineThree: "Join SRC",
     ctaLabel: "Register Now",
     ctaUrl: "/register",
+    logos: [],
     contactHeading: "Contact us",
     facebookLabel: "Follow us on Facebook",
     facebookUrl: "https://www.facebook.com/fpt.resfes",
@@ -486,20 +599,109 @@ export const normalizePageLayout = (
   return normalized;
 };
 
+const isResearchIconKey = (value: unknown): value is ResearchIconKey =>
+  typeof value === "string" && researchIconKeys.includes(value as ResearchIconKey);
+
+const normalizeImageItems = (items?: PageImageItem[]): PageImageItem[] =>
+  Array.isArray(items)
+    ? items
+        .filter(
+          (item): item is PageImageItem =>
+            Boolean(item) &&
+            typeof item.id === "number" &&
+            typeof item.url === "string",
+        )
+        .map((item) => ({
+          id: item.id,
+          url: item.url,
+          alt: typeof item.alt === "string" ? item.alt : "",
+        }))
+    : [];
+
+export const normalizeSectionStyles = (
+  styles?: PageSectionStyle[],
+): PageSectionStyle[] => {
+  const incoming = Array.isArray(styles) ? styles : [];
+
+  return defaultSectionStyles.map((defaultStyle) => {
+    const incomingStyle = incoming.find((style) => style?.id === defaultStyle.id);
+
+    return {
+      ...defaultStyle,
+      ...(incomingStyle ?? {}),
+      id: defaultStyle.id,
+      backgroundColor:
+        typeof incomingStyle?.backgroundColor === "string" &&
+        incomingStyle.backgroundColor.trim()
+          ? incomingStyle.backgroundColor
+          : defaultStyle.backgroundColor,
+      textColor:
+        typeof incomingStyle?.textColor === "string" &&
+        incomingStyle.textColor.trim()
+          ? incomingStyle.textColor
+          : defaultStyle.textColor,
+      accentColor:
+        typeof incomingStyle?.accentColor === "string" &&
+        incomingStyle.accentColor.trim()
+          ? incomingStyle.accentColor
+          : defaultStyle.accentColor,
+    };
+  });
+};
+
+export const getSectionStyle = (
+  styles: PageSectionStyle[] | undefined,
+  sectionId: PageSectionKind,
+): PageSectionStyle =>
+  normalizeSectionStyles(styles).find((style) => style.id === sectionId) ??
+  defaultSectionStyles.find((style) => style.id === sectionId) ??
+  defaultSectionStyles[0];
+
 export const normalizeEditableContent = (
   content: Partial<EditableContent>,
-): EditableContent => ({
-  ...defaultContent,
-  ...content,
-  layout: normalizePageLayout(content.layout),
-  hero: { ...defaultContent.hero, ...content.hero },
-  about: { ...defaultContent.about, ...content.about },
-  publicationsHome: {
-    ...defaultContent.publicationsHome,
-    ...content.publicationsHome,
-  },
-  footer: { ...defaultContent.footer, ...content.footer },
-});
+): EditableContent => {
+  const hero = { ...defaultContent.hero, ...content.hero };
+  const about = { ...defaultContent.about, ...content.about };
+  const footer = { ...defaultContent.footer, ...content.footer };
+
+  return {
+    ...defaultContent,
+    ...content,
+    layout: normalizePageLayout(content.layout),
+    sectionStyles: normalizeSectionStyles(content.sectionStyles),
+    hero: {
+      ...hero,
+      partnerLogos: normalizeImageItems(hero.partnerLogos),
+    },
+    about: {
+      ...about,
+      images: normalizeImageItems(about.images),
+    },
+    researchFields: Array.isArray(content.researchFields)
+      ? content.researchFields.map((field) => ({
+          ...field,
+          icon: isResearchIconKey(field.icon) ? field.icon : "code",
+        }))
+      : defaultContent.researchFields,
+    publicationsHome: {
+      ...defaultContent.publicationsHome,
+      ...content.publicationsHome,
+    },
+    workshops: Array.isArray(content.workshops)
+      ? content.workshops.map((workshop) => ({
+          ...workshop,
+          backgroundImageUrl:
+            typeof workshop.backgroundImageUrl === "string"
+              ? workshop.backgroundImageUrl
+              : "",
+        }))
+      : defaultContent.workshops,
+    footer: {
+      ...footer,
+      logos: normalizeImageItems(footer.logos),
+    },
+  };
+};
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   Boolean(value) && typeof value === "object";
@@ -523,6 +725,9 @@ const readStoredContent = (): Partial<EditableContent> => {
     return {
       layout: Array.isArray(parsed.layout)
         ? (parsed.layout as PageLayoutSection[])
+        : undefined,
+      sectionStyles: Array.isArray(parsed.sectionStyles)
+        ? (parsed.sectionStyles as PageSectionStyle[])
         : undefined,
       hero: isRecord(parsed.hero) ? (parsed.hero as HeroContent) : undefined,
       about: isRecord(parsed.about) ? (parsed.about as AboutContent) : undefined,

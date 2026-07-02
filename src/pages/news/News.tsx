@@ -6,6 +6,10 @@ import srcLogo from "../../assets/logo_src_white_nobg.png";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import { usePageContent } from "../../hook/usePageContent";
 import LoadingPage from "../../components/loading/LoadingPage";
+import {
+  getContentSectionStyle,
+  sectionCssVars,
+} from "../../config/pageCustomization";
 
 const getNewsImage = (newsItem: NewsRecord) =>
   newsItem.thumbNailImage || newsItem.images[0] || srcLogo;
@@ -14,6 +18,7 @@ const News = () => {
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
   const { content } = usePageContent();
+  const sectionStyle = getContentSectionStyle(content, "news");
   const newsReadAllLabel = content?.newsReadAllLabel ?? "Read all news";
   const newsSubtitle = content?.newsSubtitle ?? "Latest news about SRC2026";
   const newsTitle = content?.newsTitle ?? "News";
@@ -57,12 +62,13 @@ const News = () => {
   return (
     <section
       id="news"
-      className="mt-10 flex scroll-mt-24 flex-col items-center justify-center rounded-lg p-4 text-black"
+      style={sectionCssVars(sectionStyle)}
+      className="mt-10 flex scroll-mt-24 flex-col items-center justify-center rounded-lg bg-[var(--section-bg)] p-4 text-[var(--section-text)]"
     >
       <div className="mb-10 w-4/5 text-center">
-        <h2 className="text-4xl font-bold text-black lg:text-5xl">{newsTitle}</h2>
-        <div className="mt-3 text-sm font-thin text-black/70 lg:text-base">
-          <p className="divider divider-neutral">{newsSubtitle}</p>
+        <h2 className="text-4xl font-bold text-[var(--section-text)] lg:text-5xl">{newsTitle}</h2>
+        <div className="mt-3 text-sm font-thin text-[var(--section-text)]/70 lg:text-base">
+          <p className="divider before:bg-[var(--section-text)]/30 after:bg-[var(--section-text)]/30">{newsSubtitle}</p>
         </div>
       </div>
 
@@ -99,7 +105,7 @@ const News = () => {
                     className="h-20 w-28 shrink-0 object-cover"
                   />
                   <div className="min-w-0">
-                    <p className="line-clamp-2 font-semibold text-black">
+                    <p className="line-clamp-2 font-semibold text-[var(--section-text)]">
                       {newsItem.title}
                     </p>
                   </div>
@@ -109,7 +115,7 @@ const News = () => {
 
             <button
               type="button"
-              className="mt-6 w-full cursor-pointer rounded py-2 text-left text-blue-600"
+              className="mt-6 w-full cursor-pointer rounded py-2 text-left text-[var(--section-accent)]"
               onClick={() => navigate("/news-list")}
             >
               {newsReadAllLabel}
@@ -128,7 +134,7 @@ const News = () => {
                 <span className="mt-4 block text-lg font-semibold">
                   {topStory.title}
                 </span>
-                <p className="text-md mt-2 line-clamp-2 text-gray-500">
+                <p className="text-md mt-2 line-clamp-2 text-[var(--section-text)]/60">
                   {topStory.description}
                 </p>
               </a>
@@ -160,7 +166,7 @@ const News = () => {
                 ))}
                 <button
                   type="button"
-                  className="cursor-pointer self-start rounded hover:underline"
+                  className="cursor-pointer self-start rounded text-[var(--section-accent)] hover:underline"
                   onClick={() => navigate("/news-list")}
                 >
                   {newsReadAllLabel}

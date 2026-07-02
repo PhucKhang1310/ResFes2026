@@ -6,6 +6,10 @@ import type { PublicationItem } from "../../data/publicationsData";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import { usePageContent } from "../../hook/usePageContent";
 import LoadingPage from "../../components/loading/LoadingPage";
+import {
+  getContentSectionStyle,
+  sectionCssVars,
+} from "../../config/pageCustomization";
 
 const fallbackPublicationsHome = {
   eyebrow: "Latest Posts",
@@ -18,6 +22,7 @@ const Publications = () => {
   const navigate = useNavigate();
   const { isMobile } = useCheckMobile();
   const { content } = usePageContent();
+  const sectionStyle = getContentSectionStyle(content, "publications");
   const publicationsHome =
     content?.publicationsHome ?? fallbackPublicationsHome;
   const [latestPubs, setLatestPubs] = useState<PublicationItem[]>([]);
@@ -61,10 +66,11 @@ const Publications = () => {
   return (
     <section
       id="publications"
-      className="flex scroll-mt-24 flex-col items-center justify-center px-4 py-16 text-black"
+      style={sectionCssVars(sectionStyle)}
+      className="flex scroll-mt-24 flex-col items-center justify-center bg-[var(--section-bg)] px-4 py-16 text-[var(--section-text)]"
     >
       <div className="mb-12 w-4/5 max-w-5xl text-center">
-        <p className="divider divider-neutral text-xs font-semibold uppercase tracking-[0.3em] text-black/50">
+        <p className="divider before:bg-[var(--section-text)]/30 after:bg-[var(--section-text)]/30 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--section-text)]/50">
           {publicationsHome.eyebrow}
         </p>
       </div>
@@ -109,7 +115,7 @@ const Publications = () => {
                     : undefined
                 }
               >
-                <span className="mb-2 text-xs font-bold uppercase tracking-widest text-teal-600">
+                  <span className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--section-accent)]">
                   {publicationsHome.badge}
                 </span>
                 <h3 className="mb-3 line-clamp-4 text-xl font-bold leading-tight text-gray-900 md:text-2xl">
@@ -131,7 +137,7 @@ const Publications = () => {
                   </span>
                   <button
                     type="button"
-                    className="group flex cursor-pointer items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400 transition-colors hover:text-teal-600"
+                    className="group flex cursor-pointer items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400 transition-colors hover:text-[var(--section-accent)]"
                     onClick={() =>
                       navigate(`/publications/${encodeURIComponent(pub.id)}`)
                     }
@@ -145,14 +151,14 @@ const Publications = () => {
           ))}
         </div>
       ) : (
-        <p className="py-12 text-center text-black/60">
+        <p className="py-12 text-center text-[var(--section-text)]/60">
           No publications are available.
         </p>
       )}
 
       <button
         type="button"
-        className="mt-12 flex cursor-pointer items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-500 transition-colors hover:text-black"
+        className="mt-12 flex cursor-pointer items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[var(--section-text)]/60 transition-colors hover:text-[var(--section-text)]"
         onClick={() => navigate("/publications")}
       >
         {publicationsHome.viewAllLabel}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaPen, FaPlus, FaRotateRight, FaTrash } from "react-icons/fa6";
+import { useEffect, useMemo, useState } from "react";
+import { FaPen, FaPlus, FaRotateRight } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
 import { fetchNews, type NewsRecord } from "../../api/newsApi";
 import { deleteAdminNews } from "../../api/adminContentApi";
@@ -17,8 +19,37 @@ const NewsAdminPage = () => {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [status, setStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [semesterFilter, setSemesterFilter] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const filteredNews = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    const semester = semesterFilter.trim().toLowerCase();
+
+    return news.filter((item) => {
+      const matchesStatus = statusFilter ? item.status === statusFilter : true;
+      const matchesSemester = semester
+        ? (item.semesterId || "").toLowerCase().includes(semester)
+        : true;
+      const searchable = [
+        item.title,
+        item.slug,
+        item.description,
+        item.summary,
+        item.author,
+        item.category,
+        item.tags?.join(" "),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return matchesStatus && matchesSemester && (!query || searchable.includes(query));
+    });
+  }, [news, searchTerm, semesterFilter, statusFilter]);
 
   const loadNews = async (
     signal?: AbortSignal,
@@ -98,13 +129,17 @@ const NewsAdminPage = () => {
           <div className="mb-6 flex flex-col gap-4 border-b border-amber-50/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#ff6a1f]">
-                Published news
+                News workflow
               </p>
               <h1 className="mt-1 text-3xl font-bold text-amber-50">
-                {news.length} articles
+                {filteredNews.length} articles
               </h1>
               <p className="mt-2 text-sm text-amber-50/55">
                 Manage news articles saved in the backend news database.
+              </p>
+            </div>
+                Manage draft, scheduled, and published news articles saved in
+                the backend news database.
               </p>
             </div>
 
@@ -116,6 +151,7 @@ const NewsAdminPage = () => {
               <FaPlus />
               Add news
             </button>
+          </div>
           </div>
 
           {error && (
@@ -129,31 +165,65 @@ const NewsAdminPage = () => {
               <Alert tone="success">{status}</Alert>
             </div>
           )}
+          {error && (
+            <div className="mb-6 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100">
+              {error}
+            </div>
+          )}
+
+          <div className="mb-6 grid gap-3 rounded-lg border border-amber-50/10 bg-zinc-900 p-4 md:grid-cols-[1fr_180px_180px]">
+            <input
+              className="w-full rounded-lg border border-white/15 bg-black px-3 py-2 text-sm text-amber-50 outline-none transition placeholder:text-amber-50/30 focus:border-[#ff6a1f] focus:ring-2 focus:ring-[#ff6a1f]/20"
+              placeholder="Search title, author, category, tags"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+            <select
+              className="w-full rounded-lg border border-white/15 bg-black px-3 py-2 text-sm text-amber-50 outline-none transition focus:border-[#ff6a1f] focus:ring-2 focus:ring-[#ff6a1f]/20"
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value)}
+            >
+              <option value="">All statuses</option>
+              <option value="draft">Draft</option>
+              <option value="review">Review</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </select>
+            <input
+              className="w-full rounded-lg border border-white/15 bg-black px-3 py-2 text-sm text-amber-50 outline-none transition placeholder:text-amber-50/30 focus:border-[#ff6a1f] focus:ring-2 focus:ring-[#ff6a1f]/20"
+              placeholder="Semester ID"
+              value={semesterFilter}
+              onChange={(event) => setSemesterFilter(event.target.value)}
+            />
+          </div>
 
           <div className="rounded-lg border border-amber-50/10 bg-black">
             <table className="table table-fixed">
               <thead className="bg-zinc-950 text-amber-50/45">
                 <tr className="border-amber-50/10">
                   <th className="w-[12%]">Image</th>
-                  <th className="w-[42%]">Title</th>
-                  <th className="w-[18%]">Author</th>
-                  <th className="w-[14%]">Date</th>
-                  <th className="w-[14%] text-right">Actions</th>
+                  <th className="w-[30%]">Title</th>
+                  <th className="w-[12%]">Status</th>
+                  <th className="w-[12%]">Semester</th>
+                  <th className="w-[12%]">Flags</th>
+                  <th className="w-[16%]">Updated</th>
+                  <th className="w-[10%] text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {news.length === 0 ? (
+                {filteredNews.length === 0 ? (
                   <tr className="border-amber-50/10">
-                    <td colSpan={5} className="py-10 text-center text-sm text-amber-50/55">
+                    <td colSpan={7} className="py-10 text-center text-sm text-amber-50/55">
                       No news articles found.
                     </td>
                   </tr>
                 ) : (
-                  news.map((item) => (
+                  filteredNews.map((item) => (
                     <tr key={item._id} className="border-amber-50/10 hover:bg-amber-50/5">
                       <td>
                         <img
-                          src={item.thumbNailImage}
+                          src={item.coverImageUrl || item.thumbNailImage}
                           alt={item.title}
                           className="h-14 w-20 rounded-lg border border-amber-50/10 object-cover"
                         />
@@ -164,15 +234,29 @@ const NewsAdminPage = () => {
                             {item.title}
                           </h2>
                           <p className="mt-1 line-clamp-2 text-xs text-amber-50/50">
-                            {item.description}
+                            {item.summary || item.description}
+                          </p>
+                          <p className="mt-1 text-xs text-amber-50/35">
+                            {item.author}
                           </p>
                         </div>
                       </td>
-                      <td className="text-sm text-amber-50/70 wrap-anywhere">
-                        {item.author}
+                      <td>
+                        <span className="rounded-full border border-amber-50/15 bg-amber-50/5 px-2 py-1 text-xs font-semibold capitalize text-amber-50/80">
+                          {item.status || "published"}
+                        </span>
+                      </td>
+                      <td className="text-xs text-amber-50/55">
+                        {item.semesterId || "-"}
+                      </td>
+                      <td className="text-xs text-amber-50/55">
+                        {item.isPinned ? "Pinned" : ""}
+                        {item.isPinned && item.isFeatured ? " / " : ""}
+                        {item.isFeatured ? "Featured" : ""}
+                        {!item.isPinned && !item.isFeatured ? "-" : ""}
                       </td>
                       <td className="text-sm text-amber-50/55">
-                        {new Date(item.date).toLocaleDateString("vi-VN")}
+                        {new Date(item.updatedAt || item.date).toLocaleDateString("vi-VN")}
                       </td>
                       <td>
                         <div className="flex justify-end">

@@ -3,6 +3,10 @@ import { FaMedal, FaTrophy, FaChevronLeft, FaChevronRight } from "react-icons/fa
 import { useFadeIn } from "../../hook/useFadeIn";
 import type { AwardCommittee, AwardTier } from "../../data/contentData";
 import { usePageContent } from "../../hook/usePageContent";
+import {
+  getContentSectionStyle,
+  sectionCssVars,
+} from "../../config/pageCustomization";
 
 const AwardCard = ({ award }: { award: AwardTier }) => (
   <div className="flex flex-col items-center gap-1 rounded-xl bg-white/5 backdrop-blur-sm px-4 py-4 border border-white/10 transition-all duration-300 hover:bg-white/10 hover:scale-105">
@@ -95,6 +99,7 @@ function scrollToChild(el: HTMLDivElement, childIdx: number, behavior: ScrollBeh
 const Awards = () => {
   const { inView, ref } = useFadeIn(0.15, 80);
   const { content } = usePageContent();
+  const sectionStyle = getContentSectionStyle(content, "awards");
   const awards = content?.awards ?? [];
   const awardsNote = content?.awardsNote ?? "";
   const awardsSmallLabel = content?.awardsSmallLabel ?? "";
@@ -180,13 +185,14 @@ const Awards = () => {
     <section
       id="awards"
       ref={ref}
-      className="bg-black py-20 pt-30 scroll-mt-24"
+      style={sectionCssVars(sectionStyle)}
+      className="bg-[var(--section-bg)] py-20 pt-30 text-[var(--section-text)] scroll-mt-24"
     >
       <div
         className={`mx-auto w-full ${inView ? "fade-in" : "opacity-0"
           }`}
       >
-        <div className="divider font-extrabold text-sm text-white! before:bg-amber-50/15! after:bg-amber-50/15! max-w-6xl mx-auto px-6">
+        <div className="divider font-extrabold text-sm text-[var(--section-text)] before:bg-[var(--section-text)]/15 after:bg-[var(--section-text)]/15 max-w-6xl mx-auto px-6">
           {awardsTitle}
         </div>
 

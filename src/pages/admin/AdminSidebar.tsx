@@ -1,49 +1,18 @@
-import {
-  FaFileLines,
-  FaInbox,
-  FaLayerGroup,
-  FaNewspaper,
-  FaTableColumns,
-  FaUserTie,
-} from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
+import { adminNavigation } from "../../config/adminNavigation";
+import { usePermissions } from "../../hook/usePermissions";
 
 const groups = [
   {
-    label: "Overview",
-    items: [
-      { label: "Dashboard", path: "/admin", icon: FaTableColumns },
-      { label: "Layout editor", path: "/admin/layout", icon: FaLayerGroup },
-      { label: "News", path: "/admin/news", icon: FaNewspaper },
-    ],
-  },
-  {
-    label: "Mentors",
-    items: [
-      {
-        label: "Submissions",
-        path: "/admin/submissions?queue=mentors",
-        icon: FaInbox,
-      },
-      { label: "Management", path: "/admin/mentors", icon: FaUserTie },
-    ],
-  },
-  {
-    label: "Publications",
-    items: [
-      {
-        label: "Submissions",
-        path: "/admin/submissions?queue=publications",
-        icon: FaInbox,
-      },
-      { label: "Management", path: "/admin/publications", icon: FaFileLines },
-    ],
+    label: "CMS",
+    items: adminNavigation,
   },
 ];
 
 const AdminSidebar = ({ description }: { description: string }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { can } = usePermissions();
   const currentPath = `${location.pathname}${location.search}`;
 
   const isActive = (path: string) => {
@@ -72,7 +41,7 @@ const AdminSidebar = ({ description }: { description: string }) => {
               {group.label}
             </p>
             <div className="flex flex-col gap-1">
-              {group.items.map((item) => {
+              {group.items.filter((item) => can(item.permission)).map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
 
