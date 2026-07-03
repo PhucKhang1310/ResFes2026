@@ -193,6 +193,7 @@ const NewsAdminPage = () => {
                             title="Delete"
                           >
                             <FaTrash />
+                            Delete
                           </button>
                         </div>
                       </td>
