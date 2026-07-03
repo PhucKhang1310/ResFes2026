@@ -182,7 +182,6 @@ const NewsAdminPage = () => {
                             onClick={() => navigate(`/admin/news/${item._id}/edit`)}
                           >
                             <FaPen />
-                            Edit
                           </button>
                           <button
                             type="button"
@@ -193,7 +192,6 @@ const NewsAdminPage = () => {
                             title="Delete"
                           >
                             <FaTrash />
-                            Delete
                           </button>
                         </div>
                       </td>
