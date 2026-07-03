@@ -17,6 +17,7 @@ import {
   updateAdminPublication,
   type AdminPublicationRecord,
 } from "../../api/adminContentApi";
+import Alert from "../../components/utils/Alert";
 import LoadingPage from "../../components/loading/LoadingPage";
 import Pagination from "../../components/pagination/Pagination";
 import { useUser } from "../../hook/useUser";
@@ -277,8 +278,8 @@ const PublicationAdminPage = () => {
       setPublications((items) =>
         editingId
           ? items.map((item) =>
-              item._id === savedPublication._id ? savedPublication : item,
-            )
+            item._id === savedPublication._id ? savedPublication : item,
+          )
           : [savedPublication, ...items],
       );
       if (!editingId) setCurrentPage(1);
@@ -571,24 +572,6 @@ const Field = ({
       />
     )}
   </label>
-);
-
-const Alert = ({
-  children,
-  tone,
-}: {
-  children: string;
-  tone: "error" | "success";
-}) => (
-  <div
-    className={`mb-6 rounded-lg border px-4 py-3 text-sm ${
-      tone === "error"
-        ? "border-red-500/40 bg-red-950/50 text-red-100"
-        : "border-emerald-500/40 bg-emerald-950/50 text-emerald-100"
-    }`}
-  >
-    {children}
-  </div>
 );
 
 export default PublicationAdminPage;

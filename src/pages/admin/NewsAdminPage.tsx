@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
-import { FaPen, FaPlus, FaRotateRight } from "react-icons/fa6";
+import { FaPen, FaPlus, FaRotateRight, FaTrash } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
 import { fetchNews, type NewsRecord } from "../../api/newsApi";
+import { deleteAdminNews } from "../../api/adminContentApi";
 import { useUser } from "../../hook/useUser";
 import LoadingPage from "../../components/loading/LoadingPage";
+import Pagination from "../../components/pagination/Pagination";
 import AdminSidebar from "./AdminSidebar";
+import Alert from "../../components/utils/Alert";
 
 const NewsAdminPage = () => {
   const { user, isLoading: isUserLoading } = useUser();
+  const pageSize = 10;
   const navigate = useNavigate();
   const [news, setNews] = useState<NewsRecord[]>([]);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [status, setStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -27,6 +34,21 @@ const NewsAdminPage = () => {
     } finally {
       if (!signal?.aborted) {
         setIsLoading(false);
+      }
+    }
+  };
+
+  const handleDelete = async (newsItem: NewsRecord) => {
+    if (window.confirm(`Delete news article "${newsItem.title}"?`)) {
+      try {
+        setBusyId(newsItem._id);
+        await deleteAdminNews(newsItem._id);
+        setNews((prevNews) => prevNews.filter((item) => item._id !== newsItem._id));
+        setStatus("News article deleted successfully.");
+      } catch (deleteError) {
+        setError(deleteError instanceof Error ? deleteError.message : "Could not delete news.");
+      } finally {
+        setBusyId(null);
       }
     }
   };
@@ -82,9 +104,9 @@ const NewsAdminPage = () => {
                 {news.length} articles
               </h1>
               <p className="mt-2 text-sm text-amber-50/55">
-              Manage news articles saved in the backend news database.
-            </p>
-          </div>
+                Manage news articles saved in the backend news database.
+              </p>
+            </div>
 
             <button
               type="button"
@@ -94,13 +116,19 @@ const NewsAdminPage = () => {
               <FaPlus />
               Add news
             </button>
-        </div>
-
-        {error && (
-            <div className="mb-6 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100">
-            {error}
           </div>
-        )}
+
+          {error && (
+            <div className="mb-6">
+              <Alert tone="error">{error}</Alert>
+            </div>
+          )}
+
+          {status && (
+            <div className="mb-6">
+              <Alert tone="success">{status}</Alert>
+            </div>
+          )}
 
           <div className="rounded-lg border border-amber-50/10 bg-black">
             <table className="table table-fixed">
@@ -156,6 +184,16 @@ const NewsAdminPage = () => {
                             <FaPen />
                             Edit
                           </button>
+                          <button
+                            type="button"
+                            className="btn btn-square btn-sm border-red-500/50 bg-transparent text-red-100 hover:border-red-500/70 hover:bg-red-950/60 disabled:opacity-60"
+                            disabled={busyId === item._id}
+                            onClick={() => void handleDelete(item)}
+                            aria-label={`Delete ${item.title || "news article"}`}
+                            title="Delete"
+                          >
+                            <FaTrash />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -164,6 +202,17 @@ const NewsAdminPage = () => {
               </tbody>
             </table>
           </div>
+
+          {news.length > 0 && (
+            <div className="mt-6">
+              <Pagination
+                pageSize={pageSize}
+                currentPage={currentPage}
+                totalCount={news.length}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
         </div>
       </section>
     </main>

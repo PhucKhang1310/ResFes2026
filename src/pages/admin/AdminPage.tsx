@@ -417,11 +417,10 @@ const AdminPage = () => {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 cursor-pointer ${
-                  activeTab === tab.id
+                className={`text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 cursor-pointer ${activeTab === tab.id
                     ? "bg-gradient-to-r from-[#ff6a1f]/10 to-transparent text-[#ff6a1f] font-semibold border-l-2 border-[#ff6a1f]"
                     : "text-amber-50/60 hover:bg-amber-50/5 hover:text-amber-50 border-l-2 border-transparent"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -429,7 +428,7 @@ const AdminPage = () => {
           </nav>
         </div>
         <div className="border-t border-amber-50/10 bg-black/50 p-4 backdrop-blur">
-          <p className="mb-3 px-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-amber-50/30">
+          <p className="mb-3 px-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em]">
             Admin workspaces
           </p>
           <div className="grid gap-2">
@@ -500,11 +499,10 @@ const AdminPage = () => {
                   return nextValue;
                 });
               }}
-              className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all duration-300 shadow-md cursor-pointer ${
-                isEditing 
-                  ? "bg-zinc-800 hover:bg-zinc-700 border border-zinc-600" 
+              className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all duration-300 shadow-md cursor-pointer ${isEditing
+                  ? "bg-zinc-800 hover:bg-zinc-700 border border-zinc-600"
                   : "bg-gradient-to-r from-[#ff6a1f] to-[#e85f1b] hover:shadow-[#ff6a1f]/30 border border-transparent"
-              }`}
+                }`}
             >
               {isEditing ? <FaXmark /> : <FaPen />}
               {isEditing ? "Stop Editing" : "Edit Content"}

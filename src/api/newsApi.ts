@@ -154,9 +154,9 @@ export const fetchNewsById = async (id: string, signal?: AbortSignal) => {
 
   const nextNews = cachedNews
     ? [
-        news,
-        ...cachedNews.filter((cachedItem) => cachedItem._id !== news._id),
-      ]
+      news,
+      ...cachedNews.filter((cachedItem) => cachedItem._id !== news._id),
+    ]
     : [news];
   await newsCache.write(nextNews);
 

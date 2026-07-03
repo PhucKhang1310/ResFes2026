@@ -1,3 +1,4 @@
+import { clearNewsCache } from "./api";
 import {
   API_ENDPOINTS,
   readErrorMessage,
@@ -189,14 +190,14 @@ const normalizePublication = (payload: unknown): AdminPublicationRecord => {
   const record = readRecord<ApiRecord>(payload);
   const images = Array.isArray(record.images)
     ? record.images
-        .filter((image): image is ApiRecord =>
-          Boolean(image && typeof image === "object"),
-        )
-        .map((image) => ({
-          url: readString(image, ["url"]),
-          publicId: readString(image, ["publicId"]),
-        }))
-        .filter((image) => image.url)
+      .filter((image): image is ApiRecord =>
+        Boolean(image && typeof image === "object"),
+      )
+      .map((image) => ({
+        url: readString(image, ["url"]),
+        publicId: readString(image, ["publicId"]),
+      }))
+      .filter((image) => image.url)
     : [];
 
   return {
@@ -319,4 +320,13 @@ export const deleteAdminPublication = async (
     signal,
   );
   await clearPublicationsCache();
+};
+
+export const deleteAdminNews = async (id: string, signal?: AbortSignal) => {
+  await adminRequest(
+    `${API_ENDPOINTS.news}/${id}`,
+    { method: "DELETE" },
+    signal,
+  );
+  await clearNewsCache();
 };

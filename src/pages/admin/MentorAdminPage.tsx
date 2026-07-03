@@ -18,6 +18,7 @@ import {
 } from "../../api/adminContentApi";
 import LoadingPage from "../../components/loading/LoadingPage";
 import Pagination from "../../components/pagination/Pagination";
+import Alert from "../../components/utils/Alert";
 import { useUser } from "../../hook/useUser";
 import AdminSidebar from "./AdminSidebar";
 
@@ -367,14 +368,14 @@ const MentorAdminPage = () => {
                   {selectedMentor?.fullName || "New profile"}
                 </h2>
               </div>
-                <button
-                  type="button"
-                  className="cursor-pointer rounded-lg border border-amber-50/15 p-2 transition hover:border-[#ff6a1f] hover:bg-amber-50/10"
-                  onClick={closeForm}
-                  aria-label="Close mentor form"
-                >
-                  <FaXmark />
-                </button>
+              <button
+                type="button"
+                className="cursor-pointer rounded-lg border border-amber-50/15 p-2 transition hover:border-[#ff6a1f] hover:bg-amber-50/10"
+                onClick={closeForm}
+                aria-label="Close mentor form"
+              >
+                <FaXmark />
+              </button>
             </div>
 
             <div className="grid gap-x-6 gap-y-5 lg:grid-cols-2">
@@ -444,22 +445,6 @@ const Field = ({
   </label>
 );
 
-const Alert = ({
-  children,
-  tone,
-}: {
-  children: string;
-  tone: "error" | "success";
-}) => (
-  <div
-    className={`mb-6 rounded-lg border px-4 py-3 text-sm ${
-      tone === "error"
-        ? "border-red-500/40 bg-red-950/50 text-red-100"
-        : "border-emerald-500/40 bg-emerald-950/50 text-emerald-100"
-    }`}
-  >
-    {children}
-  </div>
-);
+
 
 export default MentorAdminPage;

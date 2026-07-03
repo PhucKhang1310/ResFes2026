@@ -68,7 +68,7 @@ const AdminSidebar = ({ description }: { description: string }) => {
       <nav className="flex flex-1 flex-col gap-5 p-4">
         {groups.map((group) => (
           <div key={group.label}>
-            <p className="mb-2 px-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-amber-50/30">
+            <p className="mb-2 px-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em]">
               {group.label}
             </p>
             <div className="flex flex-col gap-1">
@@ -81,11 +81,10 @@ const AdminSidebar = ({ description }: { description: string }) => {
                     key={item.path}
                     type="button"
                     onClick={() => navigate(item.path)}
-                    className={`flex cursor-pointer items-center gap-3 rounded-lg border-l-2 px-4 py-3 text-left text-sm transition-all duration-300 ${
-                      active
-                        ? "border-[#ff6a1f] bg-gradient-to-r from-[#ff6a1f]/10 to-transparent font-semibold text-[#ff6a1f]"
-                        : "border-transparent text-amber-50/60 hover:bg-amber-50/5 hover:text-amber-50"
-                    }`}
+                    className={`flex cursor-pointer items-center gap-3 rounded-lg border-l-2 px-4 py-3 text-left text-sm transition-all duration-300 ${active
+                      ? "border-[#ff6a1f] bg-gradient-to-r from-[#ff6a1f]/10 to-transparent font-semibold text-[#ff6a1f]"
+                      : "border-transparent text-amber-50/60 hover:bg-amber-50/5 hover:text-amber-50"
+                      }`}
                   >
                     <Icon className="shrink-0" />
                     {item.label}
