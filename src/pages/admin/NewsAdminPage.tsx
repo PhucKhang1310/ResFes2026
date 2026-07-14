@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { FaPen, FaPlus, FaRotateRight, FaTrash } from "react-icons/fa6";
 import { useEffect, useMemo, useState } from "react";
-import { FaPen, FaPlus, FaRotateRight } from "react-icons/fa6";
+import { FaPen, FaPlus, FaRotateRight, FaTrash } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
 import { fetchNews, type NewsRecord } from "../../api/newsApi";
 import { deleteAdminNews } from "../../api/adminContentApi";
@@ -135,9 +133,6 @@ const NewsAdminPage = () => {
                 {filteredNews.length} articles
               </h1>
               <p className="mt-2 text-sm text-amber-50/55">
-                Manage news articles saved in the backend news database.
-              </p>
-            </div>
                 Manage draft, scheduled, and published news articles saved in
                 the backend news database.
               </p>
@@ -152,7 +147,6 @@ const NewsAdminPage = () => {
               Add news
             </button>
           </div>
-          </div>
 
           {error && (
             <div className="mb-6">
@@ -163,11 +157,6 @@ const NewsAdminPage = () => {
           {status && (
             <div className="mb-6">
               <Alert tone="success">{status}</Alert>
-            </div>
-          )}
-          {error && (
-            <div className="mb-6 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100">
-              {error}
             </div>
           )}
 
