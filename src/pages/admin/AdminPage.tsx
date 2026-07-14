@@ -6,14 +6,11 @@ import {
   FaEye,
   FaFileLines,
   FaFloppyDisk,
-  FaInbox,
-  FaNewspaper,
   FaPen,
   FaPlus,
   FaRotateRight,
   FaRocket,
   FaTrash,
-  FaUserTie,
   FaXmark,
 } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -51,6 +48,7 @@ import type {
 import { researchIconOptions } from "../../config/pageCustomization";
 import { useUser } from "../../hook/useUser";
 import LoadingPage from "../../components/loading/LoadingPage";
+import AdminLayout from "../../components/admin/AdminLayout";
 import { validatePageContentInput } from "../../validation/contentValidation";
 import VersionDiffViewer from "../../components/admin/version/VersionDiffViewer";
 import VersionRestoreDialog from "../../components/admin/version/VersionRestoreDialog";
@@ -563,151 +561,103 @@ const AdminPage = () => {
     }
   };
 
+  const pageTitle = tabs.find((tab) => tab.id === activeTab)?.label || "Layout";
+
+  const pageActions = (
+    <div className="mb-6 flex flex-wrap gap-3">
+      <button
+        type="button"
+        onClick={() => {
+          void loadContent(undefined, { forceRefresh: true });
+          void loadNews(undefined, { forceRefresh: true });
+          setIsEditing(false);
+          setIsSaveBarVisible(false);
+        }}
+        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10"
+      >
+        <FaRotateRight className="text-amber-50/70" />
+        Refresh
+      </button>
+      <button
+        type="button"
+        disabled={!content}
+        onClick={handlePreview}
+        className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:opacity-40"
+      >
+        <FaEye />
+        Preview
+      </button>
+      <button
+        type="button"
+        disabled={!content || isSaving}
+        onClick={() => void handleCmsAction("submit-review")}
+        className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:opacity-40"
+      >
+        <FaFileLines />
+        Submit Review
+      </button>
+      <button
+        type="button"
+        disabled={!content || isPublishing}
+        onClick={() => void handlePublish()}
+        className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#ff6a1f] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e85f1b] disabled:opacity-40"
+      >
+        <FaRocket />
+        {isPublishing ? "Publishing..." : "Publish"}
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setIsEditing((value) => {
+            const nextValue = !value;
+            setIsSaveBarVisible(nextValue);
+            return nextValue;
+          });
+        }}
+        className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-md transition-all duration-300 ${
+          isEditing
+            ? "border border-zinc-600 bg-zinc-800 hover:bg-zinc-700"
+            : "border border-transparent bg-gradient-to-r from-[#ff6a1f] to-[#e85f1b] hover:shadow-[#ff6a1f]/30"
+        }`}
+      >
+        {isEditing ? <FaXmark /> : <FaPen />}
+        {isEditing ? "Stop Editing" : "Edit Content"}
+      </button>
+    </div>
+  );
+
   return (
-    <main className="flex h-screen w-full bg-[#050505] text-amber-50 overflow-hidden font-sans">
-      {/* Sidebar */}
-      <aside className="w-64 flex-shrink-0 border-r border-amber-50/10 bg-black overflow-y-auto flex flex-col z-20 shadow-2xl shadow-black">
-        <div className="p-6 border-b border-amber-50/10">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff6a1f]">
-            Admin
-          </p>
-          <h1 className="mt-1 text-2xl font-bold bg-gradient-to-r from-amber-50 to-amber-500 bg-clip-text text-transparent">
-            <a href="/">SRC2026</a>
-          </h1>
-          <p className="mt-2 text-xs text-amber-50/50 leading-relaxed">
-            Review and update public page content.
-          </p>
-        </div>
-        <div className="flex-1 p-4 overflow-y-auto">
-          <nav className="flex flex-col gap-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 cursor-pointer ${activeTab === tab.id
-                    ? "bg-gradient-to-r from-[#ff6a1f]/10 to-transparent text-[#ff6a1f] font-semibold border-l-2 border-[#ff6a1f]"
-                    : "text-amber-50/60 hover:bg-amber-50/5 hover:text-amber-50 border-l-2 border-transparent"
+    <AdminLayout
+      description="Review and update public page content."
+      title={pageTitle}
+    >
+      {pageActions}
+      <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside className="lg:sticky lg:top-24 lg:self-start">
+          <div className="rounded-lg border border-amber-50/10 bg-black/45 p-3">
+            <p className="mb-3 px-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-amber-50/35">
+              Sections
+            </p>
+            <nav className="grid gap-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`rounded-lg border-l-2 px-3 py-2 text-left text-sm transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? "border-[#ff6a1f] bg-gradient-to-r from-[#ff6a1f]/10 to-transparent font-semibold text-[#ff6a1f]"
+                      : "border-transparent text-amber-50/60 hover:bg-amber-50/5 hover:text-amber-50"
                   }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-        <div className="border-t border-amber-50/10 bg-black/50 p-4 backdrop-blur">
-          <p className="mb-3 px-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em]">
-            Admin workspaces
-          </p>
-          <div className="grid gap-2">
-            <QuickAdminLink
-              icon={<FaInbox />}
-              label="Dashboard"
-              onClick={() => navigate("/admin")}
-            />
-            <QuickAdminLink
-              icon={<FaNewspaper />}
-              label="News"
-              onClick={() => navigate("/admin/news")}
-            />
-            <QuickAdminLink
-              icon={<FaUserTie />}
-              label="Mentor submissions"
-              onClick={() => navigate("/admin/submissions?queue=mentors")}
-            />
-            <QuickAdminLink
-              icon={<FaUserTie />}
-              label="Mentor management"
-              onClick={() => navigate("/admin/mentors")}
-            />
-            <QuickAdminLink
-              icon={<FaFileLines />}
-              label="Publication submissions"
-              onClick={() => navigate("/admin/submissions?queue=publications")}
-            />
-            <QuickAdminLink
-              icon={<FaFileLines />}
-              label="Publication management"
-              onClick={() => navigate("/admin/publications")}
-            />
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
           </div>
-        </div>
-      </aside>
+        </aside>
 
-      {/* Main Content Area */}
-      <section className="flex-1 overflow-y-auto relative bg-[#0a0a0a]">
-        {/* Top Sticky Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-amber-50/5 bg-[#0a0a0a]/80 backdrop-blur-md px-6 md:px-10 py-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="h-2 w-2 rounded-full bg-[#ff6a1f] animate-pulse" />
-            <h2 className="text-lg font-medium text-amber-50/90 tracking-wide">
-              {tabs.find((t) => t.id === activeTab)?.label || "Dashboard"}
-            </h2>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                void loadContent(undefined, { forceRefresh: true });
-                void loadNews(undefined, { forceRefresh: true });
-                setIsEditing(false);
-                setIsSaveBarVisible(false);
-              }}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 cursor-pointer"
-            >
-              <FaRotateRight className="text-amber-50/70" />
-              <span className="hidden sm:inline">Refresh</span>
-            </button>
-            <button
-              type="button"
-              disabled={!content}
-              onClick={handlePreview}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:opacity-40"
-            >
-              <FaEye />
-              <span className="hidden sm:inline">Preview</span>
-            </button>
-            <button
-              type="button"
-              disabled={!content || isSaving}
-              onClick={() => void handleCmsAction("submit-review")}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition-all hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:opacity-40"
-            >
-              <FaFileLines />
-              <span className="hidden sm:inline">Submit Review</span>
-            </button>
-            <button
-              type="button"
-              disabled={!content || isPublishing}
-              onClick={() => void handlePublish()}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#ff6a1f] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e85f1b] disabled:opacity-40"
-            >
-              <FaRocket />
-              <span className="hidden sm:inline">
-                {isPublishing ? "Publishing..." : "Publish"}
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setIsEditing((value) => {
-                  const nextValue = !value;
-                  setIsSaveBarVisible(nextValue);
-                  return nextValue;
-                });
-              }}
-              className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all duration-300 shadow-md cursor-pointer ${isEditing
-                  ? "bg-zinc-800 hover:bg-zinc-700 border border-zinc-600"
-                  : "bg-gradient-to-r from-[#ff6a1f] to-[#e85f1b] hover:shadow-[#ff6a1f]/30 border border-transparent"
-                }`}
-            >
-              {isEditing ? <FaXmark /> : <FaPen />}
-              {isEditing ? "Stop Editing" : "Edit Content"}
-            </button>
-          </div>
-        </div>
-
-        <div className="p-6 md:p-10 max-w-5xl mx-auto pb-32">
+        <div className="min-w-0 pb-24">
           {contentError ? <ErrorMessage>{contentError}</ErrorMessage> : null}
           {saveMessage ? <SuccessMessage>{saveMessage}</SuccessMessage> : null}
 
@@ -748,14 +698,14 @@ const AdminPage = () => {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="h-12 w-12 rounded-full border-2 border-t-[#ff6a1f] border-r-transparent border-b-[#ff6a1f]/30 border-l-transparent animate-spin mb-4" />
-              <p className="text-sm text-amber-50/60 font-medium">
+              <div className="mb-4 h-12 w-12 animate-spin rounded-full border-2 border-b-[#ff6a1f]/30 border-l-transparent border-r-transparent border-t-[#ff6a1f]" />
+              <p className="text-sm font-medium text-amber-50/60">
                 Waiting for page content...
               </p>
             </div>
           )}
         </div>
-      </section>
+      </div>
 
       {content ? (
         <SaveBar
@@ -770,7 +720,7 @@ const AdminPage = () => {
         onConfirm={() => void handleRestoreVersion()}
         version={versionToRestore}
       />
-    </main>
+    </AdminLayout>
   );
 };
 
@@ -822,7 +772,7 @@ const LayoutSection = ({
                   <div className="text-xs text-amber-50/45">
                     Position {index + 1}
                   </div>
-                  <div className="mt-3 grid gap-2 md:grid-cols-3">
+                  <div className="mt-3 grid grid-cols-3 gap-3">
                     <ColorField
                       isEditing={isEditing}
                       label="Background"
@@ -939,7 +889,7 @@ const HistorySection = ({
   versions,
 }: HistorySectionProps) => (
   <AdminSection title="History">
-    <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+    <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
       <ContentCard>
         <div className="flex items-center gap-2">
           <FaClockRotateLeft className="text-[#ff6a1f]" />
@@ -955,17 +905,19 @@ const HistorySection = ({
             {versions.map((version) => (
               <div
                 key={version.id}
-                className={`rounded-lg border border-amber-50/15 bg-zinc-950 p-2 ${selectedVersion?.id === version.id ? "border-[#ff6a1f]" : ""}`}
+                className={`min-w-0 rounded-lg border border-amber-50/15 bg-zinc-950 p-2 ${selectedVersion?.id === version.id ? "border-[#ff6a1f]" : ""}`}
               >
                 <button
                   type="button"
-                  className="flex w-full items-center gap-2 text-left text-sm text-amber-50"
+                  className="flex w-full min-w-0 items-center gap-2 text-left text-sm text-amber-50"
                   onClick={() => onSelectVersion(version)}
                 >
                   <FaEye className="size-4 shrink-0" />
-                  <span className="min-w-0 truncate">{version.label}</span>
+                  <span className="block min-w-0 flex-1 truncate">
+                    {version.label}
+                  </span>
                 </button>
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex min-w-0 flex-wrap gap-2">
                   <button
                     type="button"
                     className="btn btn-xs border-amber-50/15 bg-transparent text-amber-50 hover:border-[#ff6a1f] hover:bg-amber-50/10"
@@ -1013,7 +965,9 @@ const VersionPreview = ({ version }: { version: ContentVersionSummary }) => {
         <span className="badge badge-outline border-[#ff6a1f] text-[#ff6a1f]">
           {new Date(version.createdAt).toLocaleString()}
         </span>
-        <h3 className="text-lg font-semibold">{version.label}</h3>
+        <h3 className="min-w-0 break-words text-lg font-semibold">
+          {version.label}
+        </h3>
       </div>
       {content ? (
         <div className="mt-5 grid gap-5">
@@ -1759,7 +1713,7 @@ const SaveBar = ({ isSaving, isVisible, onSave }: SaveBarProps) => (
 );
 
 const ContentCard = ({ children }: { children: ReactNode }) => (
-  <div className="rounded-lg border border-amber-50/10 bg-zinc-900 p-4 shadow-lg">
+  <div className="min-w-0 rounded-lg border border-amber-50/10 bg-zinc-900 p-4 shadow-lg">
     {children}
   </div>
 );
@@ -1811,31 +1765,31 @@ const ColorField = ({
   onChange: (value: string) => void;
   value: string;
 }) => (
-  <label className="grid gap-1">
-    <span className={labelClass}>{label}</span>
+  <label className="grid min-w-0 gap-1">
+    <span className={`${labelClass} whitespace-nowrap`}>{label}</span>
     {isEditing ? (
-      <span className="flex items-center gap-2">
+      <span className="flex min-w-0 items-center gap-2">
         <input
           aria-label={`${label} color`}
-          className="h-9 w-11 cursor-pointer rounded border border-white/15 bg-black p-1"
+          className="h-9 w-11 shrink-0 cursor-pointer rounded border border-white/15 bg-black p-1"
           type="color"
           value={isHexColor(value) ? value : "#000000"}
           onChange={(event) => onChange(event.target.value)}
         />
         <input
-          className={inputClass}
+          className={`${inputClass} min-w-0`}
           type="text"
           value={value}
           onChange={(event) => onChange(event.target.value)}
         />
       </span>
     ) : (
-      <span className="flex items-center gap-2 text-sm leading-6 text-amber-50/80">
+      <span className="flex min-w-0 items-center gap-2 text-sm leading-6 text-amber-50/80">
         <span
-          className="inline-block h-4 w-4 rounded border border-white/20"
+          className="inline-block h-4 w-4 shrink-0 rounded border border-white/20"
           style={{ backgroundColor: value }}
         />
-        {value || "-"}
+        <span className="min-w-0 truncate">{value || "-"}</span>
       </span>
     )}
   </label>
@@ -1982,25 +1936,6 @@ const ImageListField = ({
       </span>
     ) : null}
   </label>
-);
-
-const QuickAdminLink = ({
-  icon,
-  label,
-  onClick,
-}: {
-  icon: ReactNode;
-  label: string;
-  onClick: () => void;
-}) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className="inline-flex w-full cursor-pointer items-center gap-2 rounded-lg border border-amber-50/10 bg-zinc-900/40 px-3 py-2 text-left text-xs font-semibold text-amber-50/70 transition hover:border-[#ff6a1f]/50 hover:bg-amber-50/10 hover:text-amber-50"
-  >
-    <span className="text-[#ff6a1f]">{icon}</span>
-    {label}
-  </button>
 );
 
 const ErrorMessage = ({ children }: { children: ReactNode }) => (

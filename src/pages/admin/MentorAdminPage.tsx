@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import {
+  FaFileImport,
   FaFloppyDisk,
   FaPen,
   FaPlus,
@@ -16,13 +17,16 @@ import {
   updateAdminMentor,
   type AdminMentorRecord,
 } from "../../api/adminContentApi";
+import * as XLSX from "xlsx";
 import LoadingPage from "../../components/loading/LoadingPage";
 import Pagination from "../../components/pagination/Pagination";
 import Alert from "../../components/utils/Alert";
 import { useUser } from "../../hook/useUser";
 import AdminSidebar from "./AdminSidebar";
 
-const emptyMentorForm: Omit<AdminMentorRecord, "_id" | "createdAt" | "updatedAt"> = {
+type MentorForm = Omit<AdminMentorRecord, "_id" | "createdAt" | "updatedAt">;
+
+const emptyMentorForm: MentorForm = {
   title: "",
   fullName: "",
   department: "",
@@ -42,14 +46,81 @@ const emptyMentorForm: Omit<AdminMentorRecord, "_id" | "createdAt" | "updatedAt"
 const inputClass =
   "w-full rounded-lg border border-white/15 bg-black px-3 py-1.5 text-sm text-amber-50 outline-none transition placeholder:text-amber-50/30 focus:border-[#ff6a1f] focus:ring-2 focus:ring-[#ff6a1f]/20";
 const labelClass = "text-xs font-semibold uppercase tracking-wider text-amber-50/55";
+const importableMentorFields = Object.keys(emptyMentorForm) as Array<keyof MentorForm>;
+
+const mentorImportColumns: Record<keyof MentorForm, string[]> = {
+  title: ["title", "degree", "position", "hoc ham hoc vi", "học hàm học vị"],
+  fullName: ["full name", "fullname", "name", "ho va ten", "họ và tên"],
+  department: ["department", "faculty", "major", "field", "don vi cong tac", "đơn vị công tác"],
+  phone: ["phone", "phone number", "sdt", "so dien thoai", "số điện thoại"],
+  email: ["email", "gmail", "email address"],
+  personalWebsite: ["personal website", "website", "website url", "profile url"],
+  orcid: ["orcid", "orcid url"],
+  researchGate: ["researchgate", "research gate", "researchgate url"],
+  googleScholar: ["google scholar", "google scholar url", "googlescholar"],
+  researchAreas: ["research areas", "research area", "expertise", "linh vuc nghien cuu", "lĩnh vực nghiên cứu"],
+  researchTopics: ["research topics", "research topic", "huong nghien cuu", "hướng nghiên cứu"],
+  note: ["note", "bio", "description", "ghi chu", "ghi chú"],
+  avatarImage: ["avatar image", "avatar", "avatar url", "image", "image url", "photo", "photo url"],
+  feedback: ["feedback"],
+};
+
+const normalizeImportKey = (value: string) =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[_()[\]{}:;.,/\\-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const findImportValue = (row: Record<string, unknown>, field: keyof MentorForm) => {
+  const aliases = mentorImportColumns[field].map(normalizeImportKey);
+  const entry = Object.entries(row).find(([key]) =>
+    aliases.includes(normalizeImportKey(key)),
+  );
+  const value = entry?.[1];
+
+  if (value === null || value === undefined) return "";
+  if (value instanceof Date) return value.toISOString();
+  return String(value).trim();
+};
+
+const readMentorsFromWorkbook = async (file: File): Promise<MentorForm[]> => {
+  const workbook = XLSX.read(await file.arrayBuffer(), {
+    cellDates: true,
+    type: "array",
+  });
+  const sheetName = workbook.SheetNames[0];
+  if (!sheetName) return [];
+
+  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(
+    workbook.Sheets[sheetName],
+    { defval: "" },
+  );
+
+  return rows
+    .map((row) =>
+      importableMentorFields.reduce<MentorForm>(
+        (payload, field) => ({
+          ...payload,
+          [field]: findImportValue(row, field),
+        }),
+        { ...emptyMentorForm },
+      ),
+    )
+    .filter((mentor) => mentor.fullName || mentor.email);
+};
 
 const MentorAdminPage = () => {
   const { user, isLoading: isUserLoading } = useUser();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [mentors, setMentors] = useState<AdminMentorRecord[]>([]);
   const [form, setForm] = useState(emptyMentorForm);
   const [editingId, setEditingId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const [busyId, setBusyId] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
@@ -206,6 +277,84 @@ const MentorAdminPage = () => {
     }
   };
 
+  const handleImportFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    try {
+      setIsImporting(true);
+      setStatus("");
+      setError("");
+
+      const importedMentors = await readMentorsFromWorkbook(file);
+      if (importedMentors.length === 0) {
+        setError("The spreadsheet did not contain any mentor rows to import.");
+        return;
+      }
+
+      const invalidRowIndex = importedMentors.findIndex(
+        (mentor) => !mentor.title || !mentor.fullName || !mentor.email,
+      );
+      if (invalidRowIndex >= 0) {
+        setError(
+          `Row ${invalidRowIndex + 2} is missing title, fullName, or email.`,
+        );
+        return;
+      }
+
+      const mentorsByEmail = new Map(
+        mentors
+          .filter((mentor) => mentor.email)
+          .map((mentor) => [mentor.email.trim().toLowerCase(), mentor]),
+      );
+      const savedMentors: AdminMentorRecord[] = [];
+      let createdCount = 0;
+      let updatedCount = 0;
+
+      for (const mentor of importedMentors) {
+        const existingMentor = mentorsByEmail.get(mentor.email.toLowerCase());
+        const savedMentor = existingMentor
+          ? await updateAdminMentor(existingMentor._id, mentor)
+          : await createAdminMentor(mentor);
+
+        if (existingMentor) {
+          updatedCount += 1;
+        } else {
+          createdCount += 1;
+        }
+
+        mentorsByEmail.set(savedMentor.email.toLowerCase(), savedMentor);
+        savedMentors.push(savedMentor);
+      }
+
+      setMentors((items) => {
+        const savedById = new Map(savedMentors.map((mentor) => [mentor._id, mentor]));
+        const existingIds = new Set(items.map((mentor) => mentor._id));
+        const createdMentors = savedMentors.filter(
+          (mentor) => !existingIds.has(mentor._id),
+        );
+
+        return [
+          ...createdMentors,
+          ...items.map((mentor) => savedById.get(mentor._id) ?? mentor),
+        ];
+      });
+      setCurrentPage(1);
+      setStatus(
+        `Imported ${importedMentors.length} mentors: ${createdCount} created, ${updatedCount} updated.`,
+      );
+    } catch (importError) {
+      setError(
+        importError instanceof Error
+          ? importError.message
+          : "Could not import mentors from the spreadsheet.",
+      );
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <main className="flex h-screen w-full overflow-hidden bg-[#050505] font-sans text-amber-50">
       <AdminSidebar description="Manage published mentor profiles." />
@@ -220,6 +369,7 @@ const MentorAdminPage = () => {
           </div>
           <button
             type="button"
+            disabled={isImporting}
             onClick={() => void loadMentors()}
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10"
           >
@@ -242,6 +392,13 @@ const MentorAdminPage = () => {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  accept=".xlsx,.xls,.csv"
+                  onChange={(event) => void handleImportFile(event)}
+                />
+                <input
                   className="w-full rounded-lg border border-white/15 bg-black px-3 py-2 text-sm text-amber-50 outline-none transition placeholder:text-amber-50/30 focus:border-[#ff6a1f] focus:ring-2 focus:ring-[#ff6a1f]/20 sm:w-80"
                   placeholder="Search mentors"
                   value={searchTerm}
@@ -249,8 +406,18 @@ const MentorAdminPage = () => {
                 />
                 <button
                   type="button"
+                  disabled={isImporting}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2.5 text-sm font-semibold text-amber-50 transition hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <FaFileImport />
+                  {isImporting ? "Importing..." : "Import Excel"}
+                </button>
+                <button
+                  type="button"
+                  disabled={isImporting}
                   onClick={startCreate}
-                  className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#ff6a1f] to-[#e85f1b] px-4 py-2.5 text-sm font-semibold text-white transition hover:shadow-lg hover:shadow-[#ff6a1f]/20"
+                  className="inline-flex w-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#ff6a1f] to-[#e85f1b] px-4 py-2.5 text-sm font-semibold text-white transition hover:shadow-lg hover:shadow-[#ff6a1f]/20 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <FaPlus />
                   Add mentor
