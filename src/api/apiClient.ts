@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   adminMentors: `${API_BASE_URL}/mentor/admin`,
   mentorSubmit: `${API_BASE_URL}/mentor/submit`,
   pendingMentors: `${API_BASE_URL}/mentor/pending`,
+  registration: `${API_BASE_URL}/registration`,
   news: `${API_BASE_URL}/news`,
   content: `${API_BASE_URL}/content`,
   contentVersions: `${API_BASE_URL}/content/versions`,

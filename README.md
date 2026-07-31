@@ -20,7 +20,7 @@ SRC2026 is the frontend web application for the Science Research Festival 2026 p
 - Publications pages with API-backed listing and detail views.
 - News list and detail pages.
 - Submission page for mentor profile CSV data and publication BibTeX data.
-- Registration form stored in browser local storage.
+- Turnstile-protected research registration form persisted through the backend API.
 - Authentication UI pages and protected admin route using locally stored auth token.
 - SPA deployment support through Vercel rewrites.
 
@@ -65,7 +65,7 @@ flowchart LR
 
     PublicationControllers --> Email["Email Service<br/>Nodemailer / Gmail SMTP"]
 
-    Frontend --> LocalStorage["Browser Local Storage<br/>Auth Token<br/>Registration Data"]
+    Frontend --> LocalStorage["Browser Cache<br/>Public Content<br/>Mentor and Publication Lists"]
 
     Backend --> Env["Environment Variables<br/>MONGO_URI<br/>CLOUDINARY_*<br/>GMAIL_*<br/>NOTIFY_EMAIL"]
 ```
@@ -121,6 +121,7 @@ Primary API calls are defined in `src/api/api.ts`:
 - `POST /mentor/submit`
 - `GET /publication`
 - `POST /publication/submit`
+- `POST /registration`
 - `POST /auth/signup`
 - `POST /auth/login`
 
