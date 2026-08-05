@@ -155,13 +155,24 @@ export const fetchPublicationById = async (
   id: string,
   signal?: AbortSignal,
 ) => {
-  const publications = await fetchPublications(signal);
-  const publication = publications.find(
-    (item) => String(item.id) === decodeURIComponent(id),
+  const cachedPublications = await publicationsCache.read();
+  const cachedItem = cachedPublications?.find((pub) => pub.id === id);
+  if (cachedItem) {
+    return cachedItem;
+  }
+
+  const response = await fetchWithRetry(
+    `${API_ENDPOINTS.publications}/${encodeURIComponent(id)}`,
+    { signal },
   );
 
+  if (!response.ok) {
+    throw new Error(`Publication request failed with ${response.status}`);
+  }
+
+  const publication = normalizePublications(await response.json())[0];
   if (!publication) {
-    throw new Error("Publication was not found");
+    throw new Error("Publication not found");
   }
 
   return publication;

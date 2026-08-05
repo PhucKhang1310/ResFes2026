@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { FaPen, FaPlus, FaRotateRight, FaTrash } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
-import { fetchNews, type NewsRecord } from "../../api/newsApi";
+import { fetchAdminNews, type NewsRecord } from "../../api/newsApi";
 import { deleteAdminNews } from "../../api/adminContentApi";
 import { useUser } from "../../hook/useUser";
 import LoadingPage from "../../components/loading/LoadingPage";
@@ -49,14 +49,11 @@ const NewsAdminPage = () => {
     });
   }, [news, searchTerm, semesterFilter, statusFilter]);
 
-  const loadNews = async (
-    signal?: AbortSignal,
-    options: { forceRefresh?: boolean } = {},
-  ) => {
+  const loadNews = async (signal?: AbortSignal) => {
     try {
       setIsLoading(true);
       setError("");
-      setNews(await fetchNews(signal, options));
+      setNews(await fetchAdminNews(signal));
     } catch (loadError) {
       if (signal?.aborted) return;
       setError(loadError instanceof Error ? loadError.message : "Could not load news.");
@@ -116,7 +113,7 @@ const NewsAdminPage = () => {
           <button
             type="button"
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-[#ff6a1f] hover:bg-[#ff6a1f]/10"
-            onClick={() => void loadNews(undefined, { forceRefresh: true })}
+            onClick={() => void loadNews()}
           >
             <FaRotateRight />
             Refresh

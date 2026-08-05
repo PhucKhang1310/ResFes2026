@@ -14,7 +14,7 @@ import {
   fetchPendingMentors,
   fetchPendingPublications,
 } from "../../api/adminSubmissionsApi";
-import { fetchNews } from "../../api/newsApi";
+import { fetchAdminNews } from "../../api/newsApi";
 import { getPageContent } from "../../api/pageContentApi";
 import LoadingPage from "../../components/loading/LoadingPage";
 import { useUser } from "../../hook/useUser";
@@ -43,7 +43,7 @@ const AdminDashboardPage = () => {
         fetchPendingPublications(signal),
         fetchPendingMentors(signal),
         getPageContent(signal, { forceRefresh: true }),
-        fetchNews(signal, { forceRefresh: true }),
+        fetchAdminNews(signal),
       ]);
 
       setPendingPublications(publications.length);

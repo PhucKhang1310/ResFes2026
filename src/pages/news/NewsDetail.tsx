@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
-import { fetchNews, type NewsRecord } from "../../api/newsApi";
+import { fetchNewsById, fetchRelatedNews, type NewsRecord } from "../../api/newsApi";
 import srcLogo from "../../assets/logo_src_white_nobg.png";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import Footer from "../../components/footer/Footer";
@@ -14,20 +14,41 @@ const getNewsImage = (item: NewsRecord) =>
 const NewsDetail = () => {
   const { isMobile } = useCheckMobile();
   const { id } = useParams<{ id: string }>();
-  const [news, setNews] = useState<NewsRecord[]>([]);
+  const [newsItem, setNewsItem] = useState<NewsRecord | null>(null);
+  const [relatedNews, setRelatedNews] = useState<NewsRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!id) {
+      setNewsItem(null);
+      setRelatedNews([]);
+      setError("News not found.");
+      setIsLoading(false);
+      return;
+    }
+
     const controller = new AbortController();
 
     const loadNews = async () => {
       try {
         setIsLoading(true);
         setError("");
-        setNews(await fetchNews(controller.signal));
+
+        const article = await fetchNewsById(id, controller.signal);
+        setNewsItem(article);
+
+        try {
+          setRelatedNews(await fetchRelatedNews(id, controller.signal, 3));
+        } catch (relatedError) {
+          if (controller.signal.aborted) return;
+          console.error("Failed to load related news:", relatedError);
+          setRelatedNews([]);
+        }
       } catch (loadError) {
         if (controller.signal.aborted) return;
+        setNewsItem(null);
+        setRelatedNews([]);
         setError(
           loadError instanceof Error ? loadError.message : "Failed to load news.",
         );
@@ -41,17 +62,7 @@ const NewsDetail = () => {
     void loadNews();
 
     return () => controller.abort();
-  }, []);
-
-  const newsItem = useMemo(
-    () => news.find((item) => item._id === id),
-    [id, news],
-  );
-
-  const relatedNews = useMemo(
-    () => news.filter((item) => item._id !== id).slice(0, 3),
-    [id, news],
-  );
+  }, [id]);
 
   if (isLoading) {
     return <LoadingPage label="Loading news article" />;
@@ -117,32 +128,36 @@ const NewsDetail = () => {
       </section>
 
       <div className="mx-auto w-3/4">
-        <h3 className="mt-10 text-2xl font-bold">Related News</h3>
-        <div className="mx-auto pb-20">
-          <div className="mt-6 grid grid-cols-12 gap-8">
-            {relatedNews.map((item) => (
-              <Link
-                key={item._id}
-                to={`/news-list/${item._id}`}
-                className={
-                  isMobile
-                    ? "col-span-12"
-                    : "col-span-12 md:col-span-6 lg:col-span-4"
-                }
-              >
-                <img
-                  src={getNewsImage(item)}
-                  alt={item.title}
-                  className="h-56 w-full object-cover"
-                  loading="lazy"
-                />
-                <h4 className="mt-4 line-clamp-2 text-xl font-normal text-amber-50">
-                  {item.title}
-                </h4>
-              </Link>
-            ))}
-          </div>
-        </div>
+        {relatedNews.length > 0 && (
+          <>
+            <h3 className="mt-10 text-2xl font-bold">Related News</h3>
+            <div className="mx-auto pb-20">
+              <div className="mt-6 grid grid-cols-12 gap-8">
+                {relatedNews.map((item) => (
+                  <Link
+                    key={item._id}
+                    to={`/news-list/${item._id}`}
+                    className={
+                      isMobile
+                        ? "col-span-12"
+                        : "col-span-12 md:col-span-6 lg:col-span-4"
+                    }
+                  >
+                    <img
+                      src={getNewsImage(item)}
+                      alt={item.title}
+                      className="h-56 w-full object-cover"
+                      loading="lazy"
+                    />
+                    <h4 className="mt-4 line-clamp-2 text-xl font-normal text-amber-50">
+                      {item.title}
+                    </h4>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <Footer />
     </main>

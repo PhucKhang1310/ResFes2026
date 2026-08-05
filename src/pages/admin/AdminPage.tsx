@@ -14,7 +14,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
-import { fetchNews, type NewsRecord } from "../../api/newsApi";
+import { fetchAdminNews, type NewsRecord } from "../../api/newsApi";
 import {
   createContentVersion,
   fetchContentVersions,
@@ -233,14 +233,11 @@ const AdminPage = () => {
     }
   };
 
-  const loadNews = async (
-    signal?: AbortSignal,
-    options: { forceRefresh?: boolean } = {},
-  ) => {
+  const loadNews = async (signal?: AbortSignal) => {
     try {
       setIsNewsLoading(true);
       setNewsError("");
-      setNews(await fetchNews(signal, options));
+      setNews(await fetchAdminNews(signal));
     } catch (loadError) {
       if (signal?.aborted) return;
       setNewsError(
@@ -569,7 +566,7 @@ const AdminPage = () => {
         type="button"
         onClick={() => {
           void loadContent(undefined, { forceRefresh: true });
-          void loadNews(undefined, { forceRefresh: true });
+          void loadNews();
           setIsEditing(false);
           setIsSaveBarVisible(false);
         }}
