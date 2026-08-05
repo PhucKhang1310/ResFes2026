@@ -50,6 +50,7 @@ export type PageImageItem = {
   id: number;
   url: string;
   alt: string;
+  jpgFallbackUrl?: string;
 };
 
 export type ResearchIconKey =
@@ -605,17 +606,17 @@ const isResearchIconKey = (value: unknown): value is ResearchIconKey =>
 const normalizeImageItems = (items?: PageImageItem[]): PageImageItem[] =>
   Array.isArray(items)
     ? items
-        .filter(
-          (item): item is PageImageItem =>
-            Boolean(item) &&
-            typeof item.id === "number" &&
-            typeof item.url === "string",
-        )
-        .map((item) => ({
-          id: item.id,
-          url: item.url,
-          alt: typeof item.alt === "string" ? item.alt : "",
-        }))
+      .filter(
+        (item): item is PageImageItem =>
+          Boolean(item) &&
+          typeof item.id === "number" &&
+          typeof item.url === "string",
+      )
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        alt: typeof item.alt === "string" ? item.alt : "",
+      }))
     : [];
 
 export const normalizeSectionStyles = (
@@ -632,17 +633,17 @@ export const normalizeSectionStyles = (
       id: defaultStyle.id,
       backgroundColor:
         typeof incomingStyle?.backgroundColor === "string" &&
-        incomingStyle.backgroundColor.trim()
+          incomingStyle.backgroundColor.trim()
           ? incomingStyle.backgroundColor
           : defaultStyle.backgroundColor,
       textColor:
         typeof incomingStyle?.textColor === "string" &&
-        incomingStyle.textColor.trim()
+          incomingStyle.textColor.trim()
           ? incomingStyle.textColor
           : defaultStyle.textColor,
       accentColor:
         typeof incomingStyle?.accentColor === "string" &&
-        incomingStyle.accentColor.trim()
+          incomingStyle.accentColor.trim()
           ? incomingStyle.accentColor
           : defaultStyle.accentColor,
     };
@@ -679,9 +680,9 @@ export const normalizeEditableContent = (
     },
     researchFields: Array.isArray(content.researchFields)
       ? content.researchFields.map((field) => ({
-          ...field,
-          icon: isResearchIconKey(field.icon) ? field.icon : "code",
-        }))
+        ...field,
+        icon: isResearchIconKey(field.icon) ? field.icon : "code",
+      }))
       : defaultContent.researchFields,
     publicationsHome: {
       ...defaultContent.publicationsHome,
@@ -689,12 +690,12 @@ export const normalizeEditableContent = (
     },
     workshops: Array.isArray(content.workshops)
       ? content.workshops.map((workshop) => ({
-          ...workshop,
-          backgroundImageUrl:
-            typeof workshop.backgroundImageUrl === "string"
-              ? workshop.backgroundImageUrl
-              : "",
-        }))
+        ...workshop,
+        backgroundImageUrl:
+          typeof workshop.backgroundImageUrl === "string"
+            ? workshop.backgroundImageUrl
+            : "",
+      }))
       : defaultContent.workshops,
     footer: {
       ...footer,

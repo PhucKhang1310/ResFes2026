@@ -211,6 +211,59 @@ export const fetchNewsById = async (id: string, signal?: AbortSignal) => {
   return news;
 };
 
+export const fetchAdminNews = async (signal?: AbortSignal) => {
+  const response = await fetchWithRetry(API_ENDPOINTS.adminNews, {
+    credentials: "include",
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, `Admin news request failed with ${response.status}`));
+  }
+
+  return normalizeNewsRecords(await response.json());
+};
+
+export const fetchAdminNewsById = async (id: string, signal?: AbortSignal) => {
+  const response = await fetchWithRetry(
+    `${API_ENDPOINTS.adminNews}/${encodeURIComponent(id)}`,
+    {
+      credentials: "include",
+      signal,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, `Admin news request failed with ${response.status}`));
+  }
+
+  const news = normalizeNewsRecord(await response.json());
+
+  if (!news) {
+    throw new Error("News response did not contain a usable record");
+  }
+
+  return news;
+};
+
+export const fetchRelatedNews = async (
+  id: string,
+  signal?: AbortSignal,
+  limit = 3,
+) => {
+  const encodedId = encodeURIComponent(id);
+  const response = await fetchWithRetry(
+    `${API_ENDPOINTS.news}/${encodedId}/related?limit=${limit}`,
+    { signal },
+  );
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, `Related news request failed with ${response.status}`));
+  }
+
+  return normalizeNewsRecords(await response.json());
+};
+
 const buildNewsFormData = (payload: NewsSubmissionPayload) => {
   const formData = new FormData();
 

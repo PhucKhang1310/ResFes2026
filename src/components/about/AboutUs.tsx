@@ -1,8 +1,12 @@
 import { useState } from "react";
-import resfesPlasma from "../../assets/resfes_plasma.jpg";
-import resfesTour from "../../assets/resfes_tour.jpg";
-import resfesWind from "../../assets/resfes_wind.jpg";
-import resfesMentor from "../../assets/resfes_mentor.jpg";
+import resfesPlasma from "../../assets/resfes_plasma.webp";
+import resfesTour from "../../assets/resfes_tour.webp";
+import resfesWind from "../../assets/resfes_wind.webp";
+import resfesMentor from "../../assets/resfes_mentor.webp";
+import resfesPlasmaJpg from "../../assets/resfes_plasma.jpg";
+import resfesTourJpg from "../../assets/resfes_tour.jpg";
+import resfesWindJpg from "../../assets/resfes_wind.jpg";
+import resfesMentorJpg from "../../assets/resfes_mentor.jpg";
 import { useFadeIn } from "../../hook/useFadeIn";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import { FaChevronDown } from "react-icons/fa6";
@@ -22,11 +26,11 @@ const AboutUs = () => {
     about && about.images.length > 0
       ? about.images
       : [
-          { id: 1, url: resfesPlasma, alt: "SRC research showcase" },
-          { id: 2, url: resfesTour, alt: "SRC campus tour" },
-          { id: 3, url: resfesWind, alt: "SRC wind research" },
-          { id: 4, url: resfesMentor, alt: "SRC mentor guidance" },
-        ];
+        { id: 1, url: resfesPlasma, alt: "SRC research showcase", jpgFallbackUrl: resfesPlasmaJpg },
+        { id: 2, url: resfesTour, alt: "SRC campus tour", jpgFallbackUrl: resfesTourJpg },
+        { id: 3, url: resfesWind, alt: "SRC wind research", jpgFallbackUrl: resfesWindJpg },
+        { id: 4, url: resfesMentor, alt: "SRC mentor guidance", jpgFallbackUrl: resfesMentorJpg },
+      ];
 
   const [activeIndex, setActiveIndex] = useState(0);
   const { inView, ref } = useFadeIn();
@@ -70,11 +74,10 @@ const AboutUs = () => {
               {images.map((_, index) => (
                 <div
                   key={index}
-                  className={`w-6 h-1 rounded transition-all ${
-                    index === activeIndex
-                      ? "bg-[var(--section-accent)] opacity-100"
-                      : "bg-[var(--section-text)] opacity-25"
-                  }`}
+                  className={`w-6 h-1 rounded transition-all ${index === activeIndex
+                    ? "bg-[var(--section-accent)] opacity-100"
+                    : "bg-[var(--section-text)] opacity-25"
+                    }`}
                 />
               ))}
             </div>
@@ -122,11 +125,10 @@ const AboutUs = () => {
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-6 rounded transition-all ${
-                  index === activeIndex
-                    ? "bg-[var(--section-accent)] opacity-100"
-                    : "bg-[var(--section-text)] opacity-25"
-                }`}
+                className={`w-1 h-6 rounded transition-all ${index === activeIndex
+                  ? "bg-[var(--section-accent)] opacity-100"
+                  : "bg-[var(--section-text)] opacity-25"
+                  }`}
               />
             ))}
           </div>
@@ -136,7 +138,18 @@ const AboutUs = () => {
           >
             {images.map((image) => (
               <div key={image.id} className="carousel-item h-full">
-                <img className="object-cover" src={image.url} alt={image.alt} />
+                <picture>
+                  <source
+                    className="object-cover"
+                    srcSet={image.url} type="image/webp"
+                  />
+
+                  <img className="object-cover"
+                    src={image.jpgFallbackUrl}
+                    alt={image.alt}
+                    loading="lazy"
+                  />
+                </picture>
               </div>
             ))}
           </div>

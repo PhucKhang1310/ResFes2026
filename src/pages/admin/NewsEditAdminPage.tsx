@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
-  fetchNewsById,
+  fetchAdminNewsById,
   updateNews,
   type NewsRecord,
   type NewsSubmissionPayload,
@@ -34,7 +34,7 @@ const NewsEditAdminPage = () => {
 
     const controller = new AbortController();
 
-    fetchNewsById(id, controller.signal)
+    fetchAdminNewsById(id, controller.signal)
       .then((record) => {
         setNews(record);
       })
