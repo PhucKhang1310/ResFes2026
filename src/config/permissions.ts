@@ -56,15 +56,15 @@ export const rolePermissions: Record<CmsRole, Permission[]> = {
   ],
   contributor: ["dashboard.read", "content.read", "content.update", "news.manage"],
   viewer: ["dashboard.read", "content.read"],
-  // Current backend defaults new users to `user`. Keep local admin work usable
-  // until real role assignment is introduced and enforced by the backend.
-  user: allPermissions,
+  user: [],
 };
 
 export const hasPermission = (
   role: string | undefined,
   permission: Permission,
 ) => {
-  const normalizedRole = (role || "user") as CmsRole;
-  return (rolePermissions[normalizedRole] ?? rolePermissions.user).includes(permission);
+  const normalizedRole = role as CmsRole | undefined;
+  return normalizedRole
+    ? (rolePermissions[normalizedRole] ?? []).includes(permission)
+    : false;
 };

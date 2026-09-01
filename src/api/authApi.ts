@@ -89,6 +89,12 @@ export const logout = async (signal?: AbortSignal) => {
     signal,
   });
 
+  // An expired or already-revoked session is already logged out from the
+  // server's perspective, so callers can safely clear their local user state.
+  if (response.status === 401) {
+    return { message: "Logged out" };
+  }
+
   if (!response.ok) {
     throw new Error(
       await readErrorMessage(response, `Logout failed with ${response.status}`),

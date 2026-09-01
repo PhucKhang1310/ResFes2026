@@ -1,4 +1,5 @@
 const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "") ??
   import.meta.env.VITE_TEST_API_BASE_URL?.replace(/\/+$/, "") ??
   "https://src2026backendmain.vercel.app/api/v1";
 
@@ -17,6 +18,7 @@ export const API_ENDPOINTS = {
   adminSemesters: `${API_BASE_URL}/admin/semesters`,
   adminMedia: `${API_BASE_URL}/admin/media`,
   adminAuditLogs: `${API_BASE_URL}/admin/audit-logs`,
+  adminAnalytics: `${API_BASE_URL}/admin/analytics`,
   currentHomepage: `${API_BASE_URL}/pages/current/homepage`,
   semesterHomepage: `${API_BASE_URL}/pages`,
   publications: `${API_BASE_URL}/publication`,
@@ -112,11 +114,13 @@ export const submitJson = async <Payload>(
   endpoint: string,
   payload: Payload,
   signal?: AbortSignal,
+  idempotencyKey?: string,
 ) => {
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
     },
     body: JSON.stringify(payload),
     signal,
@@ -134,4 +138,10 @@ export const submitJson = async <Payload>(
   }
 
   return response.text();
+};
+
+export const createIdempotencyKey = () => {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return `src2026-${Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
 };

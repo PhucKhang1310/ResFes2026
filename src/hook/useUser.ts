@@ -6,12 +6,14 @@ import React, {
   useState,
   type PropsWithChildren,
 } from "react";
-import { getCurrentUser, type CurrentUser } from "../api/authApi";
+import { getCurrentUser, logout as logoutRequest, type CurrentUser } from "../api/authApi";
 
 type UserContextValue = {
   user: CurrentUser | null;
   isLoading: boolean;
+  authError: string | null;
   login: (user: CurrentUser) => void;
+  logout: () => Promise<void>;
 };
 
 const UserContext = React.createContext<UserContextValue | undefined>(
@@ -21,6 +23,7 @@ const UserContext = React.createContext<UserContextValue | undefined>(
 const UserProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     window.sessionStorage.removeItem("resfes-user-token");
@@ -28,10 +31,14 @@ const UserProvider = ({ children }: PropsWithChildren) => {
     const controller = new AbortController();
 
     getCurrentUser(controller.signal)
-      .then(setUser)
+      .then((currentUser) => {
+        setUser(currentUser);
+        setAuthError(null);
+      })
       .catch((error: Error) => {
         if (error.name !== "AbortError") {
           setUser(null);
+          setAuthError("Authentication service is temporarily unavailable.");
         }
       })
       .finally(() => {
@@ -45,11 +52,18 @@ const UserProvider = ({ children }: PropsWithChildren) => {
 
   const login = useCallback((user: CurrentUser) => {
     setUser(user);
+    setAuthError(null);
+  }, []);
+
+  const logout = useCallback(async () => {
+    await logoutRequest();
+    setUser(null);
+    setAuthError(null);
   }, []);
 
   const contextValue = useMemo(
-    () => ({ user, isLoading, login }),
-    [user, isLoading, login],
+    () => ({ user, isLoading, authError, login, logout }),
+    [user, isLoading, authError, login, logout],
   );
 
   return React.createElement(UserContext.Provider, {

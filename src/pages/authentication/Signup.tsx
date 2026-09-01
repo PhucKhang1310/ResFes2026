@@ -99,9 +99,9 @@ const SignUp = () => {
               id="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="At least 6 characters"
+              placeholder="At least 12 characters"
               autoComplete="new-password"
-              minLength={6}
+              minLength={12}
               required
               className="bg-black border border-white/20 rounded-lg p-3 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a1f] focus:ring-1 focus:ring-[#ff6a1f] transition-all"
             />
@@ -118,7 +118,7 @@ const SignUp = () => {
               onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="Enter your password again"
               autoComplete="new-password"
-              minLength={6}
+              minLength={12}
               required
               className="bg-black border border-white/20 rounded-lg p-3 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a1f] focus:ring-1 focus:ring-[#ff6a1f] transition-all"
             />

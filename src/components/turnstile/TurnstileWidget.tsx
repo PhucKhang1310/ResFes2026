@@ -56,7 +56,7 @@ const TurnstileWidget = ({ onTokenChange, resetKey = 0 }: TurnstileWidgetProps) 
   const widgetIdRef = useRef<string | null>(null);
   const onTokenChangeRef = useRef(onTokenChange);
   const [isScriptFailed, setIsScriptFailed] = useState(false);
-  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string || '0x4AAAAAADgcZdql8gcd20q9';
+  const siteKey = (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined)?.trim() ?? "";
 
   useEffect(() => {
     onTokenChangeRef.current = onTokenChange;

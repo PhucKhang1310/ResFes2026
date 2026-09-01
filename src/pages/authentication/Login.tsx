@@ -3,6 +3,8 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../api/authApi";
 import { useUser } from "../../hook/useUser";
+import { hasPermission } from "../../config/permissions";
+import { logout } from "../../api/authApi";
 
 const Login = () => {
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -20,6 +22,11 @@ const Login = () => {
         setIsSubmitting(true);
         login(email, password)
             .then((response) => {
+                if (!hasPermission(response.user.role, "dashboard.read")) {
+                    return logout().then(() => {
+                        throw new Error("This account does not have administrator access");
+                    });
+                }
                 setErrorMessage("");
                 loginUser(response.user);
                 navigate("/admin");
@@ -59,6 +66,8 @@ const Login = () => {
                             type="email"
                             id="email"
                             name="email"
+                            autoComplete="email"
+                            required
                             placeholder="your.email@example.com"
                             className="bg-black border border-white/20 rounded-lg p-3 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a1f] focus:ring-1 focus:ring-[#ff6a1f] transition-all"
                             disabled={isSubmitting}
@@ -73,6 +82,8 @@ const Login = () => {
                             type="password"
                             id="password"
                             name="password"
+                            autoComplete="current-password"
+                            required
                             placeholder="Your password..."
                             className="bg-black border border-white/20 rounded-lg p-3 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a1f] focus:ring-1 focus:ring-[#ff6a1f] transition-all"
                             disabled={isSubmitting}
@@ -91,7 +102,7 @@ const Login = () => {
                             "Sign In"
                         )}
                     </button>
-                    {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
+                    {errorMessage && <p role="alert" className="text-red-400 text-sm mt-2">{errorMessage}</p>}
                 </form>
             </div>
         </main>
