@@ -1,7 +1,5 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "") ??
-  import.meta.env.VITE_TEST_API_BASE_URL?.replace(/\/+$/, "") ??
-  "https://src2026backendmain.vercel.app/api/v1";
+  import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, "") ?? "";
 
 
 export const API_ENDPOINTS = {

@@ -101,19 +101,26 @@ src/
 
 ## API Configuration
 
-The frontend reads the backend base URL from `VITE_API_BASE_URL`.
+The frontend reads the backend base URL from `VITE_API_BASE_URL`. Production
+builds also require `VITE_TURNSTILE_SITE_KEY` and reject local API URLs or
+placeholder Turnstile keys.
 
 Create a `.env` file in this directory when running against a local or custom backend:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=http://localhost:3000/api/v1
+VITE_TURNSTILE_SITE_KEY=replace-with-public-turnstile-site-key
 ```
 
-If `VITE_API_BASE_URL` is not set, the app uses:
+For production, configure both values in the deployment environment. The API
+URL must include the `/api/v1` prefix, for example:
 
 ```text
-https://src2026backendmain.vercel.app
+https://src2026backendmain.vercel.app/api/v1
 ```
+
+CI reads the same values from the `VITE_API_BASE_URL` and
+`VITE_TURNSTILE_SITE_KEY` repository variables.
 
 Primary API calls are defined in `src/api/api.ts`:
 

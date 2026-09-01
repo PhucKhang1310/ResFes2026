@@ -17,7 +17,7 @@ import {
   updateAdminMentor,
   type AdminMentorRecord,
 } from "../../api/adminContentApi";
-import * as XLSX from "xlsx";
+import { readSheet } from "read-excel-file/browser";
 import LoadingPage from "../../components/loading/LoadingPage";
 import Pagination from "../../components/pagination/Pagination";
 import Alert from "../../components/utils/Alert";
@@ -87,16 +87,14 @@ const findImportValue = (row: Record<string, unknown>, field: keyof MentorForm) 
 };
 
 const readMentorsFromWorkbook = async (file: File): Promise<MentorForm[]> => {
-  const workbook = XLSX.read(await file.arrayBuffer(), {
-    cellDates: true,
-    type: "array",
-  });
-  const sheetName = workbook.SheetNames[0];
-  if (!sheetName) return [];
-
-  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(
-    workbook.Sheets[sheetName],
-    { defval: "" },
+  const [headerRow = [], ...dataRows] = await readSheet(file);
+  const headers = headerRow.map((value) =>
+    value === null ? "" : String(value).trim(),
+  );
+  const rows = dataRows.map((row) =>
+    Object.fromEntries(
+      headers.map((header, index) => [header, row[index] ?? ""]),
+    ),
   );
 
   return rows
@@ -395,7 +393,7 @@ const MentorAdminPage = () => {
                   ref={fileInputRef}
                   type="file"
                   className="hidden"
-                  accept=".xlsx,.xls,.csv"
+                  accept=".xlsx"
                   onChange={(event) => void handleImportFile(event)}
                 />
                 <input
