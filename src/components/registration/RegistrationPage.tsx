@@ -243,7 +243,6 @@ const RegistrationPage = () => {
                 resetKey={turnstileResetKey}
                 onTokenChange={(token) => {
                   setTurnstileToken(token);
-                  setStatus("");
                 }}
               />
             </div>

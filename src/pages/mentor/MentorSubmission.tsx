@@ -211,7 +211,6 @@ const MentorSubmission = () => {
                 resetKey={turnstileResetKey}
                 onTokenChange={(token) => {
                   setTurnstileToken(token);
-                  setStatus("");
                 }}
               />
             </div>
