@@ -8,7 +8,10 @@ const port = 4173;
 const appUrl = `http://${host}:${port}`;
 const apiOrigin = 'https://api.src2026.test';
 
-const startVite = () => new Promise((resolve, reject) => {
+const delay = (milliseconds) =>
+    new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+const startVite = async () => {
     const output = [];
     const processHandle = spawn(
         process.execPath,
@@ -25,17 +28,39 @@ const startVite = () => new Promise((resolve, reject) => {
     );
 
     const onOutput = (chunk) => {
-        const line = String(chunk);
-        output.push(line);
-        if (line.includes(`http://${host}:${port}`)) resolve({ processHandle, output });
+        output.push(String(chunk));
     };
+    let spawnError = null;
     processHandle.stdout.on('data', onOutput);
     processHandle.stderr.on('data', onOutput);
-    processHandle.once('error', reject);
-    processHandle.once('exit', (code) => {
-        reject(new Error(`Vite exited with ${code}: ${output.join('')}`));
+    processHandle.once('error', (error) => {
+        spawnError = error;
     });
-});
+
+    const deadline = Date.now() + 15_000;
+    try {
+        while (Date.now() < deadline) {
+            if (spawnError) throw spawnError;
+            if (processHandle.exitCode !== null) {
+                throw new Error(`Vite exited with ${processHandle.exitCode}: ${output.join('')}`);
+            }
+
+            try {
+                const response = await fetch(appUrl);
+                if (response.ok) return { processHandle, output };
+            } catch {
+                // Vite has not started listening yet.
+            }
+
+            await delay(100);
+        }
+
+        throw new Error(`Vite did not become ready within 15 seconds: ${output.join('')}`);
+    } catch (error) {
+        if (!processHandle.killed) processHandle.kill('SIGTERM');
+        throw error;
+    }
+};
 
 const json = (route, body, status = 200) => route.fulfill({
     status,
