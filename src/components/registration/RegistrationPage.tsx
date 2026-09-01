@@ -6,6 +6,7 @@ import { submitRegistration } from "../../api/registrationApi";
 import Footer from "../footer/Footer";
 import NavBar from "../navbar/NavBar";
 import TurnstileWidget from "../turnstile/TurnstileWidget";
+import { createIdempotencyKey } from "../../api/apiClient";
 
 type RegistrationForm = {
   name: string;
@@ -39,6 +40,7 @@ const RegistrationPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const [idempotencyKey, setIdempotencyKey] = useState(createIdempotencyKey);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -107,20 +109,25 @@ const RegistrationPage = () => {
       setIsSubmitting(true);
       setStatus("");
 
-      const response = await submitRegistration({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        topic: form.topic.trim(),
-        field: form.field,
-        mentor: form.mentor,
-        turnstileToken,
-      });
+      const response = await submitRegistration(
+        {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          topic: form.topic.trim(),
+          field: form.field,
+          mentor: form.mentor,
+          turnstileToken,
+        },
+        undefined,
+        idempotencyKey,
+      );
 
       setForm(initialForm);
       setErrors({});
       setStatus(`${response.message}. Reference: ${response.registrationId}`);
       setTurnstileToken("");
       setTurnstileResetKey((current) => current + 1);
+      setIdempotencyKey(createIdempotencyKey());
     } catch (error) {
       setStatus(
         error instanceof Error
@@ -274,7 +281,7 @@ const FormField = ({ label, error, children }: FormFieldProps) => (
   <label className="grid gap-2">
     <span className={labelClass}>{label}</span>
     {children}
-    {error ? <span className="text-xs text-orange-300">{error}</span> : null}
+    {error ? <span role="alert" className="text-xs text-orange-300">{error}</span> : null}
   </label>
 );
 

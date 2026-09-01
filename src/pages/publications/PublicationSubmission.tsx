@@ -8,6 +8,7 @@ import {
 import Footer from "../../components/footer/Footer";
 import NavBar from "../../components/navbar/NavBar";
 import TurnstileWidget from "../../components/turnstile/TurnstileWidget";
+import { createIdempotencyKey } from "../../api/apiClient";
 
 const inputClass =
   "w-full rounded-lg border border-white/15 bg-black px-3 py-2 text-sm text-amber-50 outline-none transition placeholder:text-amber-50/30 focus:border-[#ff6a1f] focus:ring-2 focus:ring-[#ff6a1f]/20";
@@ -44,6 +45,7 @@ const PublicationSubmission = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const [idempotencyKey, setIdempotencyKey] = useState(createIdempotencyKey);
 
   const payload = useMemo<PublicationSubmissionPayload>(
     () => ({
@@ -78,12 +80,13 @@ const PublicationSubmission = () => {
 
       setIsSubmitting(true);
       setStatus("");
-      await submitPublication({ ...payload, turnstileToken });
+      await submitPublication({ ...payload, turnstileToken }, undefined, idempotencyKey);
       setStatus("Publication submission sent.");
       setForm(initialForm);
       setImagesText("");
       setTurnstileToken("");
       setTurnstileResetKey((current) => current + 1);
+      setIdempotencyKey(createIdempotencyKey());
     } catch (error) {
       setStatus(
         error instanceof Error ? error.message : "Publication submission failed.",

@@ -1,7 +1,8 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import {
   FaArrowRight,
   FaCircleExclamation,
+  FaDownload,
   FaFileLines,
   FaInbox,
   FaLayerGroup,
@@ -11,11 +12,10 @@ import {
 } from "react-icons/fa6";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
-  fetchPendingMentors,
-  fetchPendingPublications,
-} from "../../api/adminSubmissionsApi";
-import { fetchAdminNews } from "../../api/newsApi";
-import { getPageContent } from "../../api/pageContentApi";
+  downloadAnalyticsCsv,
+  fetchAnalyticsSummary,
+  type AnalyticsFilters,
+} from "../../api/analyticsApi";
 import LoadingPage from "../../components/loading/LoadingPage";
 import { useUser } from "../../hook/useUser";
 import AdminSidebar from "./AdminSidebar";
@@ -28,29 +28,32 @@ const AdminDashboardPage = () => {
   const [activeSections, setActiveSections] = useState(0);
   const [inactiveSections, setInactiveSections] = useState(0);
   const [newsArticles, setNewsArticles] = useState(0);
+  const [publications, setPublications] = useState(0);
+  const [researchers, setResearchers] = useState(0);
+  const [registrations, setRegistrations] = useState(0);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [filters, setFilters] = useState<AnalyticsFilters>({});
   const [isTelemetryLoading, setIsTelemetryLoading] = useState(true);
   const [telemetryError, setTelemetryError] = useState("");
 
   const totalPending = pendingPublications + pendingMentors;
   const totalSections = activeSections + inactiveSections;
 
-  const loadTelemetry = async (signal?: AbortSignal) => {
+  const loadTelemetry = useCallback(async (signal?: AbortSignal, activeFilters = filters) => {
     try {
       setIsTelemetryLoading(true);
       setTelemetryError("");
 
-      const [publications, mentors, content, news] = await Promise.all([
-        fetchPendingPublications(signal),
-        fetchPendingMentors(signal),
-        getPageContent(signal, { forceRefresh: true }),
-        fetchAdminNews(signal),
-      ]);
-
-      setPendingPublications(publications.length);
-      setPendingMentors(mentors.length);
-      setActiveSections(content.layout.filter((section) => section.enabled).length);
-      setInactiveSections(content.layout.filter((section) => !section.enabled).length);
-      setNewsArticles(news.length);
+      const summary = await fetchAnalyticsSummary(activeFilters, signal);
+      setPendingPublications(summary.totals.pendingPublications);
+      setPendingMentors(summary.totals.pendingResearchers);
+      setActiveSections(summary.content.activeSections);
+      setInactiveSections(summary.content.inactiveSections);
+      setNewsArticles(summary.totals.publishedNews);
+      setPublications(summary.totals.publications);
+      setResearchers(summary.totals.researchers);
+      setRegistrations(summary.totals.registrations);
     } catch (error) {
       if (signal?.aborted) return;
       setTelemetryError(
@@ -63,7 +66,7 @@ const AdminDashboardPage = () => {
         setIsTelemetryLoading(false);
       }
     }
-  };
+  }, [filters]);
 
   useEffect(() => {
     if (!user) return;
@@ -72,7 +75,20 @@ const AdminDashboardPage = () => {
     void loadTelemetry(controller.signal);
 
     return () => controller.abort();
-  }, [user]);
+  }, [user, loadTelemetry]);
+
+  const applyFilters = () => {
+    setFilters({
+      ...(fromDate ? { from: fromDate } : {}),
+      ...(toDate ? { to: toDate } : {}),
+    });
+  };
+
+  const resetFilters = () => {
+    setFromDate("");
+    setToDate("");
+    setFilters({});
+  };
 
   if (isLoading) {
     return <LoadingPage label="Checking login status" />;
@@ -117,7 +133,7 @@ const AdminDashboardPage = () => {
           </div>
 
           {telemetryError ? (
-            <div className="mb-6 flex items-center justify-between gap-4 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100">
+            <div role="alert" className="mb-6 flex items-center justify-between gap-4 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100">
               <span className="inline-flex items-center gap-2">
                 <FaCircleExclamation />
                 {telemetryError}
@@ -132,6 +148,53 @@ const AdminDashboardPage = () => {
               </button>
             </div>
           ) : null}
+
+          <div className="mb-6 flex flex-wrap items-end gap-3 border-b border-amber-50/10 pb-6">
+            <label className="grid gap-2 text-xs font-semibold text-amber-50/60">
+              From
+              <input
+                type="date"
+                value={fromDate}
+                max={toDate || undefined}
+                onChange={(event) => setFromDate(event.target.value)}
+                className="rounded border border-amber-50/15 bg-black px-3 py-2 text-sm text-amber-50"
+              />
+            </label>
+            <label className="grid gap-2 text-xs font-semibold text-amber-50/60">
+              To
+              <input
+                type="date"
+                value={toDate}
+                min={fromDate || undefined}
+                onChange={(event) => setToDate(event.target.value)}
+                className="rounded border border-amber-50/15 bg-black px-3 py-2 text-sm text-amber-50"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={applyFilters}
+              className="rounded bg-[#ff6a1f] px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-500"
+            >
+              Apply
+            </button>
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="rounded border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-amber-50/40"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => void downloadAnalyticsCsv(filters).catch((error) => {
+                setTelemetryError(error instanceof Error ? error.message : "Could not export report.");
+              })}
+              className="ml-auto inline-flex items-center gap-2 rounded border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-[#ff6a1f]"
+            >
+              <FaDownload aria-hidden="true" />
+              Export CSV
+            </button>
+          </div>
 
           <div className="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <TelemetryCard
@@ -165,6 +228,24 @@ const AdminDashboardPage = () => {
               isLoading={isTelemetryLoading}
               label="News articles"
               value={newsArticles}
+            />
+            <TelemetryCard
+              icon={<FaFileLines />}
+              isLoading={isTelemetryLoading}
+              label="Publications"
+              value={publications}
+            />
+            <TelemetryCard
+              icon={<FaUserTie />}
+              isLoading={isTelemetryLoading}
+              label="Researchers"
+              value={researchers}
+            />
+            <TelemetryCard
+              icon={<FaInbox />}
+              isLoading={isTelemetryLoading}
+              label="Registrations"
+              value={registrations}
             />
           </div>
 

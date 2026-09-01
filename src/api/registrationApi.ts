@@ -17,5 +17,6 @@ export type RegistrationSubmissionResponse = {
 export const submitRegistration = (
   payload: RegistrationSubmissionPayload,
   signal?: AbortSignal,
+  idempotencyKey?: string,
 ) =>
-  submitJson(API_ENDPOINTS.registration, payload, signal) as Promise<RegistrationSubmissionResponse>;
+  submitJson(API_ENDPOINTS.registration, payload, signal, idempotencyKey) as Promise<RegistrationSubmissionResponse>;

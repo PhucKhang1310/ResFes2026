@@ -181,8 +181,9 @@ export const fetchPublicationById = async (
 export const submitPublication = (
   payload: PublicationSubmissionPayload,
   signal?: AbortSignal,
+  idempotencyKey?: string,
 ) =>
-  submitJson(API_ENDPOINTS.publicationSubmit, payload, signal).then(async (result) => {
+  submitJson(API_ENDPOINTS.publicationSubmit, payload, signal, idempotencyKey).then(async (result) => {
     await clearPublicationsCache();
     return result;
   });

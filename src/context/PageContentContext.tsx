@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { getPageContent } from "../api/pageContentApi";
-import type { EditableContent } from "../data/contentData";
+import { defaultContent, type EditableContent } from "../data/contentData";
 import { PageContentContext } from "./pageContentContextValue";
-import LoadingPage from "../components/loading/LoadingPage";
 
 export const PageContentProvider = ({
     children,
 }: {
     children: React.ReactNode;
 }) => {
-    const [content, setContent] = useState<EditableContent | null>(null);
+    const [content, setContent] = useState<EditableContent>(defaultContent);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -29,10 +28,6 @@ export const PageContentProvider = ({
 
         return () => controller.abort();
     }, []);
-
-    if (loading) {
-        return <LoadingPage label="Loading page content" />;
-    }
 
     return (
         <PageContentContext value={{ content, loading, error }}>

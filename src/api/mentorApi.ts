@@ -189,8 +189,9 @@ export const fetchMentors = async (
 export const submitMentor = (
   payload: MentorSubmissionPayload,
   signal?: AbortSignal,
+  idempotencyKey?: string,
 ) =>
-  submitJson(API_ENDPOINTS.mentorSubmit, payload, signal).then(async (result) => {
+  submitJson(API_ENDPOINTS.mentorSubmit, payload, signal, idempotencyKey).then(async (result) => {
     await clearMentorsCache();
     return result;
   });

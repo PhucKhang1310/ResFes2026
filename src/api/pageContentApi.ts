@@ -279,7 +279,10 @@ const getContentVersionRecords = (payload: unknown): unknown[] => {
 };
 
 export const fetchContentVersions = async (signal?: AbortSignal) => {
-  const response = await fetchWithRetry(API_ENDPOINTS.contentVersions, { signal });
+  const response = await fetchWithRetry(API_ENDPOINTS.contentVersions, {
+    credentials: "include",
+    signal,
+  });
 
   if (!response.ok) {
     throw new Error(
