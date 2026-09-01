@@ -63,6 +63,7 @@ test('release browser flow covers public, authentication, admin, and submissions
 
     let authenticated = false;
     let adminMutation = false;
+    let registrationDeadline = '2099-12-31T23:59:59+07:00';
     const sessionChecks = [];
     const submissions = new Set();
     const pageErrors = [];
@@ -98,7 +99,15 @@ test('release browser flow covers public, authentication, admin, and submissions
                 user: { id: 'admin-1', email: 'admin@example.com', role: 'super_admin' },
             });
         }
-        if (path === '/content') return json(route, { data: {} });
+        if (path === '/content') {
+            return json(route, {
+                data: {
+                    hero: {
+                        registrationDeadline,
+                    },
+                },
+            });
+        }
         if (path === '/mentor' && method === 'GET') {
             return json(route, { data: [{
                 _id: 'mentor-public-1',
@@ -109,6 +118,26 @@ test('release browser flow covers public, authentication, admin, and submissions
                 department: 'Software Engineering',
                 email: 'mentor@example.com',
                 description: 'Release testing mentor',
+                ResearchGate: 'https://orcid.org/0000-0002-1825-0097',
+            }] });
+        }
+        if (path === '/publication/release-publication-1' && method === 'GET') {
+            return json(route, { data: {
+                _id: 'release-publication-1',
+                publishTitle: 'Release publication detail',
+                publishDate: '2026-09-01',
+                author: 'Release Author',
+                content: '<p>Cold publication detail loaded.</p>',
+                imageUrl: 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=',
+            } });
+        }
+        if (path === '/news' && method === 'GET') {
+            return json(route, { data: [{
+                _id: 'release-news-1',
+                title: 'Release news',
+                author: 'Release Author',
+                date: '2026-09-01',
+                content: 'Release news content',
             }] });
         }
         if (path === '/mentor/admin' && method === 'GET') return json(route, { data: [] });
@@ -137,6 +166,19 @@ test('release browser flow covers public, authentication, admin, and submissions
     await page.getByRole('link', { name: 'Mentors' }).click();
     await page.waitForURL('**/mentors');
     await waitForText(page, 'Release Mentor');
+    assert.equal(await page.getByRole('link', { name: 'Release Mentor ORCID' }).count(), 1);
+    assert.equal(await page.getByRole('link', { name: 'Release Mentor ResearchGate' }).count(), 0);
+
+    await page.goto(`${appUrl}/publications/release-publication-1`);
+    await waitForText(page, 'Cold publication detail loaded.');
+    assert.equal(await page.locator('header').count(), 1);
+    assert.equal(await page.getByText('All rights reserved').count(), 1);
+    assert.equal(await page.title(), 'Publication detail | SRC2026');
+
+    await page.goto(`${appUrl}/news-list`);
+    await page.getByRole('button', { name: 'Back' }).click();
+    await page.waitForURL('**/#news');
+    assert.equal(new URL(page.url()).hash, '#news');
 
     await page.goto(`${appUrl}/auth/login`);
     await page.getByLabel('Email').fill('admin@example.com');
@@ -178,6 +220,20 @@ test('release browser flow covers public, authentication, admin, and submissions
     await page.getByLabel('Mentor').selectOption({ label: 'Release Mentor' });
     await page.getByRole('button', { name: 'Submit Registration' }).click();
     await waitForText(page, 'Reference: registration-1');
+
+    registrationDeadline = '2026-02-20T23:59:59+07:00';
+    await page.evaluate(async () => {
+        window.localStorage.clear();
+        for (const cacheName of await window.caches.keys()) {
+            await window.caches.delete(cacheName);
+        }
+    });
+    await page.goto(appUrl);
+    await waitForText(page, 'Registration is closed');
+    assert.equal(await page.getByRole('link', { name: 'Register Now' }).count(), 0);
+    await page.goto(`${appUrl}/register`);
+    await waitForText(page, 'The SRC 2026 registration period ended on February 20, 2026.');
+    assert.equal(await page.getByRole('button', { name: 'Submit Registration' }).count(), 0);
 
     assert.deepEqual(sessionChecks.includes(false), true, 'unauthenticated session check was not observed');
     assert.deepEqual(sessionChecks.includes(true), true, 'authenticated session check was not observed');
