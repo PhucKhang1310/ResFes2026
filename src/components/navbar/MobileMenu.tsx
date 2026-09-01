@@ -1,28 +1,32 @@
+import { useEffect, useRef } from "react";
+import { RxCross2 } from "react-icons/rx";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { useUser } from "../../hook/useUser";
+import { hasPermission } from "../../config/permissions";
 
 const listItem = [
   {
-    href: "/home#about",
+    href: "/#about",
     label: "About",
   },
   {
-    href: "/home#research-fields",
+    href: "/#research-fields",
     label: "Research Fields",
   },
   {
-    href: "/home#awards",
+    href: "/#awards",
     label: "Awards",
   },
   {
-    href: "/home#regulations",
+    href: "/#regulations",
     label: "Regulations",
   },
   {
-    href: "/home#milestones",
+    href: "/#milestones",
     label: "Milestones",
   },
   {
-    href: "/home#workshops",
+    href: "/#workshops",
     label: "Workshops",
   },
   {
@@ -37,10 +41,6 @@ const listItem = [
     href: "/submit",
     label: "Submit",
   },
-  {
-    href: "/auth/login",
-    label: "Login",
-  }
 ];
 
 type MobileMenuProps = {
@@ -49,31 +49,77 @@ type MobileMenuProps = {
 };
 
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
-  const { user } = useUser();
+  const { user, logout } = useUser();
+  const canOpenAdmin = hasPermission(user?.role, "dashboard.read");
+  const panelRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
   return (
     <>
       <div
-        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-200 ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-          }`}
+        className="fixed inset-0 z-40 bg-black/60"
         onClick={onClose}
         aria-hidden="true"
       />
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-dvh w-80 max-w-[85vw] bg-black text-white shadow-2xl transition-transform duration-200 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        ref={panelRef}
+        id="mobile-navigation"
+        className="fixed right-0 top-0 z-50 h-dvh w-80 max-w-[85vw] bg-black text-white shadow-2xl"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="mobile-navigation-title"
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <span className="text-sm font-semibold tracking-wide">Menu</span>
+          <span id="mobile-navigation-title" className="text-sm font-semibold tracking-wide">Menu</span>
           <button
+            ref={closeButtonRef}
             type="button"
             className="btn btn-ghost btn-sm text-white!"
             onClick={onClose}
             aria-label="Close menu"
           >
-            ✕
+            <RxCross2 aria-hidden="true" size={22} />
           </button>
         </div>
 
@@ -86,12 +132,21 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             </li>
           ))}
           {user && (
-            <li>
-              <a href="/admin" onClick={onClose}>
-                Admin
-              </a>
-            </li>
+            <>
+              {canOpenAdmin && (
+                <li>
+                  <a href="/admin" onClick={onClose}>Admin</a>
+                </li>
+              )}
+              <li>
+                <button type="button" onClick={() => void logout().then(onClose)}>
+                  <FaArrowRightFromBracket aria-hidden="true" />
+                  Sign out
+                </button>
+              </li>
+            </>
           )}
+          {!user && <li><a href="/auth/login" onClick={onClose}>Login</a></li>}
         </ul>
       </aside>
     </>

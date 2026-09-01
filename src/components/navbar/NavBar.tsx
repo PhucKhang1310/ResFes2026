@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
 import MobileMenu from "./MobileMenu";
 import { useCheckMobile } from "../../hook/useCheckMobile";
 import srcLogo from "../../assets/logo_src_white_nobg.png";
 import { useUser } from "../../hook/useUser";
+import { hasPermission } from "../../config/permissions";
 
 type NavBarProps = {
   themeMode?: "dark" | "light";
 };
 
 const NavBar = ({ themeMode = "dark" }: NavBarProps) => {
-  const { user } = useUser();
+  const { user, logout } = useUser();
+  const canOpenAdmin = hasPermission(user?.role, "dashboard.read");
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,6 +43,7 @@ const NavBar = ({ themeMode = "dark" }: NavBarProps) => {
       : "text-white [&>li>button]:hover:text-amber-200";
   const menuIconColor = isLight && isAtTop ? "#0f172a" : "white";
   const logoFilterClass = isLight ? "invert" : "";
+  const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,16 +118,26 @@ const NavBar = ({ themeMode = "dark" }: NavBarProps) => {
               <div className="navbar-end">
                 <details ref={dropdownRef} className="dropdown dropdown-end" onToggle={(e) => setIsDropdownOpen((e.currentTarget as HTMLDetailsElement).open)}>
                   <summary className="btn btn-ghost btn-circle">
-                    <RxHamburgerMenu size={24} color={menuIconColor} />
+                    <span className="sr-only">Open navigation menu</span>
+                    <RxHamburgerMenu aria-hidden="true" size={24} color={menuIconColor} />
                   </summary>
                   <ul className="dropdown-content menu bg-base-100 text-base-content rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-base-300" onClick={() => dropdownRef.current?.removeAttribute("open")}>
                     <li><a href="/publications">Publications</a></li>
                     <li><a href="/mentors">Mentors</a></li>
                     <li><a href="/submit">Submit</a></li>
                     <div className="divider my-0"></div>
-                    <li><a href="/auth/login">Login</a></li>
-                    {user && (
-                      <li><a href="/admin">Admin</a></li>
+                    {user ? (
+                      <>
+                        {canOpenAdmin && <li><a href="/admin">Admin</a></li>}
+                        <li>
+                          <button type="button" onClick={() => void logout()} title="Sign out">
+                            <FaArrowRightFromBracket aria-hidden="true" />
+                            Sign out
+                          </button>
+                        </li>
+                      </>
+                    ) : (
+                      <li><a href="/auth/login">Login</a></li>
                     )}
                   </ul>
                 </details>
@@ -149,10 +163,11 @@ const NavBar = ({ themeMode = "dark" }: NavBarProps) => {
           type="button"
           className="btn btn-ghost btn-sm text-amber-500"
           onClick={() => setIsMenuOpen((open) => !open)}
-          aria-label="Open menu"
+          aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isMenuOpen}
+          aria-controls="mobile-navigation"
         >
-          <RxHamburgerMenu size={25} color={menuIconColor} />
+          <RxHamburgerMenu aria-hidden="true" size={25} color={menuIconColor} />
         </button>
 
         <a href="/" className="inline-flex items-center leading-none">
@@ -164,7 +179,7 @@ const NavBar = ({ themeMode = "dark" }: NavBarProps) => {
         </a>
       </header>
 
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MobileMenu isOpen={isMenuOpen} onClose={closeMobileMenu} />
     </>
   );
 };

@@ -14,7 +14,7 @@ import {
 
 const Hero = () => {
   const { isMobile } = useCheckMobile()
-  const { content, error } = usePageContent();
+  const { content } = usePageContent();
   const hero = content?.hero;
   const sectionStyle = getContentSectionStyle(content, "hero");
   const registrationDeadline = hero?.registrationDeadline;
@@ -35,7 +35,7 @@ const Hero = () => {
     return () => window.clearInterval(timer);
   }, [registrationDeadline]);
 
-  if (error || !hero) {
+  if (!hero) {
     return (
       <section
         id="home"
@@ -95,18 +95,18 @@ const Hero = () => {
       >
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl items-center px-6 pb-16 pt-28 lg:px-10 ">
           <div className="flex w-full flex-col lg:gap-90 lg:flex-row lg:items-center lg:justify-between">
-            <div className="hero-content self-start p-0 text-[var(--section-text)] lg:justify-start">
+            <div className="hero-content relative z-10 self-start p-0 text-[var(--section-text)] lg:justify-start">
               <div className="max-w-xl">
-                <div className="mb-3 text-5xl lg:text-7xl text-[var(--section-text)]">
+                <h1 className="mb-3 text-5xl text-[var(--section-text)] lg:text-7xl">
                   {hero.titleLines.map((line, index) => (
-                    <h1
+                    <span
                       key={`${line}-${index}`}
-                      className={index % 2 === 0 ? "font-bold" : "font-thin"}
+                      className={`block ${index % 2 === 0 ? "font-bold" : "font-thin"}`}
                     >
                       {renderFlickerText(line)}
-                    </h1>
+                    </span>
                   ))}
-                </div>
+                </h1>
                 <div className="text-rotate mb-3 font-semibold text-[var(--section-accent)]">
                   <span className="justify-items-start">
                     <span className="max-w-lg">
@@ -118,13 +118,14 @@ const Hero = () => {
                   </span>
                 </div>
                 <p className="text-xs text-[var(--section-text)]/50 mb-2 tracking-wide">{hero.countdownLabel}</p>
-                <div className={`grid grid-flow-col gap-2 text-center auto-cols-max lg:gap-5 `}>
+                <p className="sr-only" aria-live="polite">
+                  {days} days, {hours} hours, {minutes} minutes, and {seconds} seconds remaining
+                </p>
+                <div aria-hidden="true" className="grid auto-cols-max grid-flow-col gap-2 text-center lg:gap-5">
                   <div className="flex flex-col p-2 bg-[#111827] rounded-box text-neutral-content">
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(days)}
-                        aria-live="polite"
-                        aria-label={`${days} days`}
                       >
                         {days}
                       </span>
@@ -135,8 +136,6 @@ const Hero = () => {
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(hours)}
-                        aria-live="polite"
-                        aria-label={`${hours} hours`}
                       >
                         {hours}
                       </span>
@@ -147,8 +146,6 @@ const Hero = () => {
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(minutes)}
-                        aria-live="polite"
-                        aria-label={`${minutes} minutes`}
                       >
                         {minutes}
                       </span>
@@ -159,8 +156,6 @@ const Hero = () => {
                     <span className="countdown font-mono text-5xl">
                       <span
                         style={valueStyle(seconds)}
-                        aria-live="polite"
-                        aria-label={`${seconds} seconds`}
                       >
                         {seconds}
                       </span>
@@ -171,8 +166,6 @@ const Hero = () => {
                 <div className={`flex ${isMobile ? `flex-col max-w-xs` : `gap-5`}`}>
                   <a
                     href="/register"
-                    target="_blank"
-                    rel="noreferrer"
                     style={{ backgroundColor: sectionStyle.accentColor }}
                     className="btn mt-8 rounded-full border-0 px-8 text-white hover:brightness-110"
                   >
@@ -187,7 +180,7 @@ const Hero = () => {
               src={heroBackgroundImage}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute left-[-30%] top-[6%] w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw] ml-48 fade-in"
+              className="pointer-events-none absolute left-[-30%] top-[6%] z-0 ml-48 w-[165vw] max-w-none opacity-80 mix-blend-screen sm:left-[-18%] sm:top-[8%] sm:w-[145vw] lg:left-[-2%] lg:top-[8%] lg:w-[74vw] fade-in"
             />
           </div>
         </div>
@@ -235,10 +228,10 @@ const Hero = () => {
               </div>
             )}
             <div className="col-span-6 text-center text-2xl pb-18">
-              <h1 className="font-thin text-[var(--section-text)] ">
+              <p className="font-thin text-[var(--section-text)] ">
                 <span className="font-bold">{hero.closingLinePrimary}</span>
-              </h1>
-              <h1 className="font-bold text-[var(--section-text)]">{hero.closingLineSecondary}</h1>
+              </p>
+              <p className="font-bold text-[var(--section-text)]">{hero.closingLineSecondary}</p>
             </div>
           </div>
         </div>
