@@ -115,7 +115,7 @@ const PublicationsList = () => {
         {/* Back button */}
         <div className="flex items-center justify-between gap-4">
           <button
-            onClick={() => navigate("/home#publications")}
+            onClick={() => navigate("/#publications")}
             className={`text-md flex cursor-pointer items-center gap-2 transition-colors ${theme.backButton}`}
           >
             <FaArrowLeft size={16} />

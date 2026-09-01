@@ -87,7 +87,7 @@ src/
 
 | Route | Purpose |
 | --- | --- |
-| `/home` | Main SRC2026 landing page |
+| `/` | Main SRC2026 landing page |
 | `/mentors` | Mentor directory |
 | `/news-list` | News listing |
 | `/news-list/:id` | News detail |
@@ -119,8 +119,9 @@ URL must include the `/api/v1` prefix, for example:
 https://src2026backendmain.vercel.app/api/v1
 ```
 
-CI reads the same values from the `VITE_API_BASE_URL` and
-`VITE_TURNSTILE_SITE_KEY` repository variables.
+CI reads `VITE_API_BASE_URL` from the repository variable and uses Cloudflare's
+official test site key for build verification only. Preview and production
+deployments still require a real `VITE_TURNSTILE_SITE_KEY`.
 
 Primary API calls are defined in `src/api/api.ts`:
 

@@ -35,11 +35,16 @@ if (!apiBaseUrl) {
 
 const turnstileSiteKey = env.VITE_TURNSTILE_SITE_KEY?.trim();
 const turnstileTestKeyPattern = /^[123]x0{18,}/i;
+const allowTurnstileTestKey =
+  process.env.CI === "true" && env.ALLOW_TURNSTILE_TEST_KEY === "true";
 if (!turnstileSiteKey) {
   errors.push("VITE_TURNSTILE_SITE_KEY is required for production builds.");
 } else if (/replace|placeholder|your[-_ ]|example/i.test(turnstileSiteKey)) {
   errors.push("VITE_TURNSTILE_SITE_KEY must not be a placeholder value.");
-} else if (turnstileTestKeyPattern.test(turnstileSiteKey)) {
+} else if (
+  turnstileTestKeyPattern.test(turnstileSiteKey) &&
+  !allowTurnstileTestKey
+) {
   errors.push("VITE_TURNSTILE_SITE_KEY must not be a Turnstile test key.");
 }
 

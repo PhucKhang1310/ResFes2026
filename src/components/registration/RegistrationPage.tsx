@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaCheck } from "react-icons/fa6";
-import { useEditableContent } from "../../hook/useEditableContent";
+import { usePageContent } from "../../hook/usePageContent";
 import { fetchMentors } from "../../api/mentorApi";
 import { submitRegistration } from "../../api/registrationApi";
 import Footer from "../footer/Footer";
 import NavBar from "../navbar/NavBar";
 import TurnstileWidget from "../turnstile/TurnstileWidget";
 import { createIdempotencyKey } from "../../api/apiClient";
+import { useDeadlineStatus } from "../../hook/useDeadlineStatus";
 
 type RegistrationForm = {
   name: string;
@@ -30,7 +31,10 @@ const inputClass =
 const labelClass = "text-xs font-bold uppercase tracking-wide text-white/60";
 
 const RegistrationPage = () => {
-  const { researchFields } = useEditableContent();
+  const { content } = usePageContent();
+  const researchFields = content?.researchFields ?? [];
+  const registrationDeadline = content?.hero.registrationDeadline;
+  const isRegistrationClosed = useDeadlineStatus(registrationDeadline);
   const [form, setForm] = useState<RegistrationForm>(initialForm);
   const [status, setStatus] = useState("");
   const [errors, setErrors] = useState<Partial<RegistrationForm>>({});
@@ -43,6 +47,11 @@ const RegistrationPage = () => {
   const [idempotencyKey, setIdempotencyKey] = useState(createIdempotencyKey);
 
   useEffect(() => {
+    if (isRegistrationClosed) {
+      setIsLoadingMentors(false);
+      return;
+    }
+
     const controller = new AbortController();
 
     fetchMentors(controller.signal)
@@ -66,7 +75,7 @@ const RegistrationPage = () => {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [isRegistrationClosed]);
 
   const updateForm = (field: keyof RegistrationForm, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -94,6 +103,11 @@ const RegistrationPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
+
+    if (isRegistrationClosed) {
+      setStatus("Registration is closed.");
+      return;
+    }
 
     if (!validateForm()) {
       setStatus("Please complete all required fields.");
@@ -163,11 +177,19 @@ const RegistrationPage = () => {
           </h1>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="rounded border border-white/10 bg-zinc-900 p-5 shadow-2xl md:p-8"
-        >
-          <div className="grid gap-5 md:grid-cols-2">
+        {isRegistrationClosed ? (
+          <div className="rounded border border-orange-400/30 bg-zinc-900 p-8 text-center shadow-2xl">
+            <h2 className="text-2xl font-bold text-white">Registration is closed</h2>
+            <p className="mt-3 text-sm text-white/65">
+              The SRC 2026 registration period ended on February 20, 2026.
+            </p>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="rounded border border-white/10 bg-zinc-900 p-5 shadow-2xl md:p-8"
+          >
+            <div className="grid gap-5 md:grid-cols-2">
             <FormField label="Name" error={errors.name}>
               <input
                 className={inputClass}
@@ -246,9 +268,9 @@ const RegistrationPage = () => {
                 }}
               />
             </div>
-          </div>
+            </div>
 
-          <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <button
               type="submit"
               disabled={isSubmitting || isLoadingMentors || Boolean(mentorLoadError)}
@@ -262,8 +284,9 @@ const RegistrationPage = () => {
                 {status}
               </p>
             ) : null}
-          </div>
-        </form>
+            </div>
+          </form>
+        )}
       </section>
       <Footer />
     </main>

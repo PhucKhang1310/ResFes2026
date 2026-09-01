@@ -78,7 +78,7 @@ export const getCurrentUser = async (signal?: AbortSignal) => {
     );
   }
 
-  const payload = (await response.json()) as { user: CurrentUser };
+  const payload = (await response.json()) as { user: CurrentUser | null };
   return payload.user;
 };
 

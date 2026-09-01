@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { fetchNews, type NewsRecord } from "../../api/newsApi";
 import srcLogo from "../../assets/logo_src_white_nobg.png";
 import { useCheckMobile } from "../../hook/useCheckMobile";
-// import Footer from "../footer/Footer";
+import Footer from "../../components/footer/Footer";
 import NavBar from "../../components/navbar/NavBar";
 import Pagination from "../../components/pagination/Pagination";
 import LoadingPage from "../../components/loading/LoadingPage";
@@ -56,7 +56,7 @@ const NewsList = () => {
     }, [currentPage, newsList, pageSize]);
 
     const handleBackToNewsPage = () => {
-        navigate("/home#news");
+        navigate("/#news");
     };
 
     if (isLoading) {
@@ -131,7 +131,7 @@ const NewsList = () => {
                     />
                 )}
             </section>
-            {/* <Footer /> */}
+            <Footer />
         </main>
     );
 };

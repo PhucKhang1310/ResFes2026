@@ -45,6 +45,10 @@ const getPublicationRecords = (payload: unknown): unknown[] => {
     if (Array.isArray(wrappedList)) {
       return wrappedList;
     }
+
+    if (wrappedList && typeof wrappedList === "object") {
+      return [wrappedList];
+    }
   }
 
   return [];

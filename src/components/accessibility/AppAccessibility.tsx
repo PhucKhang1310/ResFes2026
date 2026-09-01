@@ -13,9 +13,15 @@ const routeLabels: Record<string, string> = {
   "/admin": "Admin dashboard",
 };
 
-const getRouteLabel = (pathname: string) =>
-  routeLabels[pathname] ??
-  (pathname.startsWith("/admin") ? "Admin workspace" : "SRC2026 page");
+const getRouteLabel = (pathname: string) => {
+  if (routeLabels[pathname]) return routeLabels[pathname];
+  if (pathname.startsWith("/news-list/")) return "News article";
+  if (pathname.startsWith("/publications/")) return "Publication detail";
+  if (pathname === "/submit/publication") return "Publication submission";
+  if (pathname === "/submit/mentor") return "Mentor submission";
+  if (pathname.startsWith("/admin")) return "Admin workspace";
+  return "SRC2026 page";
+};
 
 const AppAccessibility = () => {
   const { pathname } = useLocation();

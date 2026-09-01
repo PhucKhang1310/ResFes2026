@@ -10,7 +10,7 @@ import {
   getContentSectionStyle,
   sectionCssVars,
 } from "../../config/pageCustomization";
-
+import { useDeadlineStatus } from "../../hook/useDeadlineStatus";
 
 const Hero = () => {
   const { isMobile } = useCheckMobile()
@@ -19,13 +19,15 @@ const Hero = () => {
   const sectionStyle = getContentSectionStyle(content, "hero");
   const registrationDeadline = hero?.registrationDeadline;
   const [totalSeconds, setTotalSeconds] = useState(0);
+  const isRegistrationClosed = useDeadlineStatus(registrationDeadline, 1000);
 
   useEffect(() => {
     if (!registrationDeadline) return;
 
     const updateTimeLeft = () => {
       const targetDate = new Date(registrationDeadline).getTime();
-      const diff = Math.max(0, Math.floor((targetDate - Date.now()) / 1000));
+      const difference = targetDate - Date.now();
+      const diff = Math.max(0, Math.floor(difference / 1000));
       setTotalSeconds(diff);
     };
 
@@ -49,7 +51,6 @@ const Hero = () => {
   const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
   const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
   const seconds = totalSeconds % 60;
-
   const valueStyle = (value: number) => ({ "--value": value } as CSSProperties);
   const getFlickerTimings = (text: string, index: number) => {
     let seed = index + text.length;
@@ -117,7 +118,9 @@ const Hero = () => {
                     </span>
                   </span>
                 </div>
-                <p className="text-xs text-[var(--section-text)]/50 mb-2 tracking-wide">{hero.countdownLabel}</p>
+                <p className="text-xs text-[var(--section-text)]/50 mb-2 tracking-wide">
+                  {isRegistrationClosed ? "Registration is closed" : hero.countdownLabel}
+                </p>
                 <p className="sr-only" aria-live="polite">
                   {days} days, {hours} hours, {minutes} minutes, and {seconds} seconds remaining
                 </p>
@@ -164,13 +167,22 @@ const Hero = () => {
                   </div>
                 </div>
                 <div className={`flex ${isMobile ? `flex-col max-w-xs` : `gap-5`}`}>
-                  <a
-                    href="/register"
-                    style={{ backgroundColor: sectionStyle.accentColor }}
-                    className="btn mt-8 rounded-full border-0 px-8 text-white hover:brightness-110"
-                  >
-                    {hero.ctaLabel}
-                  </a>
+                  {isRegistrationClosed ? (
+                    <span
+                      className="btn mt-8 cursor-not-allowed rounded-full border border-white/15 bg-zinc-800 px-8 text-white/60"
+                      aria-disabled="true"
+                    >
+                      Registration closed
+                    </span>
+                  ) : (
+                    <a
+                      href={hero.ctaUrl}
+                      style={{ backgroundColor: sectionStyle.accentColor }}
+                      className="btn mt-8 rounded-full border-0 px-8 text-white hover:brightness-110"
+                    >
+                      {hero.ctaLabel}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

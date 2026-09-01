@@ -5,12 +5,8 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { fetchPublicationById, parsePublicationDate } from "../../api/publicationApi";
 import type { PublicationItem } from "../../data/publicationsData";
 import NavBar from "../../components/navbar/NavBar";
-import Footer from "../../components/navbar/NavBar";
+import Footer from "../../components/footer/Footer";
 import LoadingPage from "../../components/loading/LoadingPage";
-
-
-
-
 const PublicationDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();

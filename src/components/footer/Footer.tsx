@@ -8,11 +8,15 @@ import {
   getContentSectionStyle,
   sectionCssVars,
 } from "../../config/pageCustomization";
+import { useDeadlineStatus } from "../../hook/useDeadlineStatus";
 
 const Footer = () => {
   const { isMobile } = useCheckMobile();
   const { content } = usePageContent();
   const footer = content?.footer;
+  const isRegistrationClosed = useDeadlineStatus(
+    content?.hero.registrationDeadline,
+  );
   const sectionStyle = getContentSectionStyle(content, "footer");
 
   if (!footer) {
@@ -71,15 +75,22 @@ const Footer = () => {
             <p className="text-4xl mt-3 font-medium">{footer.headlineThree}</p>
             <br />
             <div className={`flex ${isMobile ? "flex-col max-w-xs" : ""} gap-5`}>
-              <a
-                href="/register"
-                target="_blank"
-                rel="noreferrer"
-                style={{ backgroundColor: sectionStyle.accentColor }}
-                className="btn mt-2 rounded-full border-0 px-8 text-white hover:brightness-110"
-              >
-                {footer.ctaLabel}
-              </a>
+              {isRegistrationClosed ? (
+                <span
+                  className="btn mt-2 cursor-not-allowed rounded-full border border-white/15 bg-zinc-800 px-8 text-white/60"
+                  aria-disabled="true"
+                >
+                  Registration closed
+                </span>
+              ) : (
+                <a
+                  href={footer.ctaUrl}
+                  style={{ backgroundColor: sectionStyle.accentColor }}
+                  className="btn mt-2 rounded-full border-0 px-8 text-white hover:brightness-110"
+                >
+                  {footer.ctaLabel}
+                </a>
+              )}
             </div>
           </div>
           <nav className={`${isMobile ? "" : "justify-self-end"}`}>

@@ -27,6 +27,14 @@ export type MentorSubmissionPayload = {
 
 const MENTORS_CACHE_TTL = 5 * 60 * 1000;
 
+const getHostname = (value: string) => {
+  try {
+    return new URL(value).hostname.toLowerCase();
+  } catch {
+    return "";
+  }
+};
+
 const readMentorLinks = (
   record: ApiRecord,
 ): NonNullable<MentorItem["links"]> => {
@@ -35,20 +43,29 @@ const readMentorLinks = (
       ? (record.links as ApiRecord)
       : {};
 
-  return {
-    website:
+  const website =
       readString(record, ["website", "websiteUrl", "profileUrl"]) ||
       readString(record, ["personalWebsite"]) ||
       readString(record, ["Personal Website"]) ||
-      readString(links, ["website", "websiteUrl", "profileUrl"]),
-    orcid:
+      readString(links, ["website", "websiteUrl", "profileUrl"]);
+  const orcid =
       readString(record, ["orcid", "orcidUrl"]) ||
       readString(record, ["ORCID"]) ||
-      readString(links, ["orcid", "orcidUrl"]),
-    researchgate:
+      readString(links, ["orcid", "orcidUrl"]);
+  const researchgate =
       readString(record, ["researchgate", "researchGate", "researchGateUrl"]) ||
       readString(record, ["ResearchGate"]) ||
-      readString(links, ["researchgate", "researchGate", "researchGateUrl"]),
+      readString(links, ["researchgate", "researchGate", "researchGateUrl"]);
+  const researchgateHostname = getHostname(researchgate);
+  const misplacedOrcid =
+    !orcid &&
+    (researchgateHostname === "orcid.org" ||
+      researchgateHostname.endsWith(".orcid.org"));
+
+  return {
+    website,
+    orcid: misplacedOrcid ? researchgate : orcid,
+    researchgate: misplacedOrcid ? "" : researchgate,
     googleScholar:
       readString(record, [
         "googleScholar",
