@@ -34,3 +34,4 @@ credentials*.json
 *.sln
 *.sw?
 .playwright-cli/*
+.vercel
