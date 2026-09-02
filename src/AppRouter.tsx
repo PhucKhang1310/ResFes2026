@@ -66,8 +66,7 @@ const AppRouter = () => (
         <Route path="/admin/audit-logs" element={protectedRoute("audit.read", <AuditLogPage />)} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/auth/login" element={<LoginPage />} />
-        <Route path="/auth/signup" element={<SignUp />} />
-        <Route path="/auth/signupabc" element={<Navigate to="/auth/signup" replace />} />
+        <Route path="/auth/signupabcd" element={<SignUp />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

@@ -22,6 +22,27 @@ body,
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: #f27255 #111827;
+  scrollbar-width: auto;
+}
+
+html::-webkit-scrollbar {
+  width: 14px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+html::-webkit-scrollbar-thumb {
+  min-height: 48px;
+  border: 3px solid #111827;
+  border-radius: 999px;
+  background-color: #f27255;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: #fb923c;
 }
 
 :focus-visible {
