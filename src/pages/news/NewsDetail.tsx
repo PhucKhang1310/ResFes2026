@@ -7,9 +7,51 @@ import { useCheckMobile } from "../../hook/useCheckMobile";
 import Footer from "../../components/footer/Footer";
 import Navbar from "../../components/navbar/NavBar";
 import LoadingPage from "../../components/loading/LoadingPage";
+import {
+  parseNewsArticle,
+  type NewsArticleBlock,
+} from "../../utils/newsArticleContent";
 
-const getNewsImage = (item: NewsRecord) =>
+const getCardImage = (item: NewsRecord) =>
   item.thumbNailImage || item.images[0] || srcLogo;
+
+const ArticleBlock = ({ block, title }: { block: NewsArticleBlock; title: string }) => {
+  if (block.type === "heading") {
+    return <h3 data-article-block="heading" className="pt-3 text-2xl font-bold leading-tight text-amber-50">{block.text}</h3>;
+  }
+
+  if (block.type === "quote") {
+    return (
+      <blockquote data-article-block="quote" className="border-l-4 border-[#f27255] py-2 pl-5 text-xl italic leading-8 text-amber-50/85 whitespace-pre-wrap">
+        {block.text}
+      </blockquote>
+    );
+  }
+
+  if (block.type === "image") {
+    return (
+      <figure data-article-block="image" className="my-3">
+        <img
+          src={block.url}
+          alt={block.alt || block.caption || title}
+          className="max-h-[42rem] w-full rounded-lg object-contain bg-white/5"
+          loading="lazy"
+        />
+        {block.caption ? (
+          <figcaption className="mt-2 text-sm leading-5 text-amber-50/55">
+            {block.caption}
+          </figcaption>
+        ) : null}
+      </figure>
+    );
+  }
+
+  return (
+    <p data-article-block="paragraph" className="text-base leading-8 text-amber-50/90 whitespace-pre-wrap sm:text-lg">
+      {block.text}
+    </p>
+  );
+};
 
 const NewsDetail = () => {
   const { isMobile } = useCheckMobile();
@@ -68,6 +110,16 @@ const NewsDetail = () => {
     return <LoadingPage label="Loading news article" />;
   }
 
+  const article = newsItem
+    ? parseNewsArticle(
+        newsItem.body || newsItem.content || newsItem.description,
+        newsItem.images,
+      )
+    : null;
+  const coverImage = newsItem
+    ? newsItem.coverImageUrl || newsItem.thumbNailImage
+    : "";
+
   return (
     <main className="min-h-screen bg-black p-6 text-amber-50">
       <Navbar />
@@ -87,9 +139,9 @@ const NewsDetail = () => {
           </p>
         ) : newsItem ? (
           <>
-            {isMobile && (
+            {isMobile && coverImage && (
               <img
-                src={getNewsImage(newsItem)}
+                src={coverImage}
                 alt={newsItem.title}
                 className="mt-6 max-h-105 w-full rounded-lg object-cover"
               />
@@ -100,9 +152,9 @@ const NewsDetail = () => {
                 {newsItem.title}
               </h2>
 
-              {!isMobile && (
+              {!isMobile && coverImage && (
                 <img
-                  src={getNewsImage(newsItem)}
+                  src={coverImage}
                   alt={newsItem.title}
                   className="max-h-105 w-full rounded-lg object-cover"
                 />
@@ -112,9 +164,16 @@ const NewsDetail = () => {
                 <span>{newsItem.author}</span>
                 <span>{new Date(newsItem.date).toLocaleDateString("vi-VN")}</span>
               </div>
-              <p className="mt-4 leading-7 text-amber-50/90">
-                {newsItem.content || newsItem.description}
-              </p>
+              {newsItem.summary || newsItem.description ? (
+                <p className="mt-5 text-lg font-medium leading-8 text-amber-50/70">
+                  {newsItem.summary || newsItem.description}
+                </p>
+              ) : null}
+              <div className="mt-8 grid gap-7">
+                {article?.blocks.map((block) => (
+                  <ArticleBlock key={block.id} block={block} title={newsItem.title} />
+                ))}
+              </div>
             </div>
           </>
         ) : (
@@ -144,7 +203,7 @@ const NewsDetail = () => {
                     }
                   >
                     <img
-                      src={getNewsImage(item)}
+                      src={getCardImage(item)}
                       alt={item.title}
                       className="h-56 w-full object-cover"
                       loading="lazy"

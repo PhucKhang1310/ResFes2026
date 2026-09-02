@@ -8,7 +8,7 @@
     "prebuild": "node scripts/validate-build-env.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test:e2e": "node --test --test-force-exit test/browser-release.test.mjs",
+    "test:e2e": "node --test --test-force-exit test/browser-release.test.mjs test/news-editor-flow.test.mjs",
     "preview": "vite preview",
     "check": "npm run build && npm run lint"
   },

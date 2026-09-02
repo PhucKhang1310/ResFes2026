@@ -43,7 +43,7 @@ const NewsUploadAdminPage = () => {
 
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
-      <section className="mx-auto max-w-4xl">
+      <section className="mx-auto max-w-6xl">
         <button
           type="button"
           className="mb-6 inline-flex items-center gap-2 text-sm cursor-pointer text-slate-300 transition hover:text-white"
