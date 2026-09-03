@@ -1,4 +1,4 @@
-import { FaPlus, FaTrash } from "react-icons/fa6";
+import { FaPlus, FaXmark } from "react-icons/fa6";
 
 export const AddCollectionItemButton = ({
   label,
@@ -28,9 +28,9 @@ export const RemoveCollectionItemButton = ({
     type="button"
     aria-label={label}
     title={label}
-    className="inline-grid size-9 shrink-0 cursor-pointer place-items-center rounded border border-red-400/30 text-red-300 transition hover:bg-red-500/10 hover:text-red-200"
+    className="inline-grid size-7 shrink-0 cursor-pointer place-items-center rounded text-red-300/80 transition hover:bg-red-500/10 hover:text-red-200"
     onClick={onClick}
   >
-    <FaTrash aria-hidden="true" />
+    <FaXmark className="size-3.5" aria-hidden="true" />
   </button>
 );

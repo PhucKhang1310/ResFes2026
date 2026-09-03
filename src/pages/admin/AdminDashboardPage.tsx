@@ -41,33 +41,36 @@ const AdminDashboardPage = () => {
   const totalPending = pendingPublications + pendingMentors;
   const totalSections = activeSections + inactiveSections;
 
-  const loadTelemetry = useCallback(async (signal?: AbortSignal, activeFilters = filters) => {
-    try {
-      setIsTelemetryLoading(true);
-      setTelemetryError("");
+  const loadTelemetry = useCallback(
+    async (signal?: AbortSignal, activeFilters = filters) => {
+      try {
+        setIsTelemetryLoading(true);
+        setTelemetryError("");
 
-      const summary = await fetchAnalyticsSummary(activeFilters, signal);
-      setPendingPublications(summary.totals.pendingPublications);
-      setPendingMentors(summary.totals.pendingResearchers);
-      setActiveSections(summary.content.activeSections);
-      setInactiveSections(summary.content.inactiveSections);
-      setNewsArticles(summary.totals.publishedNews);
-      setPublications(summary.totals.publications);
-      setResearchers(summary.totals.researchers);
-      setRegistrations(summary.totals.registrations);
-    } catch (error) {
-      if (signal?.aborted) return;
-      setTelemetryError(
-        error instanceof Error
-          ? error.message
-          : "Could not load dashboard telemetry.",
-      );
-    } finally {
-      if (!signal?.aborted) {
-        setIsTelemetryLoading(false);
+        const summary = await fetchAnalyticsSummary(activeFilters, signal);
+        setPendingPublications(summary.totals.pendingPublications);
+        setPendingMentors(summary.totals.pendingResearchers);
+        setActiveSections(summary.content.activeSections);
+        setInactiveSections(summary.content.inactiveSections);
+        setNewsArticles(summary.totals.publishedNews);
+        setPublications(summary.totals.publications);
+        setResearchers(summary.totals.researchers);
+        setRegistrations(summary.totals.registrations);
+      } catch (error) {
+        if (signal?.aborted) return;
+        setTelemetryError(
+          error instanceof Error
+            ? error.message
+            : "Could not load dashboard telemetry.",
+        );
+      } finally {
+        if (!signal?.aborted) {
+          setIsTelemetryLoading(false);
+        }
       }
-    }
-  }, [filters]);
+    },
+    [filters],
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -128,13 +131,16 @@ const AdminDashboardPage = () => {
               SRC2026 operations
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-amber-50/55">
-              Open the workspace you need for page layout management or submission
-              review.
+              Open the workspace you need for page layout management or
+              submission review.
             </p>
           </div>
 
           {telemetryError ? (
-            <div role="alert" className="mb-6 flex items-center justify-between gap-4 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100">
+            <div
+              role="alert"
+              className="mb-6 flex items-center justify-between gap-4 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-100"
+            >
               <span className="inline-flex items-center gap-2">
                 <FaCircleExclamation />
                 {telemetryError}
@@ -150,7 +156,7 @@ const AdminDashboardPage = () => {
             </div>
           ) : null}
 
-          <div className="mb-6 flex flex-wrap items-end gap-3 border-b border-amber-50/10 pb-6">
+          <div className="mb-6 flex flex-wrap items-stretch gap-3 border-b border-amber-50/10 pb-6">
             <ReportDateRangePicker
               from={fromDate}
               to={toDate}
@@ -162,23 +168,29 @@ const AdminDashboardPage = () => {
             <button
               type="button"
               onClick={applyFilters}
-              className="rounded bg-[#ff6a1f] px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-500"
+              className="min-h-14 rounded bg-[#ff6a1f] px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-500"
             >
               Apply
             </button>
             <button
               type="button"
               onClick={resetFilters}
-              className="rounded border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-amber-50/40"
+              className="min-h-14 rounded border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-amber-50/40"
             >
               Reset
             </button>
             <button
               type="button"
-              onClick={() => void downloadAnalyticsCsv(filters).catch((error) => {
-                setTelemetryError(error instanceof Error ? error.message : "Could not export report.");
-              })}
-              className="ml-auto inline-flex items-center gap-2 rounded border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-[#ff6a1f]"
+              onClick={() =>
+                void downloadAnalyticsCsv(filters).catch((error) => {
+                  setTelemetryError(
+                    error instanceof Error
+                      ? error.message
+                      : "Could not export report.",
+                  );
+                })
+              }
+              className="ml-auto inline-flex min-h-14 items-center gap-2 rounded border border-amber-50/15 px-4 py-2 text-sm font-semibold text-amber-50 transition hover:border-[#ff6a1f]"
             >
               <FaDownload aria-hidden="true" />
               Export CSV

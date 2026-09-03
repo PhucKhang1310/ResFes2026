@@ -104,8 +104,7 @@ const textToList = (value: string) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
-const isHexColor = (value: string) =>
-  /^#[0-9A-Fa-f]{6}$/.test(value.trim());
+const isHexColor = (value: string) => /^#[0-9A-Fa-f]{6}$/.test(value.trim());
 
 const AdminPage = () => {
   const { user, isLoading: isUserLoading } = useUser();
@@ -149,7 +148,9 @@ const AdminPage = () => {
     ];
   }, [content]);
 
-  const updateContent = (updater: (current: EditableContent) => EditableContent) => {
+  const updateContent = (
+    updater: (current: EditableContent) => EditableContent,
+  ) => {
     setContent((current) => (current ? updater(current) : current));
     setSaveMessage("");
   };
@@ -166,7 +167,9 @@ const AdminPage = () => {
   const moveLayoutSection = (sectionId: PageSectionKind, direction: -1 | 1) => {
     updateLayout((layout) => {
       const nextLayout = [...layout];
-      const currentIndex = nextLayout.findIndex((section) => section.id === sectionId);
+      const currentIndex = nextLayout.findIndex(
+        (section) => section.id === sectionId,
+      );
       const nextIndex = currentIndex + direction;
 
       if (currentIndex < 0 || nextIndex < 0 || nextIndex >= nextLayout.length) {
@@ -249,7 +252,9 @@ const AdminPage = () => {
   const validateCurrentContent = () => {
     const result = validatePageContentInput(content);
     if (!result.valid) {
-      setContentError(Object.values(result.errors)[0] ?? "Page content is invalid.");
+      setContentError(
+        Object.values(result.errors)[0] ?? "Page content is invalid.",
+      );
       return false;
     }
 
@@ -310,7 +315,10 @@ const AdminPage = () => {
 
       const savedContent = await updatePageContent(content);
       setContent(savedContent);
-      await createContentVersion(`Published ${new Date().toLocaleString()}`, savedContent);
+      await createContentVersion(
+        `Published ${new Date().toLocaleString()}`,
+        savedContent,
+      );
       await loadVersions();
 
       setSaveMessage(
@@ -369,7 +377,10 @@ const AdminPage = () => {
 
   const handlePreview = () => {
     if (!content) return;
-    window.sessionStorage.setItem("resfes-page-preview", JSON.stringify(content));
+    window.sessionStorage.setItem(
+      "resfes-page-preview",
+      JSON.stringify(content),
+    );
     window.open("/?preview=local", "_blank", "noopener,noreferrer");
   };
 
@@ -380,7 +391,9 @@ const AdminPage = () => {
     } catch (diffError) {
       setVersionDiff([]);
       setVersionDiffError(
-        diffError instanceof Error ? diffError.message : "Could not compare version.",
+        diffError instanceof Error
+          ? diffError.message
+          : "Could not compare version.",
       );
     }
   };
@@ -393,7 +406,9 @@ const AdminPage = () => {
       setVersionsError("");
       await restorePageVersionAsDraft("legacy-homepage", versionToRestore.id);
       await loadVersions();
-      setSaveMessage("Version restored as draft. Live content was not changed.");
+      setSaveMessage(
+        "Version restored as draft. Live content was not changed.",
+      );
       setVersionToRestore(null);
     } catch (restoreError) {
       setVersionsError(
@@ -426,7 +441,8 @@ const AdminPage = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const isNearBottom =
-        window.innerHeight + currentScrollY >= document.documentElement.scrollHeight - 24;
+        window.innerHeight + currentScrollY >=
+        document.documentElement.scrollHeight - 24;
 
       if (currentScrollY > lastScrollY.current + 8 || isNearBottom) {
         setIsSaveBarVisible(true);
@@ -660,14 +676,20 @@ const AdminPage = () => {
                 <LayoutSection
                   content={content}
                   isEditing={isEditing}
-                  onAdd={(sectionId) => setLayoutSectionEnabled(sectionId, true)}
+                  onAdd={(sectionId) =>
+                    setLayoutSectionEnabled(sectionId, true)
+                  }
                   onMove={moveLayoutSection}
-                  onRemove={(sectionId) => setLayoutSectionEnabled(sectionId, false)}
+                  onRemove={(sectionId) =>
+                    setLayoutSectionEnabled(sectionId, false)
+                  }
                   onUpdateSectionStyle={(sectionId, updates) =>
                     updateContent((current) => ({
                       ...current,
                       sectionStyles: current.sectionStyles.map((style) =>
-                        style.id === sectionId ? { ...style, ...updates } : style,
+                        style.id === sectionId
+                          ? { ...style, ...updates }
+                          : style,
                       ),
                     }))
                   }
@@ -678,7 +700,9 @@ const AdminPage = () => {
                   diff={versionDiff}
                   diffError={versionDiffError}
                   error={versionsError}
-                  onCompareVersion={(version) => void handleCompareVersion(version)}
+                  onCompareVersion={(version) =>
+                    void handleCompareVersion(version)
+                  }
                   onRestoreVersion={setVersionToRestore}
                   onSelectVersion={setSelectedVersion}
                   selectedVersion={selectedVersion}
@@ -717,7 +741,9 @@ const AdminPage = () => {
   );
 };
 
-type ContentUpdater = (updater: (current: EditableContent) => EditableContent) => void;
+type ContentUpdater = (
+  updater: (current: EditableContent) => EditableContent,
+) => void;
 
 type EditableSectionProps = {
   content: EditableContent;
@@ -756,68 +782,83 @@ const LayoutSection = ({
             {enabledSections.map((section, index) => (
               <li
                 key={section.id}
-                className="list-row border-b border-amber-50/10 last:border-b-0"
+                className="border-b border-amber-50/10 px-3 py-4 last:border-b-0"
               >
-                <div className="list-col-grow">
-                  <div className="font-semibold text-amber-50">
-                    {sectionLabels[section.id]}
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="font-semibold text-amber-50">
+                      {sectionLabels[section.id]}
+                    </div>
+                    <div className="text-xs text-amber-50/45">
+                      Position {index + 1}
+                    </div>
                   </div>
-                  <div className="text-xs text-amber-50/45">
-                    Position {index + 1}
-                  </div>
-                  <div className="mt-3 grid grid-cols-3 gap-3">
-                    <ColorField
-                      isEditing={isEditing}
-                      label="Background"
-                      value={getSectionStyle(content.sectionStyles, section.id).backgroundColor}
-                      onChange={(value) =>
-                        onUpdateSectionStyle(section.id, { backgroundColor: value })
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-xs"
+                      disabled={!isEditing || index === 0}
+                      onClick={() => onMove(section.id, -1)}
+                    >
+                      Up
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-xs"
+                      disabled={
+                        !isEditing || index === enabledSections.length - 1
                       }
-                    />
-                    <ColorField
-                      isEditing={isEditing}
-                      label="Text"
-                      value={getSectionStyle(content.sectionStyles, section.id).textColor}
-                      onChange={(value) =>
-                        onUpdateSectionStyle(section.id, { textColor: value })
-                      }
-                    />
-                    <ColorField
-                      isEditing={isEditing}
-                      label="Accent"
-                      value={getSectionStyle(content.sectionStyles, section.id).accentColor}
-                      onChange={(value) =>
-                        onUpdateSectionStyle(section.id, { accentColor: value })
-                      }
-                    />
+                      onClick={() => onMove(section.id, 1)}
+                    >
+                      Down
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-xs text-red-200"
+                      disabled={!isEditing}
+                      onClick={() => onRemove(section.id)}
+                    >
+                      <FaTrash className="size-3" />
+                      Remove
+                    </button>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-end gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-xs"
-                    disabled={!isEditing || index === 0}
-                    onClick={() => onMove(section.id, -1)}
-                  >
-                    Up
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-xs"
-                    disabled={!isEditing || index === enabledSections.length - 1}
-                    onClick={() => onMove(section.id, 1)}
-                  >
-                    Down
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-xs text-red-200"
-                    disabled={!isEditing}
-                    onClick={() => onRemove(section.id)}
-                  >
-                    <FaTrash className="size-3" />
-                    Remove
-                  </button>
+                <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
+                  <ColorField
+                    isEditing={isEditing}
+                    label="Background"
+                    value={
+                      getSectionStyle(content.sectionStyles, section.id)
+                        .backgroundColor
+                    }
+                    onChange={(value) =>
+                      onUpdateSectionStyle(section.id, {
+                        backgroundColor: value,
+                      })
+                    }
+                  />
+                  <ColorField
+                    isEditing={isEditing}
+                    label="Text"
+                    value={
+                      getSectionStyle(content.sectionStyles, section.id)
+                        .textColor
+                    }
+                    onChange={(value) =>
+                      onUpdateSectionStyle(section.id, { textColor: value })
+                    }
+                  />
+                  <ColorField
+                    isEditing={isEditing}
+                    label="Accent"
+                    value={
+                      getSectionStyle(content.sectionStyles, section.id)
+                        .accentColor
+                    }
+                    onChange={(value) =>
+                      onUpdateSectionStyle(section.id, { accentColor: value })
+                    }
+                  />
                 </div>
               </li>
             ))}
@@ -977,10 +1018,19 @@ const VersionPreview = ({ version }: { version: ContentVersionSummary }) => {
             </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            <ReadOnlyMetric label="Hero" value={content.hero.titleLines.join(" ")} />
+            <ReadOnlyMetric
+              label="Hero"
+              value={content.hero.titleLines.join(" ")}
+            />
             <ReadOnlyMetric label="About" value={content.about.title} />
-            <ReadOnlyMetric label="Research Fields" value={String(content.researchFields.length)} />
-            <ReadOnlyMetric label="Milestones" value={String(content.milestones.length)} />
+            <ReadOnlyMetric
+              label="Research Fields"
+              value={String(content.researchFields.length)}
+            />
+            <ReadOnlyMetric
+              label="Milestones"
+              value={String(content.milestones.length)}
+            />
           </div>
         </div>
       ) : (
@@ -999,7 +1049,11 @@ const ReadOnlyMetric = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const HeroSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection title="Hero">
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
@@ -1036,7 +1090,18 @@ const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps
             }))
           }
         />
-        {(["taglinePrimary", "taglineSecondary", "countdownLabel", "ctaLabel", "ctaUrl", "partnerLabel", "closingLinePrimary", "closingLineSecondary"] as const).map((field) => (
+        {(
+          [
+            "taglinePrimary",
+            "taglineSecondary",
+            "countdownLabel",
+            "ctaLabel",
+            "ctaUrl",
+            "partnerLabel",
+            "closingLinePrimary",
+            "closingLineSecondary",
+          ] as const
+        ).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1068,11 +1133,17 @@ const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps
   </AdminSection>
 );
 
-const AboutSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const AboutSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection title="About">
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
-        {(["sectionLabel", "title", "highlightOne", "highlightTwo"] as const).map((field) => (
+        {(
+          ["sectionLabel", "title", "highlightOne", "highlightTwo"] as const
+        ).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1099,44 +1170,52 @@ const AboutSection = ({ content, isEditing, updateContent }: EditableSectionProp
             }
           />
         </div>
-        {(["paragraphOne", "paragraphTwo", "paragraphThree"] as const).map((field) => (
-          <div key={field} className="md:col-span-2">
-            <EditableField
-              isEditing={isEditing}
-              label={field}
-              textarea
-              value={content.about[field]}
-              onChange={(value) =>
-                updateContent((current) => ({
-                  ...current,
-                  about: { ...current.about, [field]: value },
-                }))
-              }
-            />
-          </div>
-        ))}
+        {(["paragraphOne", "paragraphTwo", "paragraphThree"] as const).map(
+          (field) => (
+            <div key={field} className="md:col-span-2">
+              <EditableField
+                isEditing={isEditing}
+                label={field}
+                textarea
+                value={content.about[field]}
+                onChange={(value) =>
+                  updateContent((current) => ({
+                    ...current,
+                    about: { ...current.about, [field]: value },
+                  }))
+                }
+              />
+            </div>
+          ),
+        )}
       </div>
     </ContentCard>
   </AdminSection>
 );
 
-const ResearchSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const ResearchSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection
     title="Research Fields"
-    action={isEditing ? (
-      <AddCollectionItemButton
-        label="Add research field"
-        onClick={() =>
-          updateContent((current) => ({
-            ...current,
-            researchFields: [
-              ...current.researchFields,
-              createResearchField(current.researchFields),
-            ],
-          }))
-        }
-      />
-    ) : undefined}
+    action={
+      isEditing ? (
+        <AddCollectionItemButton
+          label="Add research field"
+          onClick={() =>
+            updateContent((current) => ({
+              ...current,
+              researchFields: [
+                ...current.researchFields,
+                createResearchField(current.researchFields),
+              ],
+            }))
+          }
+        />
+      ) : undefined
+    }
   >
     <ContentCard>
       <EditableField
@@ -1158,7 +1237,9 @@ const ResearchSection = ({ content, isEditing, updateContent }: EditableSectionP
         />
       ))}
       {content.researchFields.length === 0 ? (
-        <p className="text-sm text-amber-50/45">No research fields configured.</p>
+        <p className="text-sm text-amber-50/45">
+          No research fields configured.
+        </p>
       ) : null}
     </div>
   </AdminSection>
@@ -1206,7 +1287,9 @@ const ResearchFieldCard = ({
           isEditing={isEditing}
           label="Title"
           value={item.title}
-          onChange={(value) => updateItem((field) => ({ ...field, title: value }))}
+          onChange={(value) =>
+            updateItem((field) => ({ ...field, title: value }))
+          }
         />
         <IconSelectField
           isEditing={isEditing}
@@ -1240,27 +1323,32 @@ const ResearchFieldCard = ({
   );
 };
 
-const AwardsSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const AwardsSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection
     title="Awards"
-    action={isEditing ? (
-      <AddCollectionItemButton
-        label="Add award committee"
-        onClick={() =>
-          updateContent((current) => ({
-            ...current,
-            awards: [
-              ...current.awards,
-              createAwardCommittee(current.awards),
-            ],
-          }))
-        }
-      />
-    ) : undefined}
+    action={
+      isEditing ? (
+        <AddCollectionItemButton
+          label="Add award committee"
+          onClick={() =>
+            updateContent((current) => ({
+              ...current,
+              awards: [...current.awards, createAwardCommittee(current.awards)],
+            }))
+          }
+        />
+      ) : undefined
+    }
   >
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-3">
-        {(["awardsTitle", "awardsStandardLabel", "awardsSmallLabel"] as const).map((field) => (
+        {(
+          ["awardsTitle", "awardsStandardLabel", "awardsSmallLabel"] as const
+        ).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1294,7 +1382,9 @@ const AwardsSection = ({ content, isEditing, updateContent }: EditableSectionPro
         />
       ))}
       {content.awards.length === 0 ? (
-        <p className="text-sm text-amber-50/45">No award committees configured.</p>
+        <p className="text-sm text-amber-50/45">
+          No award committees configured.
+        </p>
       ) : null}
     </div>
   </AdminSection>
@@ -1338,13 +1428,17 @@ const AwardCard = ({
           isEditing={isEditing}
           label="Name"
           value={award.name}
-          onChange={(value) => updateAward((item) => ({ ...item, name: value }))}
+          onChange={(value) =>
+            updateAward((item) => ({ ...item, name: value }))
+          }
         />
         <EditableField
           isEditing={isEditing}
           label="Vietnamese name"
           value={award.nameVi}
-          onChange={(value) => updateAward((item) => ({ ...item, nameVi: value }))}
+          onChange={(value) =>
+            updateAward((item) => ({ ...item, nameVi: value }))
+          }
         />
         <AwardTierFields
           isEditing={isEditing}
@@ -1395,7 +1489,9 @@ const AwardTierFields = ({
             <div className="mb-2 flex justify-end">
               <RemoveCollectionItemButton
                 label={`Remove prize ${tier.label}`}
-                onClick={() => onChange(tiers.filter((item) => item.id !== tier.id))}
+                onClick={() =>
+                  onChange(tiers.filter((item) => item.id !== tier.id))
+                }
               />
             </div>
           ) : null}
@@ -1405,7 +1501,11 @@ const AwardTierFields = ({
               label="Label"
               value={tier.label}
               onChange={(value) =>
-                onChange(tiers.map((item) => (item.id === tier.id ? { ...item, label: value } : item)))
+                onChange(
+                  tiers.map((item) =>
+                    item.id === tier.id ? { ...item, label: value } : item,
+                  ),
+                )
               }
             />
             <EditableField
@@ -1413,7 +1513,11 @@ const AwardTierFields = ({
               label="Amount"
               value={tier.amount}
               onChange={(value) =>
-                onChange(tiers.map((item) => (item.id === tier.id ? { ...item, amount: value } : item)))
+                onChange(
+                  tiers.map((item) =>
+                    item.id === tier.id ? { ...item, amount: value } : item,
+                  ),
+                )
               }
             />
           </div>
@@ -1426,23 +1530,29 @@ const AwardTierFields = ({
   </div>
 );
 
-const RegulationsSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const RegulationsSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection
     title="Regulations"
-    action={isEditing ? (
-      <AddCollectionItemButton
-        label="Add regulation"
-        onClick={() =>
-          updateContent((current) => ({
-            ...current,
-            regulations: [
-              ...current.regulations,
-              createRegulation(current.regulations),
-            ],
-          }))
-        }
-      />
-    ) : undefined}
+    action={
+      isEditing ? (
+        <AddCollectionItemButton
+          label="Add regulation"
+          onClick={() =>
+            updateContent((current) => ({
+              ...current,
+              regulations: [
+                ...current.regulations,
+                createRegulation(current.regulations),
+              ],
+            }))
+          }
+        />
+      ) : undefined
+    }
   >
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
@@ -1451,7 +1561,10 @@ const RegulationsSection = ({ content, isEditing, updateContent }: EditableSecti
           label="Section title"
           value={content.regulationsTitle}
           onChange={(value) =>
-            updateContent((current) => ({ ...current, regulationsTitle: value }))
+            updateContent((current) => ({
+              ...current,
+              regulationsTitle: value,
+            }))
           }
         />
         <EditableField
@@ -1492,7 +1605,9 @@ const RegulationCard = ({
   isEditing: boolean;
   updateContent: ContentUpdater;
 }) => {
-  const updateItem = (updater: (item: RegulationSection) => RegulationSection) => {
+  const updateItem = (
+    updater: (item: RegulationSection) => RegulationSection,
+  ) => {
     updateContent((current) => ({
       ...current,
       regulations: current.regulations.map((regulation) =>
@@ -1523,36 +1638,46 @@ const RegulationCard = ({
           isEditing={isEditing}
           label="Title"
           value={item.title}
-          onChange={(value) => updateItem((current) => ({ ...current, title: value }))}
+          onChange={(value) =>
+            updateItem((current) => ({ ...current, title: value }))
+          }
         />
         <EditableListField
           isEditing={isEditing}
           label="Rules"
           value={item.items}
-          onChange={(value) => updateItem((current) => ({ ...current, items: value }))}
+          onChange={(value) =>
+            updateItem((current) => ({ ...current, items: value }))
+          }
         />
       </div>
     </ContentCard>
   );
 };
 
-const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const MilestonesSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection
     title="Milestones"
-    action={isEditing ? (
-      <AddCollectionItemButton
-        label="Add milestone"
-        onClick={() =>
-          updateContent((current) => ({
-            ...current,
-            milestones: [
-              ...current.milestones,
-              createMilestone(current.milestones),
-            ],
-          }))
-        }
-      />
-    ) : undefined}
+    action={
+      isEditing ? (
+        <AddCollectionItemButton
+          label="Add milestone"
+          onClick={() =>
+            updateContent((current) => ({
+              ...current,
+              milestones: [
+                ...current.milestones,
+                createMilestone(current.milestones),
+              ],
+            }))
+          }
+        />
+      ) : undefined
+    }
   >
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
@@ -1602,7 +1727,9 @@ const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectio
                 updateContent((current) => ({
                   ...current,
                   milestones: current.milestones.map((milestone) =>
-                    milestone.id === item.id ? { ...milestone, date: value } : milestone,
+                    milestone.id === item.id
+                      ? { ...milestone, date: value }
+                      : milestone,
                   ),
                 }))
               }
@@ -1615,7 +1742,9 @@ const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectio
                 updateContent((current) => ({
                   ...current,
                   milestones: current.milestones.map((milestone) =>
-                    milestone.id === item.id ? { ...milestone, title: value } : milestone,
+                    milestone.id === item.id
+                      ? { ...milestone, title: value }
+                      : milestone,
                   ),
                 }))
               }
@@ -1628,7 +1757,9 @@ const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectio
                 updateContent((current) => ({
                   ...current,
                   milestones: current.milestones.map((milestone) =>
-                    milestone.id === item.id ? { ...milestone, detail: value || undefined } : milestone,
+                    milestone.id === item.id
+                      ? { ...milestone, detail: value || undefined }
+                      : milestone,
                   ),
                 }))
               }
@@ -1643,30 +1774,43 @@ const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectio
   </AdminSection>
 );
 
-const PublicationsPreviewSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const PublicationsPreviewSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection title="Publications Preview">
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
-        {(["eyebrow", "badge", "readMoreLabel", "viewAllLabel"] as const).map((field) => (
-          <EditableField
-            key={field}
-            isEditing={isEditing}
-            label={field}
-            value={content.publicationsHome[field]}
-            onChange={(value) =>
-              updateContent((current) => ({
-                ...current,
-                publicationsHome: { ...current.publicationsHome, [field]: value },
-              }))
-            }
-          />
-        ))}
+        {(["eyebrow", "badge", "readMoreLabel", "viewAllLabel"] as const).map(
+          (field) => (
+            <EditableField
+              key={field}
+              isEditing={isEditing}
+              label={field}
+              value={content.publicationsHome[field]}
+              onChange={(value) =>
+                updateContent((current) => ({
+                  ...current,
+                  publicationsHome: {
+                    ...current.publicationsHome,
+                    [field]: value,
+                  },
+                }))
+              }
+            />
+          ),
+        )}
       </div>
     </ContentCard>
   </AdminSection>
 );
 
-const WorkshopSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const WorkshopSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection title="Workshop">
     <div className="grid gap-4">
       {content.workshops.map((item) => (
@@ -1702,7 +1846,18 @@ const WorkshopCard = ({
   return (
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
-        {(["eyebrow", "title", "scheduleLabel", "date", "note", "sessionTitle", "sessionSubtitle", "time"] as const).map((field) => (
+        {(
+          [
+            "eyebrow",
+            "title",
+            "scheduleLabel",
+            "date",
+            "note",
+            "sessionTitle",
+            "sessionSubtitle",
+            "time",
+          ] as const
+        ).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1740,11 +1895,32 @@ const WorkshopCard = ({
   );
 };
 
-const FooterSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
+const FooterSection = ({
+  content,
+  isEditing,
+  updateContent,
+}: EditableSectionProps) => (
   <AdminSection title="Footer">
     <ContentCard>
       <div className="grid gap-3 mb-12 md:grid-cols-2">
-        {(["headlineOne", "headlineTwo", "headlineThree", "ctaLabel", "ctaUrl", "contactHeading", "facebookLabel", "facebookUrl", "emailLabel", "email", "phoneLabel", "phone", "copyrightLine", "rightsLine"] as const).map((field) => (
+        {(
+          [
+            "headlineOne",
+            "headlineTwo",
+            "headlineThree",
+            "ctaLabel",
+            "ctaUrl",
+            "contactHeading",
+            "facebookLabel",
+            "facebookUrl",
+            "emailLabel",
+            "email",
+            "phoneLabel",
+            "phone",
+            "copyrightLine",
+            "rightsLine",
+          ] as const
+        ).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1756,7 +1932,7 @@ const FooterSection = ({ content, isEditing, updateContent }: EditableSectionPro
                 footer: { ...current.footer, [field]: value },
               }))
             }
-            />
+          />
         ))}
         <div className="md:col-span-2">
           <ImageListUploadField
@@ -1776,11 +1952,7 @@ const FooterSection = ({ content, isEditing, updateContent }: EditableSectionPro
   </AdminSection>
 );
 
-const NewsList = ({
-  news,
-}: {
-  news: NewsRecord[];
-}) => (
+const NewsList = ({ news }: { news: NewsRecord[] }) => (
   <div className="overflow-hidden rounded-lg border border-amber-50/10 bg-zinc-900">
     <div className="grid grid-cols-[96px_1fr] gap-4 border-b border-amber-50/10 bg-black/25 px-4 py-3 text-xs font-semibold uppercase text-amber-50/45 md:grid-cols-[120px_1fr_180px_140px]">
       <span>Image</span>
@@ -1820,7 +1992,9 @@ const NewsList = ({
               <span>{formatNewsDate(item.date)}</span>
             </div>
           </div>
-          <span className="hidden text-sm text-amber-50/75 md:block">{item.author}</span>
+          <span className="hidden text-sm text-amber-50/75 md:block">
+            {item.author}
+          </span>
           <span className="hidden text-sm text-amber-50/55 md:block">
             {formatNewsDate(item.date)}
           </span>
@@ -1854,8 +2028,9 @@ type SaveBarProps = {
 
 const SaveBar = ({ isSaving, isVisible, onSave }: SaveBarProps) => (
   <div
-    className={`fixed right-0 md:left-64 bottom-0 z-50 border-t border-amber-50/15 bg-black/90 px-5 py-4 backdrop-blur transition-transform duration-200 ${isVisible ? "translate-y-0" : "translate-y-full"
-      }`}
+    className={`fixed right-0 md:left-64 bottom-0 z-50 border-t border-amber-50/15 bg-black/90 px-5 py-4 backdrop-blur transition-transform duration-200 ${
+      isVisible ? "translate-y-0" : "translate-y-full"
+    }`}
   >
     <div className="mx-auto flex max-w-6xl justify-end">
       <button
@@ -1927,16 +2102,17 @@ const ColorField = ({
   <label className="grid min-w-0 gap-1">
     <span className={`${labelClass} whitespace-nowrap`}>{label}</span>
     {isEditing ? (
-      <span className="flex min-w-0 items-center gap-2">
+      <span className="flex h-10 min-w-0 overflow-hidden rounded-lg border border-white/15 bg-black transition focus-within:border-[#ff6a1f] focus-within:ring-2 focus-within:ring-[#ff6a1f]/20">
         <input
           aria-label={`${label} color`}
-          className="h-9 w-11 shrink-0 cursor-pointer rounded border border-white/15 bg-black p-1"
+          className="h-full w-12 shrink-0 cursor-pointer border-0 bg-black p-1.5"
           type="color"
           value={isHexColor(value) ? value : "#000000"}
           onChange={(event) => onChange(event.target.value)}
         />
         <input
-          className={`${inputClass} min-w-0`}
+          aria-label={`${label} hex value`}
+          className="min-w-28 flex-1 border-0 border-l border-white/15 bg-black px-3 font-mono text-sm text-amber-50 outline-none"
           type="text"
           value={value}
           onChange={(event) => onChange(event.target.value)}

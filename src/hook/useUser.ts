@@ -6,7 +6,11 @@ import React, {
   useState,
   type PropsWithChildren,
 } from "react";
-import { getCurrentUser, logout as logoutRequest, type CurrentUser } from "../api/authApi";
+import {
+  getCurrentUser,
+  logout as logoutRequest,
+  type CurrentUser,
+} from "../api/authApi";
 
 type UserContextValue = {
   user: CurrentUser | null;
