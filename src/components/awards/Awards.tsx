@@ -196,8 +196,13 @@ const Awards = () => {
           {awardsTitle}
         </div>
 
-        {/* DaisyUI Carousel - center snap, 30px bleed, infinite loop */}
-        <div className="relative mx-auto mt-12 w-[calc(85vw+60px)] max-w-207">
+        {awards.length === 0 ? (
+          <p className="mx-auto mt-12 max-w-xl px-6 text-center text-sm text-white/55">
+            Award details will be announced here.
+          </p>
+        ) : (
+          /* DaisyUI Carousel - center snap, 30px bleed, infinite loop */
+          <div className="relative mx-auto mt-12 w-[calc(85vw+60px)] max-w-207">
           {/* Navigation Arrows */}
           <button
             onClick={handlePrev}
@@ -229,7 +234,8 @@ const Awards = () => {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        )}
 
         {/* Important note */}
         <p className="italic text-sm font-thin text-white/35 justify-self-center mt-10 max-w-5xl text-center mx-auto px-6">

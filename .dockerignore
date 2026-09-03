@@ -1,0 +1,13 @@
+.git
+.github
+.env*
+!.env.example
+node_modules
+dist
+output
+backups
+.playwright-cli
+*.log
+Dockerfile*
+docker-compose*.yml
+deployment

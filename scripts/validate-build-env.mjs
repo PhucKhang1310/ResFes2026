@@ -7,6 +7,10 @@ const errors = [];
 const apiBaseUrl = env.VITE_API_BASE_URL?.trim();
 if (!apiBaseUrl) {
   errors.push("VITE_API_BASE_URL is required for production builds.");
+} else if (apiBaseUrl.startsWith("/")) {
+  if (apiBaseUrl !== "/api/v1") {
+    errors.push('A relative VITE_API_BASE_URL must be exactly "/api/v1".');
+  }
 } else {
   try {
     const url = new URL(apiBaseUrl);

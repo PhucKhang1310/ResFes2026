@@ -17,6 +17,7 @@ import {
   type AnalyticsFilters,
 } from "../../api/analyticsApi";
 import LoadingPage from "../../components/loading/LoadingPage";
+import ReportDateRangePicker from "../../components/admin/ReportDateRangePicker";
 import { useUser } from "../../hook/useUser";
 import AdminSidebar from "./AdminSidebar";
 
@@ -150,26 +151,14 @@ const AdminDashboardPage = () => {
           ) : null}
 
           <div className="mb-6 flex flex-wrap items-end gap-3 border-b border-amber-50/10 pb-6">
-            <label className="grid gap-2 text-xs font-semibold text-amber-50/60">
-              From
-              <input
-                type="date"
-                value={fromDate}
-                max={toDate || undefined}
-                onChange={(event) => setFromDate(event.target.value)}
-                className="rounded border border-amber-50/15 bg-black px-3 py-2 text-sm text-amber-50"
-              />
-            </label>
-            <label className="grid gap-2 text-xs font-semibold text-amber-50/60">
-              To
-              <input
-                type="date"
-                value={toDate}
-                min={fromDate || undefined}
-                onChange={(event) => setToDate(event.target.value)}
-                className="rounded border border-amber-50/15 bg-black px-3 py-2 text-sm text-amber-50"
-              />
-            </label>
+            <ReportDateRangePicker
+              from={fromDate}
+              to={toDate}
+              onChange={(range) => {
+                setFromDate(range.from);
+                setToDate(range.to);
+              }}
+            />
             <button
               type="button"
               onClick={applyFilters}
