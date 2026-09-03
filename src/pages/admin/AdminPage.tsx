@@ -38,7 +38,6 @@ import type {
   AwardCommittee,
   AwardTier,
   EditableContent,
-  PageImageItem,
   PageSectionKind,
   PageSectionStyle,
   RegulationSection,
@@ -52,6 +51,21 @@ import AdminLayout from "../../components/admin/AdminLayout";
 import { validatePageContentInput } from "../../validation/contentValidation";
 import VersionDiffViewer from "../../components/admin/version/VersionDiffViewer";
 import VersionRestoreDialog from "../../components/admin/version/VersionRestoreDialog";
+import {
+  AddCollectionItemButton,
+  RemoveCollectionItemButton,
+} from "../../components/admin/EditorCollectionActions";
+import {
+  ImageListUploadField,
+  SingleImageUploadField,
+} from "../../components/admin/ImageUploadField";
+import {
+  createAwardCommittee,
+  createAwardTier,
+  createMilestone,
+  createRegulation,
+  createResearchField,
+} from "./contentEditorFactories";
 
 const dateFormatter = new Intl.DateTimeFormat("vi-VN");
 const inputClass =
@@ -89,24 +103,6 @@ const textToList = (value: string) =>
     .split("\n")
     .map((item) => item.trim())
     .filter(Boolean);
-
-const imagesToText = (items: PageImageItem[]) =>
-  items.map((item) => `${item.url}|${item.alt}`).join("\n");
-
-const textToImages = (value: string): PageImageItem[] =>
-  value
-    .split("\n")
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .map((item, index) => {
-      const [url, ...altParts] = item.split("|");
-      return {
-        id: index + 1,
-        url: url.trim(),
-        alt: altParts.join("|").trim(),
-      };
-    })
-    .filter((item) => item.url);
 
 const isHexColor = (value: string) =>
   /^#[0-9A-Fa-f]{6}$/.test(value.trim());
@@ -1018,9 +1014,9 @@ const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps
             }))
           }
         />
-        <EditableField
+        <SingleImageUploadField
           isEditing={isEditing}
-          label="Background image URL"
+          label="Background image"
           value={content.hero.backgroundImageUrl}
           onChange={(value) =>
             updateContent((current) => ({
@@ -1055,7 +1051,7 @@ const HeroSection = ({ content, isEditing, updateContent }: EditableSectionProps
           />
         ))}
         <div className="md:col-span-2">
-          <ImageListField
+          <ImageListUploadField
             isEditing={isEditing}
             label="Partner logos"
             value={content.hero.partnerLogos}
@@ -1091,7 +1087,7 @@ const AboutSection = ({ content, isEditing, updateContent }: EditableSectionProp
           />
         ))}
         <div className="md:col-span-2">
-          <ImageListField
+          <ImageListUploadField
             isEditing={isEditing}
             label="Carousel images"
             value={content.about.images}
@@ -1125,7 +1121,23 @@ const AboutSection = ({ content, isEditing, updateContent }: EditableSectionProp
 );
 
 const ResearchSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
-  <AdminSection title="Research Fields">
+  <AdminSection
+    title="Research Fields"
+    action={isEditing ? (
+      <AddCollectionItemButton
+        label="Add research field"
+        onClick={() =>
+          updateContent((current) => ({
+            ...current,
+            researchFields: [
+              ...current.researchFields,
+              createResearchField(current.researchFields),
+            ],
+          }))
+        }
+      />
+    ) : undefined}
+  >
     <ContentCard>
       <EditableField
         isEditing={isEditing}
@@ -1145,6 +1157,9 @@ const ResearchSection = ({ content, isEditing, updateContent }: EditableSectionP
           updateContent={updateContent}
         />
       ))}
+      {content.researchFields.length === 0 ? (
+        <p className="text-sm text-amber-50/45">No research fields configured.</p>
+      ) : null}
     </div>
   </AdminSection>
 );
@@ -1171,6 +1186,21 @@ const ResearchFieldCard = ({
 
   return (
     <ContentCard>
+      {isEditing ? (
+        <div className="mb-3 flex justify-end">
+          <RemoveCollectionItemButton
+            label={`Remove research field ${item.title}`}
+            onClick={() =>
+              updateContent((current) => ({
+                ...current,
+                researchFields: current.researchFields.filter(
+                  (field) => field.id !== item.id,
+                ),
+              }))
+            }
+          />
+        </div>
+      ) : null}
       <div className="grid gap-3">
         <EditableField
           isEditing={isEditing}
@@ -1211,7 +1241,23 @@ const ResearchFieldCard = ({
 };
 
 const AwardsSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
-  <AdminSection title="Awards">
+  <AdminSection
+    title="Awards"
+    action={isEditing ? (
+      <AddCollectionItemButton
+        label="Add award committee"
+        onClick={() =>
+          updateContent((current) => ({
+            ...current,
+            awards: [
+              ...current.awards,
+              createAwardCommittee(current.awards),
+            ],
+          }))
+        }
+      />
+    ) : undefined}
+  >
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-3">
         {(["awardsTitle", "awardsStandardLabel", "awardsSmallLabel"] as const).map((field) => (
@@ -1247,6 +1293,9 @@ const AwardsSection = ({ content, isEditing, updateContent }: EditableSectionPro
           updateContent={updateContent}
         />
       ))}
+      {content.awards.length === 0 ? (
+        <p className="text-sm text-amber-50/45">No award committees configured.</p>
+      ) : null}
     </div>
   </AdminSection>
 );
@@ -1271,6 +1320,19 @@ const AwardCard = ({
 
   return (
     <ContentCard>
+      {isEditing ? (
+        <div className="mb-3 flex justify-end">
+          <RemoveCollectionItemButton
+            label={`Remove award committee ${award.name}`}
+            onClick={() =>
+              updateContent((current) => ({
+                ...current,
+                awards: current.awards.filter((item) => item.id !== award.id),
+              }))
+            }
+          />
+        </div>
+      ) : null}
       <div className="grid gap-3">
         <EditableField
           isEditing={isEditing}
@@ -1317,34 +1379,71 @@ const AwardTierFields = ({
   tiers: AwardTier[];
 }) => (
   <div>
-    <p className={labelClass}>{label}</p>
+    <div className="flex items-center justify-between gap-3">
+      <p className={labelClass}>{label}</p>
+      {isEditing ? (
+        <AddCollectionItemButton
+          label="Add prize"
+          onClick={() => onChange([...tiers, createAwardTier(tiers)])}
+        />
+      ) : null}
+    </div>
     <div className="mt-2 grid gap-2">
       {tiers.map((tier) => (
-        <div key={tier.id} className="grid gap-2 rounded border border-amber-50/10 p-3 md:grid-cols-2">
-          <EditableField
-            isEditing={isEditing}
-            label="Label"
-            value={tier.label}
-            onChange={(value) =>
-              onChange(tiers.map((item) => (item.id === tier.id ? { ...item, label: value } : item)))
-            }
-          />
-          <EditableField
-            isEditing={isEditing}
-            label="Amount"
-            value={tier.amount}
-            onChange={(value) =>
-              onChange(tiers.map((item) => (item.id === tier.id ? { ...item, amount: value } : item)))
-            }
-          />
+        <div key={tier.id} className="rounded border border-amber-50/10 p-3">
+          {isEditing ? (
+            <div className="mb-2 flex justify-end">
+              <RemoveCollectionItemButton
+                label={`Remove prize ${tier.label}`}
+                onClick={() => onChange(tiers.filter((item) => item.id !== tier.id))}
+              />
+            </div>
+          ) : null}
+          <div className="grid gap-2 md:grid-cols-2">
+            <EditableField
+              isEditing={isEditing}
+              label="Label"
+              value={tier.label}
+              onChange={(value) =>
+                onChange(tiers.map((item) => (item.id === tier.id ? { ...item, label: value } : item)))
+              }
+            />
+            <EditableField
+              isEditing={isEditing}
+              label="Amount"
+              value={tier.amount}
+              onChange={(value) =>
+                onChange(tiers.map((item) => (item.id === tier.id ? { ...item, amount: value } : item)))
+              }
+            />
+          </div>
         </div>
       ))}
+      {tiers.length === 0 ? (
+        <span className="text-sm text-amber-50/45">No prizes configured.</span>
+      ) : null}
     </div>
   </div>
 );
 
 const RegulationsSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
-  <AdminSection title="Regulations">
+  <AdminSection
+    title="Regulations"
+    action={isEditing ? (
+      <AddCollectionItemButton
+        label="Add regulation"
+        onClick={() =>
+          updateContent((current) => ({
+            ...current,
+            regulations: [
+              ...current.regulations,
+              createRegulation(current.regulations),
+            ],
+          }))
+        }
+      />
+    ) : undefined}
+  >
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
         <EditableField
@@ -1377,6 +1476,9 @@ const RegulationsSection = ({ content, isEditing, updateContent }: EditableSecti
           updateContent={updateContent}
         />
       ))}
+      {content.regulations.length === 0 ? (
+        <p className="text-sm text-amber-50/45">No regulations configured.</p>
+      ) : null}
     </div>
   </AdminSection>
 );
@@ -1401,6 +1503,21 @@ const RegulationCard = ({
 
   return (
     <ContentCard>
+      {isEditing ? (
+        <div className="mb-3 flex justify-end">
+          <RemoveCollectionItemButton
+            label={`Remove regulation ${item.title}`}
+            onClick={() =>
+              updateContent((current) => ({
+                ...current,
+                regulations: current.regulations.filter(
+                  (regulation) => regulation.id !== item.id,
+                ),
+              }))
+            }
+          />
+        </div>
+      ) : null}
       <div className="grid gap-3">
         <EditableField
           isEditing={isEditing}
@@ -1420,7 +1537,23 @@ const RegulationCard = ({
 };
 
 const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectionProps) => (
-  <AdminSection title="Milestones">
+  <AdminSection
+    title="Milestones"
+    action={isEditing ? (
+      <AddCollectionItemButton
+        label="Add milestone"
+        onClick={() =>
+          updateContent((current) => ({
+            ...current,
+            milestones: [
+              ...current.milestones,
+              createMilestone(current.milestones),
+            ],
+          }))
+        }
+      />
+    ) : undefined}
+  >
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
         <EditableField
@@ -1445,6 +1578,21 @@ const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectio
     <div className="mt-4 grid gap-4 md:grid-cols-2">
       {content.milestones.map((item) => (
         <ContentCard key={item.id}>
+          {isEditing ? (
+            <div className="mb-3 flex justify-end">
+              <RemoveCollectionItemButton
+                label={`Remove milestone ${item.title}`}
+                onClick={() =>
+                  updateContent((current) => ({
+                    ...current,
+                    milestones: current.milestones.filter(
+                      (milestone) => milestone.id !== item.id,
+                    ),
+                  }))
+                }
+              />
+            </div>
+          ) : null}
           <div className="grid gap-3">
             <EditableField
               isEditing={isEditing}
@@ -1488,6 +1636,9 @@ const MilestonesSection = ({ content, isEditing, updateContent }: EditableSectio
           </div>
         </ContentCard>
       ))}
+      {content.milestones.length === 0 ? (
+        <p className="text-sm text-amber-50/45">No milestones configured.</p>
+      ) : null}
     </div>
   </AdminSection>
 );
@@ -1551,7 +1702,7 @@ const WorkshopCard = ({
   return (
     <ContentCard>
       <div className="grid gap-3 md:grid-cols-2">
-        {(["eyebrow", "title", "backgroundImageUrl", "scheduleLabel", "date", "note", "sessionTitle", "sessionSubtitle", "time"] as const).map((field) => (
+        {(["eyebrow", "title", "scheduleLabel", "date", "note", "sessionTitle", "sessionSubtitle", "time"] as const).map((field) => (
           <EditableField
             key={field}
             isEditing={isEditing}
@@ -1562,6 +1713,17 @@ const WorkshopCard = ({
             }
           />
         ))}
+        <SingleImageUploadField
+          isEditing={isEditing}
+          label="Background image"
+          value={item.backgroundImageUrl}
+          onChange={(value) =>
+            updateItem((workshop) => ({
+              ...workshop,
+              backgroundImageUrl: value,
+            }))
+          }
+        />
         <div className="md:col-span-2">
           <EditableField
             isEditing={isEditing}
@@ -1597,7 +1759,7 @@ const FooterSection = ({ content, isEditing, updateContent }: EditableSectionPro
             />
         ))}
         <div className="md:col-span-2">
-          <ImageListField
+          <ImageListUploadField
             isEditing={isEditing}
             label="Footer logos"
             value={content.footer.logos}
@@ -1897,41 +2059,6 @@ const EditableListField = ({
         {value.length > 0 ? value.join(", ") : "-"}
       </span>
     )}
-  </label>
-);
-
-const ImageListField = ({
-  isEditing,
-  label,
-  onChange,
-  value,
-}: {
-  isEditing: boolean;
-  label: string;
-  onChange: (value: PageImageItem[]) => void;
-  value: PageImageItem[];
-}) => (
-  <label className="grid gap-1">
-    <span className={labelClass}>{label}</span>
-    {isEditing ? (
-      <textarea
-        className={`${inputClass} min-h-28 resize-y`}
-        placeholder="https://example.com/image.jpg|Image alt text"
-        value={imagesToText(value)}
-        onChange={(event) => onChange(textToImages(event.target.value))}
-      />
-    ) : (
-      <span className="text-sm leading-6 text-amber-50/80">
-        {value.length > 0
-          ? value.map((item) => item.alt || item.url).join(", ")
-          : "-"}
-      </span>
-    )}
-    {isEditing ? (
-      <span className="text-xs text-amber-50/35">
-        One image per line: URL|alt text.
-      </span>
-    ) : null}
   </label>
 );
 

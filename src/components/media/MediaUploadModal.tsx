@@ -52,7 +52,12 @@ const MediaUploadModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Upload media"
+      className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4"
+    >
       <form
         className="w-full max-w-lg rounded-lg border border-amber-50/10 bg-zinc-950 p-5 shadow-2xl"
         onSubmit={handleSubmit}
@@ -61,6 +66,8 @@ const MediaUploadModal = ({
           <h2 className="text-lg font-bold text-amber-50">Upload media</h2>
           <button
             type="button"
+            aria-label="Close upload dialog"
+            title="Close upload dialog"
             className="btn btn-sm border-amber-50/15 bg-transparent text-amber-50 hover:bg-amber-50/10"
             onClick={onClose}
           >
@@ -80,6 +87,7 @@ const MediaUploadModal = ({
             <input
               className={inputClass}
               type="file"
+              accept="image/*"
               onChange={(event) => setFile(event.target.files?.[0] ?? null)}
             />
           </label>

@@ -33,7 +33,10 @@ export type AnalyticsSummary = {
 };
 
 const buildAnalyticsUrl = (path: string, filters: AnalyticsFilters) => {
-  const url = new URL(`${API_ENDPOINTS.adminAnalytics}${path}`);
+  const url = new URL(
+    `${API_ENDPOINTS.adminAnalytics}${path}`,
+    window.location.origin,
+  );
   if (filters.from) url.searchParams.set("from", filters.from);
   if (filters.to) url.searchParams.set("to", filters.to);
   if (filters.semesterId) url.searchParams.set("semesterId", filters.semesterId);
