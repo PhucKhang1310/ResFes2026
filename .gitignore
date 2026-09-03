@@ -17,6 +17,7 @@ backups/
 # Environment and credential files
 .env*
 !.env.example
+!.env.docker.example
 *.pem
 *.key
 *.p12

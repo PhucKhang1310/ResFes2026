@@ -137,6 +137,9 @@ Note: the frontend currently defines auth API calls, but the backend entry point
 
 ## Getting Started
 
+For a complete Docker deployment with MongoDB, the backend, the frontend, and
+operations runbooks, see [`deployment/README.md`](deployment/README.md).
+
 Install dependencies:
 
 ```bash
